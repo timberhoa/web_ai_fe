@@ -1,0 +1,158 @@
+@import '../../styles/variables';
+@import '../../styles/mixins';
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  @include flex-center;
+  z-index: $z-modal;
+  padding: $spacing-4;
+  backdrop-filter: blur(4px);
+  @include fade-in(0.3s);
+}
+
+.modal {
+  background: $background;
+  border-radius: $radius-xl;
+  box-shadow: $shadow-xl;
+  max-width: 100%;
+  max-height: 100%;
+  overflow: hidden;
+  @include slide-in-up(0.3s);
+  outline: none;
+}
+
+.modalContent {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.modalHeader {
+  @include flex-between;
+  padding: $spacing-6 $spacing-6 $spacing-4;
+  border-bottom: 1px solid $border-light;
+  flex-shrink: 0;
+}
+
+.modalTitle {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-semibold;
+  color: $text;
+  margin: 0;
+}
+
+.closeButton {
+  @include flex-center;
+  width: 32px;
+  height: 32px;
+  background: none;
+  border: none;
+  border-radius: $radius;
+  color: $text-muted;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    background: $background-secondary;
+    color: $text;
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px $primary-light;
+  }
+}
+
+.modalBody {
+  padding: $spacing-6;
+  overflow-y: auto;
+  @include custom-scrollbar;
+  flex: 1;
+}
+
+// Size variants
+.modal--sm {
+  width: 100%;
+  max-width: 400px;
+  max-height: 80vh;
+}
+
+.modal--md {
+  width: 100%;
+  max-width: 600px;
+  max-height: 80vh;
+}
+
+.modal--lg {
+  width: 100%;
+  max-width: 800px;
+  max-height: 90vh;
+}
+
+.modal--xl {
+  width: 100%;
+  max-width: 1200px;
+  max-height: 90vh;
+}
+
+// Responsive adjustments
+@include media-sm {
+  .overlay {
+    padding: $spacing-2;
+  }
+
+  .modal {
+    border-radius: $radius-lg;
+    max-height: 95vh;
+  }
+
+  .modalHeader {
+    padding: $spacing-4 $spacing-4 $spacing-3;
+  }
+
+  .modalTitle {
+    font-size: $font-size-lg;
+  }
+
+  .modalBody {
+    padding: $spacing-4;
+  }
+
+  .closeButton {
+    width: 28px;
+    height: 28px;
+  }
+}
+
+@include media-xs {
+  .overlay {
+    padding: $spacing-1;
+  }
+
+  .modal {
+    border-radius: $radius-md;
+    max-height: 98vh;
+  }
+
+  .modalHeader {
+    padding: $spacing-3 $spacing-3 $spacing-2;
+  }
+
+  .modalTitle {
+    font-size: $font-size-base;
+  }
+
+  .modalBody {
+    padding: $spacing-3;
+  }
+
+  .closeButton {
+    width: 24px;
+    height: 24px;
+  }
+}

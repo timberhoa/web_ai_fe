@@ -1,0 +1,254 @@
+@import '../../styles/variables';
+@import '../../styles/mixins';
+
+.dataTable {
+  @include card;
+  padding: 0;
+  overflow: hidden;
+}
+
+.tableWrapper {
+  overflow-x: auto;
+  @include custom-scrollbar;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: $font-size-sm;
+}
+
+.tableHead {
+  background: $background-secondary;
+  border-bottom: 1px solid $border-light;
+}
+
+.tableHeader {
+  padding: $spacing-4 $spacing-6;
+  text-align: left;
+  font-weight: $font-weight-semibold;
+  color: $text;
+  white-space: nowrap;
+  position: sticky;
+  top: 0;
+  background: $background-secondary;
+  z-index: 1;
+}
+
+.tableHeaderSortable {
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.2s ease-in-out;
+
+  &:hover {
+    background: $background-tertiary;
+  }
+}
+
+.tableHeaderContent {
+  @include flex-between;
+  align-items: center;
+  gap: $spacing-2;
+}
+
+.tableHeaderTitle {
+  font-weight: $font-weight-semibold;
+  color: $text;
+}
+
+.tableHeaderSort {
+  @include flex-center;
+  color: $text-muted;
+  transition: color 0.2s ease-in-out;
+
+  .tableHeaderSortable:hover & {
+    color: $text;
+  }
+}
+
+.tableBody {
+  background: $background;
+}
+
+.tableRow {
+  border-bottom: 1px solid $border-light;
+  transition: background-color 0.2s ease-in-out;
+
+  &:hover {
+    background: $background-secondary;
+  }
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.tableRowClickable {
+  cursor: pointer;
+
+  &:hover {
+    background: $background-secondary;
+  }
+}
+
+.tableCell {
+  padding: $spacing-4 $spacing-6;
+  color: $text;
+  vertical-align: middle;
+  border-bottom: 1px solid $border-light;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.emptyCell {
+  text-align: center;
+  padding: $spacing-12 $spacing-6;
+  border-bottom: none;
+}
+
+.emptyState {
+  @include flex-column-center;
+  gap: $spacing-4;
+  color: $text-muted;
+
+  svg {
+    color: $text-muted;
+  }
+}
+
+.loading {
+  @include flex-column-center;
+  gap: $spacing-4;
+  padding: $spacing-12 $spacing-6;
+  color: $text-muted;
+}
+
+.spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid $border-light;
+  border-top: 3px solid $primary;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+// Pagination
+.pagination {
+  @include flex-between;
+  padding: $spacing-4 $spacing-6;
+  border-top: 1px solid $border-light;
+  background: $background-secondary;
+
+  @include media-sm {
+    flex-direction: column;
+    gap: $spacing-3;
+    align-items: center;
+  }
+}
+
+.paginationInfo {
+  font-size: $font-size-sm;
+  color: $text-secondary;
+}
+
+.paginationControls {
+  @include flex-center;
+  gap: $spacing-2;
+}
+
+.paginationPages {
+  @include flex-center;
+  gap: $spacing-1;
+}
+
+.paginationButton {
+  @include flex-center;
+  min-width: 32px;
+  height: 32px;
+  padding: $spacing-1 $spacing-2;
+  border: 1px solid $border;
+  background: $background;
+  color: $text;
+  border-radius: $radius;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+
+  &:hover:not(:disabled) {
+    background: $background-secondary;
+    border-color: $border;
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px $primary-light;
+  }
+}
+
+.paginationButtonActive {
+  background: $primary;
+  border-color: $primary;
+  color: white;
+
+  &:hover {
+    background: $primary-hover;
+    border-color: $primary-hover;
+  }
+}
+
+.paginationButtonDisabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+
+  &:hover {
+    background: $background;
+    border-color: $border;
+  }
+}
+
+// Responsive adjustments
+@include media-sm {
+  .tableHeader,
+  .tableCell {
+    padding: $spacing-3 $spacing-4;
+  }
+
+  .pagination {
+    padding: $spacing-3 $spacing-4;
+  }
+
+  .paginationButton {
+    min-width: 28px;
+    height: 28px;
+    font-size: $font-size-xs;
+  }
+}
+
+@include media-xs {
+  .tableHeader,
+  .tableCell {
+    padding: $spacing-2 $spacing-3;
+  }
+
+  .table {
+    font-size: $font-size-xs;
+  }
+
+  .pagination {
+    padding: $spacing-2 $spacing-3;
+  }
+
+  .paginationButton {
+    min-width: 24px;
+    height: 24px;
+    padding: $spacing-1;
+  }
+}

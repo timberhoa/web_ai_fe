@@ -1,0 +1,46 @@
+@import '../styles/variables';
+@import '../styles/mixins';
+
+.mainLayout {
+  display: flex;
+  min-height: 100vh;
+  background: $background;
+}
+
+.mainContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin-left: 280px;
+  min-height: 100vh;
+  transition: margin-left 0.3s ease-in-out;
+
+  @include media-md {
+    margin-left: 0;
+  }
+}
+
+.pageContent {
+  flex: 1;
+  padding-top: 64px;
+  background: $background-secondary;
+  min-height: calc(100vh - 64px);
+
+  @include media-sm {
+    padding-top: 56px;
+    min-height: calc(100vh - 56px);
+  }
+}
+
+// Responsive adjustments
+@include media-md {
+  .mainContent {
+    margin-left: 0;
+  }
+}
+
+@include media-sm {
+  .pageContent {
+    padding-top: 56px;
+  }
+}

@@ -1,0 +1,162 @@
+@use '../../styles/variables' as v;
+@use '../../styles/mixins' as m;
+
+.container {
+  @include m.flex-center;
+  min-height: 100vh;
+  background: v.$background;
+  padding: v.$spacing-4;
+}
+
+.content {
+  @include m.flex-column;
+  align-items: center;
+  text-align: center;
+  max-width: 500px;
+  width: 100%;
+}
+
+.illustration {
+  @include m.flex-center;
+  width: 200px;
+  height: 200px;
+  color: v.$text-muted;
+  margin-bottom: v.$spacing-8;
+  opacity: 0.6;
+}
+
+.text {
+  margin-bottom: v.$spacing-8;
+}
+
+.title {
+  font-size: v.$font-size-6xl;
+  font-weight: v.$font-weight-bold;
+  color: v.$primary;
+  margin: 0 0 v.$spacing-4;
+  line-height: v.$line-height-none;
+}
+
+.subtitle {
+  font-size: v.$font-size-2xl;
+  font-weight: v.$font-weight-semibold;
+  color: v.$text;
+  margin: 0 0 v.$spacing-4;
+  line-height: v.$line-height-tight;
+}
+
+.description {
+  font-size: v.$font-size-base;
+  color: v.$text-secondary;
+  margin: 0;
+  line-height: v.$line-height-relaxed;
+}
+
+.actions {
+  @include m.flex-center;
+  gap: v.$spacing-4;
+  flex-wrap: wrap;
+}
+
+.buttonPrimary {
+  @include m.button-primary;
+  padding: v.$spacing-3 v.$spacing-6;
+  font-size: v.$font-size-base;
+  font-weight: v.$font-weight-semibold;
+  border-radius: v.$radius-lg;
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: v.$shadow-lg;
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.buttonSecondary {
+  @include m.button-secondary;
+  padding: v.$spacing-3 v.$spacing-6;
+  font-size: v.$font-size-base;
+  font-weight: v.$font-weight-semibold;
+  border-radius: v.$radius-lg;
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: v.$shadow-md;
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+// Responsive adjustments
+@include m.media-sm {
+  .container {
+    padding: v.$spacing-3;
+  }
+
+  .illustration {
+    width: 150px;
+    height: 150px;
+    margin-bottom: v.$spacing-6;
+  }
+
+  .title {
+    font-size: v.$font-size-5xl;
+  }
+
+  .subtitle {
+    font-size: v.$font-size-xl;
+  }
+
+  .actions {
+    gap: v.$spacing-3;
+  }
+
+  .buttonPrimary,
+  .buttonSecondary {
+    padding: v.$spacing-2 v.$spacing-4;
+    font-size: v.$font-size-sm;
+  }
+}
+
+@include m.media-xs {
+  .container {
+    padding: v.$spacing-2;
+  }
+
+  .illustration {
+    width: 120px;
+    height: 120px;
+    margin-bottom: v.$spacing-4;
+  }
+
+  .title {
+    font-size: v.$font-size-4xl;
+  }
+
+  .subtitle {
+    font-size: v.$font-size-lg;
+  }
+
+  .description {
+    font-size: v.$font-size-sm;
+  }
+
+  .actions {
+    @include m.flex-column;
+    width: 100%;
+    gap: v.$spacing-2;
+  }
+
+  .buttonPrimary,
+  .buttonSecondary {
+    width: 100%;
+    padding: v.$spacing-3;
+  }
+}

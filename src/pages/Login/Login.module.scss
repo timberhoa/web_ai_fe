@@ -1,0 +1,266 @@
+@use '../../styles/variables' as v;
+@use '../../styles/mixins' as m;
+
+.container {
+  @include m.flex-center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, v.$primary 0%, v.$primary-hover 100%);
+  padding: v.$spacing-4;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+    animation: float 6s ease-in-out infinite;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-20px) rotate(180deg);
+  }
+}
+
+.card {
+  @include m.card;
+  width: 100%;
+  max-width: 400px;
+  background: v.$background;
+  border: 1px solid v.$border-light;
+  box-shadow: v.$shadow-xl;
+  position: relative;
+  z-index: 1;
+  @include m.fade-in(0.5s);
+}
+
+.header {
+  text-align: center;
+  margin-bottom: v.$spacing-8;
+}
+
+.logo {
+  @include m.flex-center;
+  width: 64px;
+  height: 64px;
+  background: v.$primary;
+  border-radius: v.$radius-xl;
+  color: white;
+  margin: 0 auto v.$spacing-4;
+  box-shadow: v.$shadow-lg;
+}
+
+.title {
+  font-size: v.$font-size-3xl;
+  font-weight: v.$font-weight-bold;
+  color: v.$text;
+  margin: 0 0 v.$spacing-2;
+  line-height: v.$line-height-tight;
+}
+
+.subtitle {
+  font-size: v.$font-size-base;
+  color: v.$text-secondary;
+  margin: 0;
+}
+
+.form {
+  @include m.flex-column;
+  gap: v.$spacing-6;
+}
+
+.inputGroup {
+  @include m.flex-column;
+  gap: v.$spacing-2;
+}
+
+.label {
+  font-size: v.$font-size-sm;
+  font-weight: v.$font-weight-medium;
+  color: v.$text;
+}
+
+.inputWrapper {
+  position: relative;
+  @include m.flex-center;
+}
+
+.inputIcon {
+  position: absolute;
+  left: v.$spacing-3;
+  color: v.$text-muted;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.input {
+  @include m.input-base;
+  padding-left: v.$spacing-10;
+  padding-right: v.$spacing-4;
+  width: 100%;
+  background: v.$background;
+  border: 1px solid v.$border;
+  transition: all 0.2s ease-in-out;
+
+  &:focus {
+    border-color: v.$primary;
+    box-shadow: 0 0 0 3px v.$primary-light;
+  }
+
+  &:focus + .inputIcon {
+    color: v.$primary;
+  }
+
+  &::placeholder {
+    color: v.$text-muted;
+  }
+}
+
+.checkboxGroup {
+  @include m.flex-start;
+  gap: v.$spacing-2;
+}
+
+.checkboxLabel {
+  @include m.flex-start;
+  gap: v.$spacing-2;
+  cursor: pointer;
+  user-select: none;
+}
+
+.checkbox {
+  width: 16px;
+  height: 16px;
+  accent-color: v.$primary;
+  cursor: pointer;
+}
+
+.checkboxText {
+  font-size: v.$font-size-sm;
+  color: v.$text-secondary;
+  line-height: v.$line-height-normal;
+}
+
+.button {
+  @include m.button-primary;
+  @include m.flex-center;
+  gap: v.$spacing-2;
+  width: 100%;
+  padding: v.$spacing-4;
+  font-size: v.$font-size-base;
+  font-weight: v.$font-weight-semibold;
+  border-radius: v.$radius-lg;
+  transition: all 0.2s ease-in-out;
+
+  &:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: v.$shadow-lg;
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
+  }
+
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+  }
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.footer {
+  text-align: center;
+  margin-top: v.$spacing-2;
+}
+
+.link {
+  background: none;
+  border: none;
+  color: v.$primary;
+  font-size: v.$font-size-sm;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.2s ease-in-out;
+
+  &:hover {
+    color: v.$primary-hover;
+    text-decoration: underline;
+  }
+
+  &:focus {
+    outline: none;
+    text-decoration: underline;
+  }
+}
+
+// Responsive adjustments
+@include m.media-sm {
+  .container {
+    padding: v.$spacing-3;
+  }
+
+  .card {
+    max-width: 100%;
+  }
+
+  .title {
+    font-size: v.$font-size-2xl;
+  }
+
+  .subtitle {
+    font-size: v.$font-size-sm;
+  }
+}
+
+@include m.media-xs {
+  .container {
+    padding: v.$spacing-2;
+  }
+
+  .card {
+    padding: v.$spacing-4;
+  }
+
+  .header {
+    margin-bottom: v.$spacing-6;
+  }
+
+  .logo {
+    width: 48px;
+    height: 48px;
+  }
+
+  .title {
+    font-size: v.$font-size-xl;
+  }
+
+  .form {
+    gap: v.$spacing-4;
+  }
+
+  .button {
+    padding: v.$spacing-3;
+    font-size: v.$font-size-sm;
+  }
+}

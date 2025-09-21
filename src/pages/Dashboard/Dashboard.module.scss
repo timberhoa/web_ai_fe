@@ -1,0 +1,302 @@
+@import '../../styles/variables';
+@import '../../styles/mixins';
+
+.dashboard {
+  padding: $spacing-6;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  @include media-sm {
+    padding: $spacing-4;
+  }
+
+  @include media-xs {
+    padding: $spacing-3;
+  }
+}
+
+.dashboardHeader {
+  margin-bottom: $spacing-8;
+
+  @include media-sm {
+    margin-bottom: $spacing-6;
+  }
+}
+
+.dashboardTitle {
+  font-size: $font-size-4xl;
+  font-weight: $font-weight-bold;
+  color: $text;
+  margin-bottom: $spacing-2;
+
+  @include media-sm {
+    font-size: $font-size-3xl;
+  }
+
+  @include media-xs {
+    font-size: $font-size-2xl;
+  }
+}
+
+.dashboardSubtitle {
+  font-size: $font-size-lg;
+  color: $text-secondary;
+  margin: 0;
+
+  @include media-sm {
+    font-size: $font-size-base;
+  }
+}
+
+.dashboardContent {
+  @include flex-column;
+  gap: $spacing-8;
+
+  @include media-sm {
+    gap: $spacing-6;
+  }
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: $spacing-6;
+
+  @include media-sm {
+    grid-template-columns: 1fr;
+    gap: $spacing-4;
+  }
+}
+
+.chartsSection {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: $spacing-6;
+
+  @include media-sm {
+    grid-template-columns: 1fr;
+    gap: $spacing-4;
+  }
+}
+
+.chartCard {
+  @include card;
+  @include flex-column;
+  height: 400px;
+}
+
+.chartHeader {
+  @include flex-between;
+  margin-bottom: $spacing-4;
+  flex-shrink: 0;
+}
+
+.chartTitle {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-semibold;
+  color: $text;
+  margin: 0;
+}
+
+.chartActions {
+  @include flex-center;
+  gap: $spacing-2;
+}
+
+.chartAction {
+  @include flex-center;
+  gap: $spacing-1;
+  padding: $spacing-2 $spacing-3;
+  background: none;
+  border: 1px solid $border;
+  border-radius: $radius;
+  color: $text-secondary;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    background: $background-secondary;
+    color: $text;
+    border-color: $border;
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px $primary-light;
+  }
+}
+
+.chartPlaceholder {
+  @include flex-column-center;
+  flex: 1;
+  gap: $spacing-4;
+  color: $text-muted;
+  text-align: center;
+  padding: $spacing-6;
+
+  svg {
+    color: $text-muted;
+  }
+
+  p {
+    font-size: $font-size-lg;
+    font-weight: $font-weight-medium;
+    margin: 0;
+  }
+
+  span {
+    font-size: $font-size-sm;
+    color: $text-muted;
+  }
+}
+
+.activitySection {
+  width: 100%;
+}
+
+.activityCard {
+  @include card;
+  @include flex-column;
+  height: 400px;
+}
+
+.activityHeader {
+  @include flex-between;
+  margin-bottom: $spacing-4;
+  flex-shrink: 0;
+}
+
+.activityTitle {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-semibold;
+  color: $text;
+  margin: 0;
+}
+
+.activityAction {
+  @include flex-center;
+  gap: $spacing-1;
+  padding: $spacing-2 $spacing-3;
+  background: none;
+  border: 1px solid $border;
+  border-radius: $radius;
+  color: $text-secondary;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    background: $background-secondary;
+    color: $text;
+    border-color: $border;
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px $primary-light;
+  }
+}
+
+.activityList {
+  @include flex-column;
+  gap: $spacing-4;
+  flex: 1;
+  overflow-y: auto;
+  @include custom-scrollbar;
+}
+
+.activityItem {
+  @include flex-start;
+  gap: $spacing-3;
+  padding: $spacing-3;
+  border-radius: $radius-lg;
+  transition: background-color 0.2s ease-in-out;
+
+  &:hover {
+    background: $background-secondary;
+  }
+}
+
+.activityIcon {
+  @include flex-center;
+  width: 32px;
+  height: 32px;
+  background: $primary-light;
+  color: $primary;
+  border-radius: $radius;
+  flex-shrink: 0;
+}
+
+.activityContent {
+  @include flex-column;
+  gap: $spacing-1;
+  flex: 1;
+  min-width: 0;
+}
+
+.activityText {
+  font-size: $font-size-sm;
+  color: $text;
+  margin: 0;
+  line-height: $line-height-normal;
+
+  strong {
+    font-weight: $font-weight-semibold;
+    color: $text;
+  }
+}
+
+.activityTime {
+  font-size: $font-size-xs;
+  color: $text-muted;
+}
+
+// Responsive adjustments
+@include media-sm {
+  .chartCard,
+  .activityCard {
+    height: 350px;
+  }
+
+  .chartPlaceholder {
+    padding: $spacing-4;
+    gap: $spacing-3;
+
+    p {
+      font-size: $font-size-base;
+    }
+
+    span {
+      font-size: $font-size-xs;
+    }
+  }
+}
+
+@include media-xs {
+  .chartCard,
+  .activityCard {
+    height: 300px;
+  }
+
+  .chartPlaceholder {
+    padding: $spacing-3;
+    gap: $spacing-2;
+
+    p {
+      font-size: $font-size-sm;
+    }
+  }
+
+  .activityItem {
+    padding: $spacing-2;
+    gap: $spacing-2;
+  }
+
+  .activityIcon {
+    width: 28px;
+    height: 28px;
+  }
+}

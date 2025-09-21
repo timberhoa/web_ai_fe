@@ -1,0 +1,190 @@
+@import '../../styles/variables';
+@import '../../styles/mixins';
+
+.statsCard {
+  @include card;
+  @include card-hover;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease-in-out;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: $primary;
+    transition: all 0.3s ease-in-out;
+  }
+
+  &:hover::before {
+    height: 6px;
+  }
+}
+
+.statsCardContent {
+  position: relative;
+  z-index: 1;
+}
+
+.statsCardHeader {
+  @include flex-between;
+  margin-bottom: $spacing-4;
+}
+
+.statsCardIcon {
+  @include flex-center;
+  width: 48px;
+  height: 48px;
+  border-radius: $radius-lg;
+  background: $primary-light;
+  color: $primary;
+  transition: all 0.3s ease-in-out;
+
+  .statsCard:hover & {
+    transform: scale(1.1);
+  }
+}
+
+.trend {
+  @include flex-center;
+  gap: $spacing-1;
+  padding: $spacing-1 $spacing-2;
+  border-radius: $radius;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+}
+
+.trendPositive {
+  background: $success-light;
+  color: $success;
+}
+
+.trendNegative {
+  background: $danger-light;
+  color: $danger;
+}
+
+.trendIcon {
+  flex-shrink: 0;
+}
+
+.trendValue {
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+}
+
+.statsCardBody {
+  @include flex-column;
+  gap: $spacing-2;
+}
+
+.statsCardValue {
+  font-size: $font-size-3xl;
+  font-weight: $font-weight-bold;
+  color: $text;
+  line-height: $line-height-tight;
+}
+
+.statsCardTitle {
+  font-size: $font-size-sm;
+  color: $text-secondary;
+  font-weight: $font-weight-medium;
+}
+
+// Color variants
+.statsCard--primary {
+  &::before {
+    background: $primary;
+  }
+
+  .statsCardIcon {
+    background: $primary-light;
+    color: $primary;
+  }
+}
+
+.statsCard--success {
+  &::before {
+    background: $success;
+  }
+
+  .statsCardIcon {
+    background: $success-light;
+    color: $success;
+  }
+}
+
+.statsCard--warning {
+  &::before {
+    background: $warning;
+  }
+
+  .statsCardIcon {
+    background: $warning-light;
+    color: $warning;
+  }
+}
+
+.statsCard--danger {
+  &::before {
+    background: $danger;
+  }
+
+  .statsCardIcon {
+    background: $danger-light;
+    color: $danger;
+  }
+}
+
+.statsCard--info {
+  &::before {
+    background: $info;
+  }
+
+  .statsCardIcon {
+    background: $info-light;
+    color: $info;
+  }
+}
+
+// Responsive adjustments
+@include media-sm {
+  .statsCard {
+    padding: $spacing-4;
+  }
+
+  .statsCardIcon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .statsCardValue {
+    font-size: $font-size-2xl;
+  }
+
+  .statsCardTitle {
+    font-size: $font-size-xs;
+  }
+}
+
+@include media-xs {
+  .statsCard {
+    padding: $spacing-3;
+  }
+
+  .statsCardHeader {
+    margin-bottom: $spacing-3;
+  }
+
+  .statsCardIcon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .statsCardValue {
+    font-size: $font-size-xl;
+  }
+}

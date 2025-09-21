@@ -1,0 +1,331 @@
+@import '../../styles/variables';
+@import '../../styles/mixins';
+
+.attendance {
+  padding: $spacing-6;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  @include media-sm {
+    padding: $spacing-4;
+  }
+
+  @include media-xs {
+    padding: $spacing-3;
+  }
+}
+
+.attendanceHeader {
+  margin-bottom: $spacing-8;
+  text-align: center;
+
+  @include media-sm {
+    margin-bottom: $spacing-6;
+  }
+}
+
+.title {
+  font-size: $font-size-4xl;
+  font-weight: $font-weight-bold;
+  color: $text;
+  margin-bottom: $spacing-2;
+
+  @include media-sm {
+    font-size: $font-size-3xl;
+  }
+
+  @include media-xs {
+    font-size: $font-size-2xl;
+  }
+}
+
+.subtitle {
+  font-size: $font-size-lg;
+  color: $text-secondary;
+  margin: 0;
+
+  @include media-sm {
+    font-size: $font-size-base;
+  }
+}
+
+.attendanceContent {
+  @include flex-column;
+  gap: $spacing-8;
+
+  @include media-lg {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  @include media-sm {
+    gap: $spacing-6;
+  }
+}
+
+.cameraSection {
+  flex: 1;
+  @include flex-center;
+}
+
+.instructionsSection {
+  @include flex-column;
+  gap: $spacing-6;
+  max-width: 400px;
+
+  @include media-lg {
+    flex: 0 0 400px;
+  }
+
+  @include media-sm {
+    max-width: none;
+  }
+}
+
+.instructionsCard,
+.quickActionsCard {
+  @include card;
+  @include flex-column;
+  gap: $spacing-4;
+}
+
+.instructionsTitle,
+.quickActionsTitle {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-semibold;
+  color: $text;
+  margin: 0;
+}
+
+.instructionsList {
+  @include flex-column;
+  gap: $spacing-4;
+}
+
+.instructionItem {
+  @include flex-start;
+  gap: $spacing-3;
+}
+
+.instructionNumber {
+  @include flex-center;
+  width: 32px;
+  height: 32px;
+  background: $primary;
+  color: white;
+  border-radius: $radius-full;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-bold;
+  flex-shrink: 0;
+}
+
+.instructionContent {
+  @include flex-column;
+  gap: $spacing-1;
+  flex: 1;
+}
+
+.instructionContent h4 {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: $text;
+  margin: 0;
+}
+
+.instructionContent p {
+  font-size: $font-size-xs;
+  color: $text-secondary;
+  margin: 0;
+  line-height: $line-height-normal;
+}
+
+.quickActionsList {
+  @include flex-column;
+  gap: $spacing-3;
+}
+
+.quickActionButton {
+  @include flex-center;
+  gap: $spacing-2;
+  padding: $spacing-3 $spacing-4;
+  background: $background;
+  border: 1px solid $border;
+  border-radius: $radius-lg;
+  color: $text;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  text-align: left;
+
+  &:hover:not(:disabled) {
+    background: $background-secondary;
+    border-color: $primary;
+    color: $primary;
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px $primary-light;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+// Success Modal Styles
+.successContent {
+  @include flex-column-center;
+  gap: $spacing-6;
+  text-align: center;
+  padding: $spacing-4;
+}
+
+.successIcon {
+  @include flex-center;
+  width: 80px;
+  height: 80px;
+  background: $success-light;
+  color: $success;
+  border-radius: $radius-full;
+  margin: 0 auto;
+}
+
+.successInfo {
+  @include flex-column;
+  gap: $spacing-3;
+}
+
+.successTitle {
+  font-size: $font-size-2xl;
+  font-weight: $font-weight-bold;
+  color: $text;
+  margin: 0;
+}
+
+.studentInfo {
+  @include flex-column;
+  gap: $spacing-2;
+  padding: $spacing-4;
+  background: $background-secondary;
+  border-radius: $radius-lg;
+  border: 1px solid $border-light;
+}
+
+.studentName {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $text;
+  margin: 0;
+}
+
+.studentClass {
+  font-size: $font-size-base;
+  color: $text-secondary;
+  margin: 0;
+}
+
+.scanTime {
+  font-size: $font-size-sm;
+  color: $text-muted;
+  margin: 0;
+}
+
+.confidence {
+  font-size: $font-size-sm;
+  color: $success;
+  font-weight: $font-weight-medium;
+  margin: 0;
+}
+
+.successActions {
+  @include flex-center;
+  gap: $spacing-3;
+  width: 100%;
+
+  @include media-sm {
+    flex-direction: column;
+  }
+}
+
+.closeButton {
+  @include button-secondary;
+  padding: $spacing-3 $spacing-6;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  flex: 1;
+
+  @include media-sm {
+    width: 100%;
+  }
+}
+
+.continueButton {
+  @include button-primary;
+  padding: $spacing-3 $spacing-6;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  flex: 1;
+
+  @include media-sm {
+    width: 100%;
+  }
+}
+
+// Responsive adjustments
+@include media-sm {
+  .attendanceContent {
+    @include flex-column;
+  }
+
+  .instructionsSection {
+    max-width: none;
+  }
+
+  .instructionItem {
+    gap: $spacing-2;
+  }
+
+  .instructionNumber {
+    width: 28px;
+    height: 28px;
+    font-size: $font-size-xs;
+  }
+
+  .quickActionButton {
+    padding: $spacing-2 $spacing-3;
+    font-size: $font-size-xs;
+  }
+}
+
+@include media-xs {
+  .successContent {
+    padding: $spacing-2;
+    gap: $spacing-4;
+  }
+
+  .successIcon {
+    width: 60px;
+    height: 60px;
+  }
+
+  .successTitle {
+    font-size: $font-size-xl;
+  }
+
+  .studentInfo {
+    padding: $spacing-3;
+  }
+
+  .studentName {
+    font-size: $font-size-base;
+  }
+
+  .studentClass,
+  .scanTime,
+  .confidence {
+    font-size: $font-size-xs;
+  }
+}
