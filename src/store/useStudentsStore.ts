@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { studentsApi, type StudentDTO } from '../services/students';
 
 export type Student = {
   id: string;
@@ -21,6 +22,12 @@ type StudentsActions = {
   addStudent: (s: Student) => void;
   updateStudent: (id: string, patch: Partial<Student>) => void;
   deleteStudent: (id: string) => void;
+
+  // CRUD via API
+  fetchStudents: () => Promise<void>;
+  createStudent: (payload: Omit<Student, 'id'>) => Promise<void>;
+  saveStudent: (id: string, patch: Partial<Student>) => Promise<void>;
+  removeStudent: (id: string) => Promise<void>;
 
   // Filter
   setSearchQuery: (query: string) => void;
@@ -56,7 +63,7 @@ export const useStudentsStore = create<StudentsStore>()(
       isLoading: false,
       error: null,
 
-      // actions
+      // actions (local)
       addStudent: (s) =>
         set((st) => ({ students: [...st.students, s] })),
 
@@ -71,6 +78,51 @@ export const useStudentsStore = create<StudentsStore>()(
         set((st) => ({
           students: st.students.filter((it) => it.id !== id),
         })),
+
+      // actions (API)
+      fetchStudents: async () => {
+        set({ isLoading: true, error: null })
+        try {
+          const data = await studentsApi.list()
+          set({ students: data as Student[], isLoading: false })
+        } catch (e: any) {
+          // keep current mock on failure
+          set({ isLoading: false, error: e?.message ?? 'Failed to load students' })
+        }
+      },
+
+      createStudent: async (payload) => {
+        set({ isLoading: true, error: null })
+        try {
+          const created = await studentsApi.create(payload as Omit<StudentDTO, 'id'>)
+          set((st) => ({ students: [...st.students, created as Student], isLoading: false }))
+        } catch (e: any) {
+          set({ isLoading: false, error: e?.message ?? 'Failed to create student' })
+        }
+      },
+
+      saveStudent: async (id, patch) => {
+        set({ isLoading: true, error: null })
+        try {
+          const updated = await studentsApi.update(id, patch)
+          set((st) => ({
+            students: st.students.map((it) => (it.id === id ? { ...it, ...(updated as any) } : it)),
+            isLoading: false,
+          }))
+        } catch (e: any) {
+          set({ isLoading: false, error: e?.message ?? 'Failed to update student' })
+        }
+      },
+
+      removeStudent: async (id) => {
+        set({ isLoading: true, error: null })
+        try {
+          await studentsApi.remove(id)
+          set((st) => ({ students: st.students.filter((it) => it.id !== id), isLoading: false }))
+        } catch (e: any) {
+          set({ isLoading: false, error: e?.message ?? 'Failed to delete student' })
+        }
+      },
 
       setSearchQuery: (query) => set({ searchQuery: query }),
       setSelectedClass: (selectedClass) => set({ selectedClass }),

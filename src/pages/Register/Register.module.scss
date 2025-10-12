@@ -1,0 +1,165 @@
+@use '../../styles/variables' as v;
+@use '../../styles/mixins' as m;
+
+.container {
+  @include m.flex-center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, v.$primary 0%, v.$primary-hover 100%);
+  padding: v.$spacing-6;
+}
+
+.card {
+  @include m.card;
+  width: 100%;
+  max-width: 920px;
+  background: v.$background;
+  border: 1px solid v.$border-light;
+  box-shadow: v.$shadow-xl;
+  overflow: hidden;
+}
+
+.header {
+  padding-bottom: v.$spacing-6;
+  border-bottom: 1px solid v.$border-light;
+  margin-bottom: v.$spacing-6;
+}
+
+.logoTitleRow {
+  @include m.flex-between;
+  gap: v.$spacing-4;
+}
+
+.logo {
+  @include m.flex-center;
+  width: 56px;
+  height: 56px;
+  background: v.$primary;
+  color: #fff;
+  border-radius: v.$radius-xl;
+  box-shadow: v.$shadow-lg;
+}
+
+.titleBlock {
+  @include m.flex-column;
+}
+
+.title {
+  margin: 0 0 v.$spacing-1 0;
+  color: v.$text;
+  font-size: v.$font-size-3xl;
+  font-weight: v.$font-weight-bold;
+  line-height: v.$line-height-tight;
+}
+
+.subtitle {
+  margin: 0;
+  color: v.$text-secondary;
+  font-size: v.$font-size-base;
+}
+
+.form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: v.$spacing-6 v.$spacing-6;
+}
+
+.fullRow {
+  grid-column: 1 / -1;
+}
+
+.inputGroup {
+  @include m.flex-column;
+  gap: v.$spacing-2;
+}
+
+.labelRow {
+  @include m.flex-between;
+}
+
+.label {
+  font-size: v.$font-size-sm;
+  font-weight: v.$font-weight-medium;
+  color: v.$text;
+}
+
+.helper {
+  font-size: v.$font-size-xs;
+  color: v.$text-muted;
+}
+
+.error {
+  font-size: v.$font-size-xs;
+  color: v.$danger;
+}
+
+.inputWrapper {
+  position: relative;
+}
+
+.inputIcon {
+  position: absolute;
+  left: v.$spacing-3;
+  top: 50%;
+  transform: translateY(-50%);
+  color: v.$text-muted;
+  pointer-events: none;
+}
+
+.input {
+  @include m.input-base;
+  padding-left: v.$spacing-10;
+}
+
+.select {
+  @include m.input-base;
+  appearance: none;
+  padding-left: v.$spacing-10;
+  padding-right: v.$spacing-10;
+  background-image: linear-gradient(45deg, transparent 50%, v.$text-muted 50%),
+    linear-gradient(135deg, v.$text-muted 50%, transparent 50%);
+  background-position: calc(100% - 20px) calc(50% - 3px), calc(100% - 15px) calc(50% + 3px);
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+}
+
+.passwordToggle {
+  position: absolute;
+  right: v.$spacing-2;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: v.$text-muted;
+  cursor: pointer;
+}
+
+.actions {
+  @include m.flex-between;
+  gap: v.$spacing-4;
+}
+
+.button {
+  @include m.button-primary;
+  width: 100%;
+  padding: v.$spacing-4;
+  font-size: v.$font-size-base;
+  border-radius: v.$radius-lg;
+}
+
+.footer {
+  text-align: center;
+  margin-top: v.$spacing-2;
+}
+
+.link {
+  color: v.$primary;
+  text-decoration: none;
+  &:hover { text-decoration: underline; }
+}
+
+@include m.media-sm {
+  .container { padding: v.$spacing-4; }
+  .card { padding: v.$spacing-4; }
+  .form { grid-template-columns: 1fr; }
+}
+

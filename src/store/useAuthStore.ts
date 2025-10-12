@@ -1,36 +1,61 @@
-import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
-
-type User = { id: string; email: string } | null
+import { create } from "zustand";
+import { persist, createJSONStorage } from "zustand/middleware";
+import {
+  authApi,
+  type LoginRequest,
+  type RegisterRequest,
+  type User,
+  type Role,
+} from "../services/auth";
 
 type AuthState = {
-    isAuthed: boolean
-    user: User
-    login: (email: string, password: string) => Promise<void>
-    logout: () => void
-}
+  token: string | null;
+  isAuthed: boolean;
+  user: User | null;
+  login: (username: string, password: string) => Promise<void>;
+  register: (payload: RegisterRequest) => Promise<void>;
+  logout: () => void;
+  setRole: (role: Role) => void;
+};
 
 export const useAuthStore = create<AuthState>()(
-    persist(
-        (set) => ({
-            isAuthed: false,
-            user: null,
+  persist(
+    (set, get) => ({
+      token: null,
+      isAuthed: false,
+      user: null,
 
-            // Demo login: bạn thay validate thật ở đây (gọi API, v.v.)
-            async login(email, password) {
-                // ví dụ demo: đúng nếu không rỗng, hoặc hardcode:
-                // if (email === 'admin@demo.com' && password === '123456') { ... }
-                if (email && password) {
-                    set({ isAuthed: true, user: { id: '1', email } })
-                } else {
-                    throw new Error('Email/Mật khẩu không hợp lệ')
-                }
-            },
+      async login(username, password) {
+        const res = await authApi.login({ username, password } as LoginRequest);
+        set({ token: res.token, user: res.user, isAuthed: true });
+      },
 
-            logout() {
-                set({ isAuthed: false, user: null })
-            },
-        }),
-        { name: 'auth-store' }
-    )
-)
+      setRole: (role) => {
+        const current = get().user;
+        if (current) {
+          set({ user: { ...current, role } as User });
+        }
+      },
+
+      async register(payload) {
+        const res = await authApi.register(payload);
+        set({ token: res.token, user: res.user, isAuthed: true });
+      },
+
+      logout() {
+        set({ token: null, isAuthed: false, user: null });
+        // Storage is managed by persist; removing key is optional
+        try { localStorage.removeItem("auth-store"); } catch {}
+      },
+    }),
+    {
+      name: "auth-store",
+      storage: createJSONStorage(() => localStorage),
+      partialize: (state) => ({
+        token: state.token,
+        user: state.user,
+        isAuthed: state.isAuthed,
+      }),
+    }
+  )
+);

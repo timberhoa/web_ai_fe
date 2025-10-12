@@ -3,21 +3,14 @@
 
 .container {
   @include m.flex-center;
-  min-height: 100vh;
+  height: 100vh;
   background: linear-gradient(135deg, v.$primary 0%, v.$primary-hover 100%);
   padding: v.$spacing-4;
   position: relative;
   overflow: hidden;
 
   &::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
-    animation: float 6s ease-in-out infinite;
+    display: none;
   }
 }
 
@@ -33,7 +26,7 @@
 .card {
   @include m.card;
   width: 100%;
-  max-width: 400px;
+  max-width: 480px;
   background: v.$background;
   border: 1px solid v.$border-light;
   box-shadow: v.$shadow-xl;
@@ -73,7 +66,23 @@
 }
 
 .form {
+  display: flex;
+  flex-direction: row;
   @include m.flex-column;
+  gap: v.$spacing-6;
+}
+
+.formGrid {
+  display: grid;
+  flex-direction: row;
+  grid-template-columns: repeat(2, minmax(0, 1fr)); 
+  grid-template-rows: repeat(3, auto);
+  gap: v.$spacing-6;
+}
+
+.formCol {
+  display: flex;
+  flex-direction: column;
   gap: v.$spacing-6;
 }
 
@@ -264,3 +273,6 @@
     font-size: v.$font-size-sm;
   }
 }
+  .formGrid {
+    grid-template-columns: 1fr;
+  }

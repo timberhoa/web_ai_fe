@@ -77,16 +77,16 @@ const DataTable = <T extends Record<string, any>>({
 
   const totalPages = Math.ceil(sortedData.length / pageSize);
 
-  const handleSort = (key: string) => {
+  const handleSort = (key: keyof T) => {
     setSortConfig((prev) => {
       if (prev.key === key) {
         if (prev.direction === 'asc') {
-          return { key, direction: 'desc' };
+          return { key, direction: 'desc' } as typeof prev;
         } else if (prev.direction === 'desc') {
-          return { key: null, direction: null };
+          return { key: null, direction: null } as typeof prev;
         }
       }
-      return { key, direction: 'asc' };
+      return { key, direction: 'asc' } as typeof prev;
     });
   };
 
@@ -99,7 +99,7 @@ const DataTable = <T extends Record<string, any>>({
     setCurrentPage(1);
   };
 
-  const getSortIcon = (key: string) => {
+  const getSortIcon = (key: keyof T) => {
     if (sortConfig.key !== key) {
       return (
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -152,13 +152,13 @@ const DataTable = <T extends Record<string, any>>({
                     width: column.width,
                     textAlign: column.align || 'left',
                   }}
-                  onClick={() => column.sortable && column.dataIndex && handleSort(String(column.dataIndex))}
+                  onClick={() => column.sortable && column.dataIndex && handleSort(column.dataIndex as keyof T)}
                 >
                   <div className={styles.tableHeaderContent}>
                     <span className={styles.tableHeaderTitle}>{column.title}</span>
                     {column.sortable && column.dataIndex && (
                       <span className={styles.tableHeaderSort}>
-                        {getSortIcon(String(column.dataIndex))}
+                        {getSortIcon(column.dataIndex as keyof T)}
                       </span>
                     )}
                   </div>

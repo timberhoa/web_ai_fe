@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { useAuthStore } from '../../store/useAuthStore';
+import type { Role } from '../../services/auth';
 import styles from './Topbar.module.scss';
 
 interface TopbarProps {
@@ -17,6 +19,9 @@ const Topbar: React.FC<TopbarProps> = ({
   showMenuToggle = true,
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
+  const user = useAuthStore((s) => s.user);
+  const logout = useAuthStore((s) => s.logout);
+  const setRole = useAuthStore((s) => s.setRole);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const query = e.target.value;
@@ -46,7 +51,7 @@ const Topbar: React.FC<TopbarProps> = ({
             </button>
           )}
           
-          <h1 className={styles.title}>{title}</h1>
+          {/* <h1 className={styles.title}>{title}</h1> */}
         </div>
 
         {/* Right side */}
@@ -93,24 +98,31 @@ const Topbar: React.FC<TopbarProps> = ({
 
           {/* User menu */}
           <div className={styles.userMenu}>
-            <button className={styles.userButton} aria-label="User menu">
-              <div className={styles.userAvatar}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
+            <div className={styles.userPanel}>
+              <div className={styles.userButton} aria-label="User menu">
+                <div className={styles.userAvatar}>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </div>
+                <span className={styles.userName}>{user?.name || user?.email || 'User'}</span>
               </div>
-              <span className={styles.userName}>Admin</span>
-              <svg 
-                className={styles.userChevron} 
-                width="16" 
-                height="16" 
-                viewBox="0 0 24 24" 
-                fill="none" 
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path d="M6 9L12 15L18 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </button>
+              <div className={styles.userControls}>
+                {/* <select
+                  className={styles.userSelect}
+                  value={(user?.role || 'ADMIN') as Role}
+                  onChange={(e) => setRole(e.target.value as Role)}
+                  aria-label="Select role"
+                >
+                  <option value="ADMIN">ADMIN</option>
+                  <option value="TEACHER">TEACHER</option>
+                  <option value="STUDENT">STUDENT</option>
+                </select> */}
+                <button className={styles.logoutButton} onClick={logout}>
+                  Logout
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>

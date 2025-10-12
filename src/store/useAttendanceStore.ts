@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
+import { attendanceApi, type AttendanceRecordDTO } from '../services/attendance';
 
 export interface AttendanceRecord {
   id: string;
@@ -25,6 +26,7 @@ interface AttendanceActions {
   markAttendance: (studentId: string, studentName: string, studentClass: string, method: 'face_recognition' | 'manual') => void;
   startScanning: () => void;
   stopScanning: () => void;
+  fetchToday: () => Promise<void>;
   
   // Data Management
   getTodayRecords: () => AttendanceRecord[];
@@ -131,6 +133,30 @@ export const useAttendanceStore = create<AttendanceStore>()(
           todayRecords: [...state.todayRecords, newRecord],
           lastScanTime: newRecord.timestamp,
         }));
+
+        // Try to persist via API (fire and forget)
+        attendanceApi
+          .mark({ studentId, method })
+          .catch(() => void 0)
+      },
+
+      fetchToday: async () => {
+        set({ isLoading: true, error: null })
+        try {
+          const data = await attendanceApi.today()
+          const mapped = (data as AttendanceRecordDTO[]).map((r) => ({
+            id: r.id,
+            studentId: r.studentId,
+            studentName: r.studentName,
+            studentClass: r.studentClass,
+            timestamp: r.timestamp,
+            method: r.method,
+            status: r.status,
+          })) as AttendanceRecord[]
+          set({ todayRecords: mapped, isLoading: false })
+        } catch (e: any) {
+          set({ isLoading: false, error: e?.message ?? 'Failed to load attendance' })
+        }
       },
 
       startScanning: () => {

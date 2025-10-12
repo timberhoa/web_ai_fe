@@ -7,12 +7,12 @@
   background: $background;
 }
 
-.mainContent {
+.shell {
   flex: 1;
   display: flex;
   flex-direction: column;
-  margin-left: 280px;
   min-height: 100vh;
+  margin-left: 280px;
   transition: margin-left 0.3s ease-in-out;
 
   @include media-md {
@@ -20,27 +20,52 @@
   }
 }
 
-.pageContent {
+.container {
   flex: 1;
-  padding-top: 64px;
+  display: flex;
+  flex-direction: column;
   background: $background-secondary;
-  min-height: calc(100vh - 64px);
+  padding-top: 99px;
 
   @include media-sm {
     padding-top: 56px;
-    min-height: calc(100vh - 56px);
   }
 }
 
-// Responsive adjustments
-@include media-md {
-  .mainContent {
-    margin-left: 0;
+.breadcrumbs {
+  max-width: 1280px;
+  width: 100%;
+  margin: 0 auto;
+  padding: $spacing-4 $spacing-6 0;
+  color: $text-secondary;
+  font-size: $font-size-sm;
+
+  @include media-sm {
+    padding: $spacing-3 $spacing-4 0;
   }
 }
 
-@include media-sm {
-  .pageContent {
-    padding-top: 56px;
+.crumbHome { opacity: 0.9; }
+.crumbSep { margin: 0 $spacing-2; opacity: 0.6; }
+.crumbCurrent { color: $text; }
+
+.page {
+  flex: 1;
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: $spacing-4 $spacing-6 $spacing-6;
+
+  @include media-sm {
+    padding: $spacing-3 $spacing-4 $spacing-4;
   }
+}
+
+.footer {
+  max-width: 1280px;
+  width: 100%;
+  margin: 0 auto;
+  padding: $spacing-4 $spacing-6 $spacing-8;
+  color: $text-secondary;
+  font-size: $font-size-sm;
 }
