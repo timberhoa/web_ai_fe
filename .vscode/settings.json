@@ -12,7 +12,8 @@
       "driver": "MySQL",
       "name": "Web AI MySQL",
       "database": "web",
-      "username": "root"
+      "username": "root",
+      "askForPassword": true
     }
   ]
 }

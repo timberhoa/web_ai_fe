@@ -25,6 +25,16 @@ const MainLayout: React.FC = () => {
   const pageTitle = useMemo(() => {
     const path = location.pathname
     if (path === '/') return 'Dashboard'
+    if (path.startsWith('/users')) return 'Quản lý tài khoản'
+    if (path.startsWith('/lecturers')) return 'Giảng viên'
+    if (path.startsWith('/classes')) return 'Lớp học'
+    if (path.startsWith('/courses')) return 'Môn học'
+    if (path.startsWith('/schedule')) return 'Lịch/Session'
+    if (path.startsWith('/attendance/monitor')) return 'Giám sát điểm danh'
+    if (path.startsWith('/attendance/review')) return 'Rà soát điểm danh'
+    if (path.startsWith('/faces')) return 'Cài đặt FR'
+    if (path.startsWith('/reports')) return 'Báo cáo'
+    if (path.startsWith('/audit-logs')) return 'Nhật ký hoạt động'
     if (path.startsWith('/students')) return 'Quản lý sinh viên'
     if (path.startsWith('/attendance/today')) return 'Điểm danh hôm nay'
     if (path.startsWith('/attendance')) return 'Điểm danh'
@@ -175,6 +185,36 @@ const MainLayout: React.FC = () => {
     // ADMIN default
     return [
       dashboard,
+      { id: 'users', label: 'Tài khoản', path: '/users', icon: (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 12C14.2091 12 16 10.2091 16 8C16 5.79086 14.2091 4 12 4C9.79086 4 8 5.79086 8 8C8 10.2091 9.79086 12 12 12Z" fill="currentColor"/><path d="M4 20C4 16.6863 6.68629 14 10 14H14C17.3137 14 20 16.6863 20 20V21H4V20Z" fill="currentColor"/></svg>
+      ) },
+      { id: 'lecturers', label: 'Giảng viên', path: '/lecturers', icon: (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 12C14.2091 12 16 10.2091 16 8C16 5.79086 14.2091 4 12 4C9.79086 4 8 5.79086 8 8C8 10.2091 9.79086 12 12 12Z" fill="currentColor"/><path d="M4 21C4 16.5817 7.58172 13 12 13C16.4183 13 20 16.5817 20 21H4Z" fill="currentColor"/></svg>
+      ) },
+      { id: 'classes', label: 'Lớp học', path: '/classes', icon: (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 7L12 3L21 7L12 11L3 7Z" fill="currentColor"/><path d="M3 12L12 16L21 12V17L12 21L3 17V12Z" fill="currentColor"/></svg>
+      ) },
+      { id: 'courses', label: 'Môn học', path: '/courses', icon: (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 6H20V18H4V6Z" fill="currentColor"/><path d="M8 10H16V14H8V10Z" fill="white"/></svg>
+      ) },
+      { id: 'schedule', label: 'Lịch/Session', path: '/schedule', icon: (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 11H17V13H7V11ZM7 7H17V9H7V7ZM5 3H19C20.1 3 21 3.9 21 5V19C21 20.1 20.1 21 19 21H5C3.9 21 3 20.1 3 19V5C3 3.9 3.9 3 5 3Z" fill="currentColor"/></svg>
+      ) },
+      { id: 'attendance-monitor', label: 'Giám sát', path: '/attendance/monitor', icon: (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 5H21V19H3V5Z" fill="currentColor"/><path d="M8 21H16V19H8V21Z" fill="currentColor"/></svg>
+      ) },
+      { id: 'attendance-review', label: 'Rà soát', path: '/attendance/review', icon: (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 3H21V21H3V3Z" fill="currentColor"/><path d="M7 13H17V15H7V13ZM7 9H17V11H7V9Z" fill="white"/></svg>
+      ) },
+      { id: 'faces', label: 'Cài đặt FR', path: '/faces', icon: (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 5V3H9V5H5V9H3V5ZM15 3H21V5H19V9H17V5H15V3ZM19 15H21V21H15V19H19V15ZM5 19H9V21H3V15H5V19Z" fill="currentColor"/></svg>
+      ) },
+      { id: 'reports', label: 'Báo cáo', path: '/reports', icon: (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 13H11V3H3V13ZM3 21H11V15H3V21ZM13 21H21V11H13V21ZM13 3V9H21V3H13Z" fill="currentColor"/></svg>
+      ) },
+      { id: 'audit-logs', label: 'Audit logs', path: '/audit-logs', icon: (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 3H19V21H5V3Z" fill="currentColor"/><path d="M8 7H16V9H8V7ZM8 11H16V13H8V11ZM8 15H13V17H8V15Z" fill="white"/></svg>
+      ) },
       {
         id: 'students',
         label: 'Sinh viên',
@@ -241,4 +281,3 @@ const MainLayout: React.FC = () => {
 }
 
 export default MainLayout
-
