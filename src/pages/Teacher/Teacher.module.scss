@@ -1,0 +1,54 @@
+@import '../../styles/variables';
+@import '../../styles/mixins';
+
+.page {
+  @include flex-column;
+  gap: $spacing-4;
+}
+
+.title {
+  font-size: $font-size-2xl;
+  font-weight: $font-weight-semibold;
+  margin: 0 0 $spacing-2 0;
+  color: $text;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-2;
+  margin: $spacing-2 0;
+
+  input,
+  select {
+    @include input-base;
+    width: auto;
+    min-width: 180px;
+  }
+
+  button {
+    @include button-secondary;
+  }
+}
+
+.actions {
+  display: flex;
+  gap: $spacing-2;
+  margin-top: $spacing-2;
+
+  .primary { @include button-primary; }
+  .danger { @include button-danger; }
+}
+
+.primaryButton { @include button-primary; }
+.dangerButton { @include button-danger; }
+
+.card { @include card; }
+.tableWrap { width: 100%; overflow: auto; @include custom-scrollbar; }
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  thead tr { text-align: left; border-bottom: 1px solid $border-light; }
+  tbody tr { border-bottom: 1px solid $border-light; }
+  th, td { padding: $spacing-2 $spacing-3; }
+}

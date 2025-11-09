@@ -1,14 +1,21 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
+import {
+  attendanceApi,
+  type AttendanceRecordDTO,
+  type AttendanceMethod,
+  type AttendanceStatus,
+} from '../services/attendance';
 
 export interface AttendanceRecord {
   id: string;
   studentId: string;
   studentName: string;
-  studentClass: string;
+  studentClass?: string;
   timestamp: string;
-  method: 'face_recognition' | 'manual';
-  status: 'success' | 'failed';
+  method?: AttendanceMethod | 'face_recognition' | 'manual';
+  status: AttendanceStatus;
+  note?: string;
 }
 
 interface AttendanceState {
@@ -22,9 +29,15 @@ interface AttendanceState {
 
 interface AttendanceActions {
   // Attendance Operations
-  markAttendance: (studentId: string, studentName: string, studentClass: string, method: 'face_recognition' | 'manual') => void;
+  markAttendance: (
+    studentId: string,
+    studentName: string,
+    studentClass: string,
+    method: AttendanceMethod | 'face_recognition' | 'manual'
+  ) => void;
   startScanning: () => void;
   stopScanning: () => void;
+  fetchToday: () => Promise<void>;
   
   // Data Management
   getTodayRecords: () => AttendanceRecord[];
@@ -50,56 +63,56 @@ const mockTodayRecords: AttendanceRecord[] = [
   {
     id: '1',
     studentId: '1',
-    studentName: 'Nguyễn Văn An',
+    studentName: 'Nguy??.n V??n An',
     studentClass: 'CNTT-01',
     timestamp: '2024-01-21T08:30:00Z',
-    method: 'face_recognition',
-    status: 'success',
+    method: 'FACE_RECOGNITION',
+    status: 'PRESENT',
   },
   {
     id: '2',
     studentId: '2',
-    studentName: 'Trần Thị Bình',
+    studentName: 'Tr??n Th??< BA?nh',
     studentClass: 'CNTT-01',
     timestamp: '2024-01-21T08:32:00Z',
-    method: 'face_recognition',
-    status: 'success',
+    method: 'FACE_RECOGNITION',
+    status: 'PRESENT',
   },
   {
     id: '3',
     studentId: '4',
-    studentName: 'Phạm Thị Dung',
+    studentName: 'Ph???m Th??< Dung',
     studentClass: 'CNTT-02',
     timestamp: '2024-01-21T08:35:00Z',
-    method: 'manual',
-    status: 'success',
+    method: 'MANUAL',
+    status: 'LATE',
   },
   {
     id: '4',
     studentId: '5',
-    studentName: 'Hoàng Văn Em',
+    studentName: 'HoA?ng V??n Em',
     studentClass: 'CNTT-03',
     timestamp: '2024-01-21T08:40:00Z',
-    method: 'face_recognition',
-    status: 'success',
+    method: 'FACE_RECOGNITION',
+    status: 'PRESENT',
   },
   {
     id: '5',
     studentId: '7',
-    studentName: 'Đặng Văn Giang',
+    studentName: '?????ng V??n Giang',
     studentClass: 'CNTT-01',
     timestamp: '2024-01-21T08:45:00Z',
-    method: 'face_recognition',
-    status: 'success',
+    method: 'FACE_RECOGNITION',
+    status: 'EXCUSED',
   },
   {
     id: '6',
     studentId: '8',
-    studentName: 'Bùi Thị Hoa',
+    studentName: 'BA1i Th??< Hoa',
     studentClass: 'CNTT-02',
     timestamp: '2024-01-21T08:50:00Z',
-    method: 'manual',
-    status: 'success',
+    method: 'MANUAL',
+    status: 'ABSENT',
   },
 ];
 
@@ -116,14 +129,21 @@ export const useAttendanceStore = create<AttendanceStore>()(
 
       // Attendance Operations
       markAttendance: (studentId, studentName, studentClass, method) => {
+        const normalizedMethod =
+          method === 'face_recognition'
+            ? 'FACE_RECOGNITION'
+            : method === 'manual'
+            ? 'MANUAL'
+            : method;
+
         const newRecord: AttendanceRecord = {
           id: Date.now().toString(),
           studentId,
           studentName,
           studentClass,
           timestamp: new Date().toISOString(),
-          method,
-          status: 'success',
+          method: normalizedMethod,
+          status: 'PRESENT',
         };
 
         set((state) => ({
@@ -131,6 +151,26 @@ export const useAttendanceStore = create<AttendanceStore>()(
           todayRecords: [...state.todayRecords, newRecord],
           lastScanTime: newRecord.timestamp,
         }));
+      },
+
+      fetchToday: async () => {
+        set({ isLoading: true, error: null })
+        try {
+          const data = await attendanceApi.today()
+          const mapped = (data as AttendanceRecordDTO[]).map((r) => ({
+            id: r.id,
+            studentId: r.studentId,
+            studentName: r.studentName,
+            studentClass: r.studentClass,
+            timestamp: r.timestamp ?? r.markedAt ?? new Date().toISOString(),
+            method: (r.method ?? 'FACE_RECOGNITION') as AttendanceRecord['method'],
+            status: r.status,
+            note: r.note,
+          })) as AttendanceRecord[]
+          set({ todayRecords: mapped, isLoading: false })
+        } catch (e: any) {
+          set({ isLoading: false, error: e?.message ?? 'Failed to load attendance' })
+        }
       },
 
       startScanning: () => {
@@ -165,24 +205,20 @@ export const useAttendanceStore = create<AttendanceStore>()(
       // Statistics
       getTodayAttendanceCount: () => {
         const state = get();
-        return state.todayRecords.length;
+        return state.todayRecords.filter((record) => record.status !== 'ABSENT').length;
       },
 
       getAttendanceRate: () => {
         const state = get();
-        // This would typically compare with total students, but for demo purposes
-        // we'll use a mock total of 8 students
         const totalStudents = 8;
-        const attendedToday = state.todayRecords.length;
+        const attendedToday = state.todayRecords.filter((record) => record.status !== 'ABSENT').length;
         return totalStudents > 0 ? (attendedToday / totalStudents) * 100 : 0;
       },
 
       getSuccessRate: () => {
         const state = get();
         const totalRecords = state.records.length;
-        const successfulRecords = state.records.filter(
-          (record) => record.status === 'success'
-        ).length;
+        const successfulRecords = state.records.filter((record) => record.status === 'PRESENT').length;
         return totalRecords > 0 ? (successfulRecords / totalRecords) * 100 : 0;
       },
 

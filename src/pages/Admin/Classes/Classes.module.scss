@@ -1,0 +1,30 @@
+@import '../../../styles/variables';
+@import '../../../styles/mixins';
+
+.root {}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr auto;
+  gap: $spacing-2;
+
+  input { @include input-base; }
+  button { @include button-primary; }
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin-top: $spacing-3;
+}
+
+.item {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr auto auto;
+  gap: $spacing-3;
+  padding: $spacing-3 0;
+  border-bottom: 1px solid $border-light;
+
+  button { @include button-secondary; }
+}
+

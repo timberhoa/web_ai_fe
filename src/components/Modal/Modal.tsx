@@ -114,6 +114,7 @@ const Modal: React.FC<ModalProps> = ({
       role="dialog"
       aria-modal="true"
       aria-labelledby={title ? 'modal-title' : undefined}
+      aria-describedby="modal-description"
     >
       <div
         ref={modalRef}

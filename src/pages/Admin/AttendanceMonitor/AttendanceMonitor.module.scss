@@ -1,0 +1,151 @@
+@import '../../../styles/variables';
+@import '../../../styles/mixins';
+
+.root {
+  width: 100%;
+}
+
+.error {
+  margin-top: $spacing-2;
+  padding: $spacing-2;
+  border-radius: $radius-md;
+  background: $danger-light;
+  color: $danger;
+}
+
+.metaRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: $text-muted;
+  font-size: $font-size-sm;
+  margin-bottom: $spacing-2;
+}
+
+.autoToggle {
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-1;
+  font-size: $font-size-sm;
+}
+
+.sessionGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: $spacing-3;
+  width: 100%;
+}
+
+.card {
+  @include card;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-3;
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  p {
+    margin: 0;
+    color: $text-muted;
+  }
+}
+
+.badgeStack {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: $spacing-1;
+}
+
+.statusBadge {
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+
+  &--live {
+    background: rgba(34, 197, 94, 0.15);
+    color: #16a34a;
+  }
+  &--upcoming {
+    background: rgba(59, 130, 246, 0.15);
+    color: #3b82f6;
+  }
+  &--done {
+    background: rgba(148, 163, 184, 0.2);
+    color: #475569;
+  }
+}
+
+.locked,
+.unlocked {
+  font-size: $font-size-xs;
+  padding: 2px 8px;
+  border-radius: $radius;
+}
+
+.locked {
+  background: rgba($danger, 0.1);
+  color: $danger;
+}
+
+.unlocked {
+  background: rgba($success, 0.1);
+  color: $success;
+}
+
+.cardBody {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: $spacing-2;
+
+  span {
+    font-weight: $font-weight-medium;
+  }
+}
+
+.label {
+  font-size: $font-size-xs;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: $text-muted;
+}
+
+.statsRow {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: $spacing-2;
+
+  strong {
+    font-size: $font-size-lg;
+  }
+
+  @media (max-width: 640px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.cardFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: $spacing-3;
+
+  button {
+    @include button-secondary;
+  }
+}
+
+.online {
+  color: $success;
+  font-weight: $font-weight-medium;
+}
+
+.offline {
+  color: $danger;
+  font-weight: $font-weight-medium;
+}

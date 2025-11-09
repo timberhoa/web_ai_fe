@@ -1,0 +1,23 @@
+@import '../../../styles/variables';
+@import '../../../styles/mixins';
+
+.root {}
+
+.actor {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: $background-tertiary;
+  border: 1px solid $border-light;
+  font-weight: $font-weight-medium;
+}
+
+.action {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: $radius;
+  background: $primary-light;
+  color: $primary;
+  border: 1px solid $primary-light;
+}
+

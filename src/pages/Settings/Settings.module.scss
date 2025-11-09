@@ -15,6 +15,58 @@
   }
 }
 
+.settingsLayout {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: $spacing-6;
+
+  @include media-md {
+    grid-template-columns: 1fr;
+  }
+}
+
+.sidebar {
+  position: sticky;
+  top: 88px; // below topbar + breadcrumbs
+  align-self: start;
+  height: fit-content;
+}
+
+.tabList {
+  @include card;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: $spacing-2;
+}
+
+.tabItem {
+  width: 100%;
+  text-align: left;
+  padding: $spacing-3 $spacing-4;
+  border-radius: $radius;
+  color: $text-secondary;
+  background: transparent;
+  border: 1px solid transparent;
+  transition: background .2s ease, color .2s ease, border-color .2s ease;
+  cursor: pointer;
+
+  &:hover {
+    background: $background-secondary;
+    color: $text;
+  }
+}
+
+.tabItemActive {
+  background: $background-secondary;
+  color: $text;
+  border-color: $border-light;
+}
+
+.content {
+  min-width: 0;
+}
+
 .settingsHeader {
   margin-bottom: $spacing-8;
   text-align: center;
@@ -86,9 +138,9 @@
 }
 
 .settingItem {
-  @include flex-between;
+  @include flex-center;
   align-items: flex-start;
-  gap: $spacing-4;
+  gap: $spacing-10;
 
   @include media-sm {
     flex-direction: column;
@@ -101,7 +153,7 @@
   @include flex-column;
   gap: $spacing-1;
   flex: 1;
-  min-width: 0;
+  min-width: 300px;
 }
 
 .settingLabel {
@@ -115,7 +167,7 @@
   font-size: $font-size-sm;
   color: $text-secondary;
   margin: 0;
-  line-height: $line-height-normal;
+  line-height: $line-height-relaxed;
 }
 
 .settingSelect {

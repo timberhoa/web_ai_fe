@@ -6,7 +6,7 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 64px;
+  height: 97px;
   background: $background;
   border-bottom: 1px solid $border-light;
   z-index: $z-sticky;
@@ -142,6 +142,11 @@
   position: relative;
 }
 
+.userPanel {
+  @include flex-center;
+  gap: $spacing-3;
+}
+
 .userButton {
   @include flex-center;
   gap: $spacing-2;
@@ -181,6 +186,23 @@
   @include media-sm {
     display: none;
   }
+}
+
+.userControls {
+  @include flex-center;
+  gap: $spacing-2;
+}
+
+.userSelect {
+  @include input-base;
+  padding: 6px 10px;
+  height: 32px;
+}
+
+.logoutButton {
+  @include button-secondary;
+  height: 32px;
+  padding: 0 $spacing-3;
 }
 
 .userChevron {

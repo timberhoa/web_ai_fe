@@ -1,0 +1,162 @@
+/* Register.module.scss – blue theme – same as Login */
+
+@use '../../styles/variables' as v;
+@use '../../styles/mixins' as m;
+
+.container {
+  @include m.flex-center;
+  min-height: 100vh;
+  padding: v.$spacing-6;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.card {
+  @include m.card;
+  width: 100%;
+  max-width: 640px;
+  padding: v.$spacing-8;
+  background: rgba(255,255,255,0.9);
+  border: 1px solid v.$border-light;
+  box-shadow: v.$shadow-lg;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.header {
+  margin-bottom: v.$spacing-6;
+}
+
+.logoTitleRow {
+  display: flex;
+  align-items: center;
+  gap: v.$spacing-4;
+}
+
+.logo {
+  @include m.flex-center;
+  width: 52px;
+  height: 52px;
+  border-radius: v.$radius-lg;
+  background: var(--primary);
+  color: white;
+  box-shadow: 0 0 16px rgba(0,0,0,0.1);
+}
+
+.titleBlock {
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  font-size: v.$font-size-2xl;
+  font-weight: v.$font-weight-bold;
+  color: v.$text;
+}
+
+.subtitle {
+  font-size: v.$font-size-sm;
+  color: v.$text-secondary;
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(2,1fr);
+  gap: v.$spacing-6;
+}
+
+.fullRow {
+  grid-column: 1 / span 2;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: v.$spacing-2;
+}
+
+.labelRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.label {
+  font-size: v.$font-size-sm;
+  font-weight: v.$font-weight-medium;
+  color: v.$text;
+}
+
+.helper {
+  font-size: v.$font-size-xs;
+  color: v.$text-secondary;
+}
+
+.inputWrapper {
+  position: relative;
+}
+
+.inputIcon {
+  position: absolute;
+  left: v.$spacing-3;
+  top: 50%;
+  transform: translateY(-50%);
+  color: v.$text-muted;
+}
+
+.input {
+  @include m.input-base;
+  padding-left: v.$spacing-10;
+  padding-right: v.$spacing-8;
+  border-radius: v.$radius-md;
+}
+
+.select {
+  @include m.input-base;
+  padding-left: v.$spacing-10;
+  border-radius: v.$radius-md;
+}
+
+.passwordToggle {
+  position: absolute;
+  right: v.$spacing-3;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: v.$text-muted;
+}
+
+.error {
+  font-size: v.$font-size-xs;
+  color: v.$danger;
+}
+
+.button {
+  @include m.button-primary;
+  width: 100%;
+  padding: v.$spacing-4;
+  font-size: v.$font-size-base;
+  border-radius: v.$radius-lg;
+}
+
+.footer {
+  margin-top: v.$spacing-2;
+  text-align: center;
+  color: v.$text-secondary;
+}
+
+.link {
+  color: var(--primary);
+  font-size: v.$font-size-sm;
+  cursor: pointer;
+  &:hover { color: var(--primary-hover); text-decoration: underline; }
+}
+
+@include m.media-sm {
+  .form { grid-template-columns: 1fr; }
+  .fullRow { grid-column: 1; }
+  .card { padding: v.$spacing-6; }
+} 
