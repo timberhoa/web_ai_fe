@@ -1,0 +1,211 @@
+@import '../../styles/variables';
+@import '../../styles/mixins';
+
+.page {
+  @include flex-column;
+  gap: $spacing-4;
+}
+
+.title {
+  font-size: $font-size-2xl;
+  font-weight: $font-weight-semibold;
+  margin: 0 0 $spacing-2 0;
+  color: $text;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-2;
+  margin: $spacing-2 0;
+
+  label {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-1;
+    font-size: $font-size-sm;
+  }
+
+  input,
+  select {
+    @include input-base;
+    width: auto;
+    min-width: 180px;
+  }
+
+  button {
+    @include button-secondary;
+  }
+}
+
+.card { @include card; }
+
+.error {
+  padding: $spacing-2;
+  border-radius: $radius-md;
+  background: $danger-light;
+  color: $danger;
+}
+
+.scheduleGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: $spacing-3;
+}
+
+.sessionList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-2;
+}
+
+.sessionItem {
+  border: 1px solid $border-light;
+  border-radius: $radius-md;
+  padding: $spacing-2;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-1;
+}
+
+.sessionTime {
+  font-weight: $font-weight-semibold;
+  color: $text;
+}
+
+.sessionCourse {
+  color: $text;
+}
+
+.sessionMeta {
+  display: flex;
+  justify-content: space-between;
+  font-size: $font-size-sm;
+  color: $text-muted;
+}
+
+.courseList {
+  list-style: none;
+  padding: 0;
+  margin: $spacing-2 0 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-2;
+}
+
+.courseItem {
+  border: 1px solid $border-light;
+  border-radius: $radius-md;
+  padding: $spacing-2;
+}
+
+.courseMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-2;
+  font-size: $font-size-sm;
+  color: $text-muted;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: $spacing-3;
+  margin-top: $spacing-3;
+}
+
+.statCard {
+  border: 1px solid $border-light;
+  border-radius: $radius-md;
+  padding: $spacing-2;
+
+  p {
+    margin: 0;
+    color: $text-muted;
+  }
+
+  strong {
+    font-size: $font-size-xl;
+  }
+}
+
+.courseHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-1;
+}
+
+.statsRow {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: $spacing-1;
+  font-size: $font-size-sm;
+  color: $text-muted;
+}
+
+.profileGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: $spacing-3;
+
+  p {
+    margin: 0;
+    color: $text-muted;
+  }
+
+  strong {
+    font-size: $font-size-lg;
+  }
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-2;
+  color: $text-muted;
+}
+
+.pagination {
+  display: flex;
+  justify-content: flex-end;
+  gap: $spacing-2;
+  margin-top: $spacing-2;
+
+  button {
+    @include button-secondary;
+  }
+}
+
+.statusBadge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+}
+
+.status-present {
+  background: rgba($success, 0.15);
+  color: $success;
+}
+
+.status-late {
+  background: rgba($warning, 0.15);
+  color: $warning;
+}
+
+.status-excused {
+  background: rgba(95, 158, 160, 0.2);
+  color: #2b6cb0;
+}
+
+.status-absent {
+  background: rgba($danger, 0.15);
+  color: $danger;
+}

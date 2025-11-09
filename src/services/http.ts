@@ -12,13 +12,24 @@ export const http = axios.create({
 
 http.interceptors.request.use((config) => {
   try {
-    const token = useAuthStore.getState().token
+    let token = useAuthStore.getState().token as string | null
+
+    if (!token) {
+      try {
+        const raw = typeof localStorage !== 'undefined' ? localStorage.getItem('auth-store') : null
+        if (raw) {
+          const parsed = JSON.parse(raw)
+          token = (parsed?.state?.token as string | null | undefined) ?? null
+        }
+      } catch {}
+    }
+
     if (token) {
       config.headers = config.headers || {}
       ;(config.headers as any).Authorization = `Bearer ${token}`
     }
-  } catch (_) {
-    // silent
+  } catch (e) {
+    // Swallow errors in token retrieval to avoid breaking requests
   }
   return config
 })
@@ -30,8 +41,8 @@ http.interceptors.response.use(
     if (status === 401) {
       try {
         useAuthStore.getState().logout()
-      } catch (_) {
-        // silent
+      } catch (e) {
+        throw new Error('Không thể đăng xuất')
       }
     }
     try {
@@ -49,8 +60,8 @@ http.interceptors.response.use(
         message: `${serverMessage}${url ? ` (${method} ${url})` : ''}`,
         details: data ? JSON.stringify(data, null, 2) : undefined,
       })
-    } catch (_) {
-      // swallow
+    } catch (e) {
+      throw new Error('Không thể xử lý lỗi')
     }
     return Promise.reject(error)
   }

@@ -156,3 +156,75 @@
     height: 24px;
   }
 }
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  @include flex-center;
+  z-index: $z-modal;
+  padding: $spacing-4;
+  backdrop-filter: blur(4px);
+  @include fade-in(0.3s);
+}
+
+.modal {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.2);
+  width: 100%;
+  /* size variants */
+  &.modal--sm { max-width: 420px; }
+  &.modal--md { max-width: 640px; }
+  &.modal--lg { max-width: 840px; }
+  &.modal--xl { max-width: 1040px; }
+
+  /* Quan trọng: giới hạn chiều cao tổng của modal */
+  max-height: min(90vh, calc(100dvh - 32px));
+  display: flex;           /* để body co giãn */
+  flex-direction: column;  /* header trên, body dưới */
+  overflow: hidden;        /* ẩn tràn khung ngoài */
+}
+
+.modalContent {
+  display: contents; /* giữ layout cột ở .modal */
+}
+
+.modalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid #eee;
+  /* tránh header dính khi body cuộn */
+  flex: 0 0 auto;
+}
+
+.modalTitle { 
+  margin: 0; 
+  font-size: 18px; 
+  font-weight: 600; 
+}
+
+.closeButton {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+}
+
+.modalBody {
+  /* Quan trọng: phần này cuộn */
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  padding: 16px 20px;
+  /* Cho phép body chiếm phần còn lại để cuộn */
+  flex: 1 1 auto;
+  min-height: 0; /* cần cho flex container để enable scroll đúng */
+}

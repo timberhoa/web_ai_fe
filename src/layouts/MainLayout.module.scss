@@ -1,10 +1,12 @@
+/* MainLayout.module.scss – Neumorphism style base */
+
 @import '../styles/variables';
 @import '../styles/mixins';
 
 .mainLayout {
   display: flex;
   min-height: 100vh;
-  background: $background;
+  background: $background-secondary;
 }
 
 .shell {
@@ -32,23 +34,6 @@
   }
 }
 
-.breadcrumbs {
-  max-width: 1280px;
-  width: 100%;
-  margin: 0 auto;
-  padding: $spacing-4 $spacing-6 0;
-  color: $text-secondary;
-  font-size: $font-size-sm;
-
-  @include media-sm {
-    padding: $spacing-3 $spacing-4 0;
-  }
-}
-
-.crumbHome { opacity: 0.9; }
-.crumbSep { margin: 0 $spacing-2; opacity: 0.6; }
-.crumbCurrent { color: $text; }
-
 .page {
   flex: 1;
   width: 100%;
@@ -61,11 +46,26 @@
   }
 }
 
+/* Neumorphic blocks */
+
+.breadcrumbs,
 .footer {
   max-width: 1280px;
   width: 100%;
   margin: 0 auto;
-  padding: $spacing-4 $spacing-6 $spacing-8;
+  padding: $spacing-4 $spacing-6 0;
   color: $text-secondary;
   font-size: $font-size-sm;
+  background: $background-secondary;
+  border-radius: 12px;
+
+
+  @include media-sm {
+    padding: $spacing-3 $spacing-4 0;
+  }
+}
+
+.footer {
+  margin-top: $spacing-6;
+  margin-bottom: $spacing-8;
 }

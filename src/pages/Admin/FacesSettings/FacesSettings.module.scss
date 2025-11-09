@@ -1,0 +1,18 @@
+@import '../../../styles/variables';
+@import '../../../styles/mixins';
+
+.root {}
+
+.form {
+  display: grid;
+  gap: $spacing-3;
+  max-width: 520px;
+
+  input[type='number'] {
+    @include input-base;
+    width: 180px;
+  }
+}
+
+.saveBtn { @include button-primary; }
+

@@ -1,0 +1,198 @@
+@import '../../../styles/variables';
+@import '../../../styles/mixins';
+
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-4;
+}
+
+.pageHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: $spacing-2;
+}
+
+.subtitle {
+  margin: $spacing-1 0 0;
+  color: $text-muted;
+  font-size: $font-size-sm;
+}
+
+.feedback {
+  font-size: $font-size-sm;
+  color: $text-muted;
+}
+
+.filters {
+  @include card;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-3;
+}
+
+.filterFields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: $spacing-2;
+
+  label {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-1;
+    font-size: $font-size-sm;
+
+    input,
+    select {
+      @include input-base;
+    }
+  }
+}
+
+.filterActions {
+  display: flex;
+  justify-content: flex-end;
+
+  button {
+    @include button-secondary;
+  }
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: $spacing-4;
+}
+
+.card {
+  @include card;
+
+  h2 {
+    margin-top: 0;
+    margin-bottom: $spacing-3;
+    font-size: $font-size-lg;
+  }
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-2;
+
+  label {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-1;
+    font-size: $font-size-sm;
+
+    input,
+    select {
+      @include input-base;
+    }
+  }
+
+  button[type='submit'] {
+    @include button-primary;
+    align-self: flex-start;
+  }
+}
+
+.formRow {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: $spacing-2;
+}
+
+.dayPicker {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+  gap: $spacing-1;
+}
+
+.dayButton,
+.daySelected {
+  @include button-secondary;
+  width: 100%;
+  text-transform: uppercase;
+  font-size: $font-size-xs;
+}
+
+.daySelected {
+  @include button-primary;
+}
+
+.sessionsCard {
+  @include card;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-3;
+}
+
+.sessionsHeader {
+  display: flex;
+  justify-content: space-between;
+  gap: $spacing-2;
+  flex-wrap: wrap;
+
+  h2 {
+    margin: 0;
+  }
+
+  p {
+    margin: 0;
+    color: $text-muted;
+  }
+}
+
+.pagination {
+  display: flex;
+  gap: $spacing-2;
+
+  button {
+    @include button-secondary;
+  }
+}
+
+.sessionTable {
+  th,
+  td {
+    white-space: nowrap;
+  }
+
+  td:first-child {
+    white-space: normal;
+    min-width: 200px;
+  }
+}
+
+.locked {
+  color: $danger;
+  font-weight: $font-weight-semibold;
+}
+
+.unlocked {
+  color: $success;
+  font-weight: $font-weight-semibold;
+}
+
+.actionsCell {
+  display: flex;
+  gap: $spacing-1;
+  flex-wrap: wrap;
+
+  button {
+    @include button-secondary;
+  }
+}
+
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: $spacing-2;
+}
+
+.secondary {
+  @include button-secondary;
+}

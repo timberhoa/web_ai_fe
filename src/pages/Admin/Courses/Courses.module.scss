@@ -1,0 +1,186 @@
+@import '../../../styles/variables';
+@import '../../../styles/mixins';
+
+.root {
+  width: 100%;
+}
+
+.headerRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: $spacing-3;
+}
+
+.primaryBtn {
+  @include button-primary;
+  white-space: nowrap;
+}
+
+.error {
+  padding: $spacing-2;
+  border-radius: $radius-md;
+  background: $danger-light;
+  color: $danger;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: $spacing-4;
+  width: 100%;
+
+  @media (max-width: 1024px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.panel {
+  @include card;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-3;
+  min-height: 420px;
+}
+
+.panelHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: $spacing-2;
+
+  h2 {
+    margin: 0;
+  }
+
+  p {
+    margin: 0;
+    color: $text-muted;
+  }
+
+  button {
+    @include button-secondary;
+  }
+}
+
+.tableWrap {
+  width: 100%;
+  overflow: auto;
+  @include custom-scrollbar;
+}
+
+.selectedRow {
+  background: rgba($primary, 0.08);
+}
+
+.inlineActions {
+  display: flex;
+  gap: $spacing-1;
+  justify-content: flex-end;
+
+  button {
+    @include button-secondary;
+    padding: $spacing-1 $spacing-2;
+    font-size: $font-size-sm;
+    border: none;
+    background: transparent;
+    color: $primary;
+  }
+}
+
+.emptyState {
+  text-align: center;
+  color: $text-muted;
+  padding: $spacing-4 0;
+}
+
+.detailGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: $spacing-3;
+
+  p {
+    margin: 0 0 $spacing-1 0;
+  }
+
+  strong {
+    font-size: $font-size-lg;
+  }
+}
+
+.mutedLabel {
+  font-size: $font-size-sm;
+  color: $text-muted;
+  margin-bottom: $spacing-1;
+}
+
+.divider {
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid $border;
+  margin: $spacing-3 0;
+}
+
+.enrollForm {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-2;
+
+  label {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-1;
+    font-size: $font-size-sm;
+  }
+
+  select {
+    @include input-base;
+    min-height: 120px;
+  }
+
+  textarea {
+    @include input-base;
+    min-height: 120px;
+  }
+
+  button {
+    align-self: flex-start;
+    @include button-primary;
+  }
+}
+
+.panel h3 {
+  margin: 0;
+}
+
+.modalForm {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-2;
+
+  label {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-1;
+  }
+
+  input,
+  select {
+    @include input-base;
+  }
+}
+
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: $spacing-2;
+  margin-top: $spacing-2;
+
+  button:first-child {
+    @include button-secondary;
+  }
+
+  button:last-child {
+    @include button-primary;
+  }
+}

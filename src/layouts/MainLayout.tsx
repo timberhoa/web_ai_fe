@@ -5,8 +5,11 @@ import Topbar from '../components/Topbar/Topbar'
 import styles from './MainLayout.module.scss'
 import { useAuthStore } from '../store/useAuthStore'
 import type { Role } from '../services/auth'
+import { userApi } from '../services/user'
 
 const MainLayout: React.FC = () => {
+  const setUser = useAuthStore((s) => s.setUser)
+  const token = useAuthStore((s) => s.token)
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(() => {
     if (typeof window !== 'undefined') {
       // On mobile, start closed; on desktop, start open
@@ -27,16 +30,15 @@ const MainLayout: React.FC = () => {
     if (path === '/') return 'Dashboard'
     if (path.startsWith('/users')) return 'Quản lý tài khoản'
     if (path.startsWith('/lecturers')) return 'Giảng viên'
-    if (path.startsWith('/classes')) return 'Lớp học'
+    // if (path.startsWith('/classes')) return 'Lớp học'
     if (path.startsWith('/courses')) return 'Môn học'
-    if (path.startsWith('/schedule')) return 'Lịch/Session'
-    if (path.startsWith('/attendance/monitor')) return 'Giám sát điểm danh'
+    if (path.startsWith('/schedule')) return 'Lịch học'
+    // if (path.startsWith('/attendance/monitor')) return 'Giám sát điểm danh'
     if (path.startsWith('/attendance/review')) return 'Rà soát điểm danh'
     if (path.startsWith('/faces')) return 'Cài đặt FR'
-    if (path.startsWith('/reports')) return 'Báo cáo'
     if (path.startsWith('/audit-logs')) return 'Nhật ký hoạt động'
     if (path.startsWith('/students')) return 'Quản lý sinh viên'
-    if (path.startsWith('/attendance/today')) return 'Điểm danh hôm nay'
+    if (path.startsWith('/attendance-today')) return 'Điểm danh hôm nay'
     if (path.startsWith('/attendance')) return 'Điểm danh'
     if (path.startsWith('/settings')) return 'Cài đặt hệ thống'
     if (path.startsWith('/my-classes')) return 'Lớp học của tôi'
@@ -57,6 +59,18 @@ const MainLayout: React.FC = () => {
   }
 
   const role = useAuthStore((s) => s.user?.role as Role | undefined)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const profile = await userApi.getProfile()
+        setUser(profile)
+      } catch (e) {
+        // ignore; handled globally in http interceptor
+      }
+    }
+    if (token) fetchData()
+  }, [token, setUser])
 
   const menuItems = useMemo((): { id: string; label: string; path: string; icon: React.ReactNode }[] => {
     const dashboard = {
@@ -106,7 +120,7 @@ const MainLayout: React.FC = () => {
         {
           id: 'attendance-today',
           label: 'Điểm danh hôm nay',
-          path: '/attendance/today',
+          path: '/attendance-today',
           icon: (
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <path d="M7 11H17V13H7V11ZM7 7H17V9H7V7ZM5 3H19C20.1 3 21 3.9 21 5V19C21 20.1 20.1 21 19 21H5C3.9 21 3 20.1 3 19V5C3 3.9 3.9 3 5 3Z" fill="currentColor"/>
@@ -190,32 +204,7 @@ const MainLayout: React.FC = () => {
       ) },
       { id: 'lecturers', label: 'Giảng viên', path: '/lecturers', icon: (
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 12C14.2091 12 16 10.2091 16 8C16 5.79086 14.2091 4 12 4C9.79086 4 8 5.79086 8 8C8 10.2091 9.79086 12 12 12Z" fill="currentColor"/><path d="M4 21C4 16.5817 7.58172 13 12 13C16.4183 13 20 16.5817 20 21H4Z" fill="currentColor"/></svg>
-      ) },
-      { id: 'classes', label: 'Lớp học', path: '/classes', icon: (
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 7L12 3L21 7L12 11L3 7Z" fill="currentColor"/><path d="M3 12L12 16L21 12V17L12 21L3 17V12Z" fill="currentColor"/></svg>
-      ) },
-      { id: 'courses', label: 'Môn học', path: '/courses', icon: (
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 6H20V18H4V6Z" fill="currentColor"/><path d="M8 10H16V14H8V10Z" fill="white"/></svg>
-      ) },
-      { id: 'schedule', label: 'Lịch/Session', path: '/schedule', icon: (
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 11H17V13H7V11ZM7 7H17V9H7V7ZM5 3H19C20.1 3 21 3.9 21 5V19C21 20.1 20.1 21 19 21H5C3.9 21 3 20.1 3 19V5C3 3.9 3.9 3 5 3Z" fill="currentColor"/></svg>
-      ) },
-      { id: 'attendance-monitor', label: 'Giám sát', path: '/attendance/monitor', icon: (
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 5H21V19H3V5Z" fill="currentColor"/><path d="M8 21H16V19H8V21Z" fill="currentColor"/></svg>
-      ) },
-      { id: 'attendance-review', label: 'Rà soát', path: '/attendance/review', icon: (
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 3H21V21H3V3Z" fill="currentColor"/><path d="M7 13H17V15H7V13ZM7 9H17V11H7V9Z" fill="white"/></svg>
-      ) },
-      { id: 'faces', label: 'Cài đặt FR', path: '/faces', icon: (
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 5V3H9V5H5V9H3V5ZM15 3H21V5H19V9H17V5H15V3ZM19 15H21V21H15V19H19V15ZM5 19H9V21H3V15H5V19Z" fill="currentColor"/></svg>
-      ) },
-      { id: 'reports', label: 'Báo cáo', path: '/reports', icon: (
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 13H11V3H3V13ZM3 21H11V15H3V21ZM13 21H21V11H13V21ZM13 3V9H21V3H13Z" fill="currentColor"/></svg>
-      ) },
-      { id: 'audit-logs', label: 'Audit logs', path: '/audit-logs', icon: (
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 3H19V21H5V3Z" fill="currentColor"/><path d="M8 7H16V9H8V7ZM8 11H16V13H8V11ZM8 15H13V17H8V15Z" fill="white"/></svg>
-      ) },
-      {
+      ) },{
         id: 'students',
         label: 'Sinh viên',
         path: '/students',
@@ -225,16 +214,35 @@ const MainLayout: React.FC = () => {
           </svg>
         ),
       },
-      {
-        id: 'attendance',
-        label: 'Điểm danh',
-        path: '/attendance',
-        icon: (
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 6.5V7.5C15 8.3 14.3 9 13.5 9H10.5C9.7 9 9 8.3 9 7.5V6.5L3 7V9L9 8.5V9.5C9 10.3 9.7 11 10.5 11H13.5C14.3 11 15 10.3 15 9.5V8.5L21 9ZM6 12H8V20H6V12ZM10 12H12V20H10V12ZM14 12H16V20H14V12Z" fill="currentColor"/>
-          </svg>
-        ),
-      },
+      { id: 'courses', label: 'Môn học', path: '/courses', icon: (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 6H20V18H4V6Z" fill="currentColor"/><path d="M8 10H16V14H8V10Z" fill="white"/></svg>
+      ) },
+      { id: 'schedule', label: 'Sắp xếp lịch học', path: '/schedule', icon: (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 11H17V13H7V11ZM7 7H17V9H7V7ZM5 3H19C20.1 3 21 3.9 21 5V19C21 20.1 20.1 21 19 21H5C3.9 21 3 20.1 3 19V5C3 3.9 3.9 3 5 3Z" fill="currentColor"/></svg>
+      ) },
+      { id: 'attendance-review', label: 'Rà soát điểm danh', path: '/attendance/review', icon: (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 3H21V21H3V3Z" fill="currentColor"/><path d="M7 13H17V15H7V13ZM7 9H17V11H7V9Z" fill="white"/></svg>
+      ) },
+      // { id: 'faces', label: 'Cài đặt FR', path: '/faces', icon: (
+      //   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 5V3H9V5H5V9H3V5ZM15 3H21V5H19V9H17V5H15V3ZM19 15H21V21H15V19H19V15ZM5 19H9V21H3V15H5V19Z" fill="currentColor"/></svg>
+      // ) },
+      { id: 'reports', label: 'Báo cáo', path: '/reports', icon: (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 13H11V3H3V13ZM3 21H11V15H3V21ZM13 21H21V11H13V21ZM13 3V9H21V3H13Z" fill="currentColor"/></svg>
+      ) },
+      { id: 'audit-logs', label: 'Audit logs', path: '/audit-logs', icon: (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 3H19V21H5V3Z" fill="currentColor"/><path d="M8 7H16V9H8V7ZM8 11H16V13H8V11ZM8 15H13V17H8V15Z" fill="white"/></svg>
+      ) },
+     
+      // {
+      //   id: 'attendance',
+      //   label: 'Điểm danh',
+      //   path: '/attendance',
+      //   icon: (
+      //     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      //       <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 6.5V7.5C15 8.3 14.3 9 13.5 9H10.5C9.7 9 9 8.3 9 7.5V6.5L3 7V9L9 8.5V9.5C9 10.3 9.7 11 10.5 11H13.5C14.3 11 15 10.3 15 9.5V8.5L21 9ZM6 12H8V20H6V12ZM10 12H12V20H10V12ZM14 12H16V20H14V12Z" fill="currentColor"/>
+      //     </svg>
+      //   ),
+      // },
       {
         id: 'settings',
         label: 'Cài đặt',
@@ -247,6 +255,8 @@ const MainLayout: React.FC = () => {
       },
     ]
   }, [role])
+
+
 
   return (
     <div className={styles.mainLayout}>
@@ -261,11 +271,11 @@ const MainLayout: React.FC = () => {
         />
 
         <div className={styles.container}>
-          <header className={styles.breadcrumbs} aria-label="breadcrumbs">
+          {/* <header className={styles.breadcrumbs} aria-label="breadcrumbs">
             <span className={styles.crumbHome}>Trang chủ</span>
             <span className={styles.crumbSep}>/</span>
             <span className={styles.crumbCurrent}>{pageTitle}</span>
-          </header>
+          </header> */}
 
           <main className={styles.page}>
             <Outlet />

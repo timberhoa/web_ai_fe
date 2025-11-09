@@ -1,79 +1,85 @@
+/* Register.module.scss – blue theme – same as Login */
+
 @use '../../styles/variables' as v;
 @use '../../styles/mixins' as m;
 
 .container {
   @include m.flex-center;
   min-height: 100vh;
-  background: linear-gradient(135deg, v.$primary 0%, v.$primary-hover 100%);
   padding: v.$spacing-6;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+  position: relative;
+  overflow: hidden;
 }
 
 .card {
   @include m.card;
   width: 100%;
-  max-width: 920px;
-  background: v.$background;
+  max-width: 640px;
+  padding: v.$spacing-8;
+  background: rgba(255,255,255,0.9);
   border: 1px solid v.$border-light;
-  box-shadow: v.$shadow-xl;
-  overflow: hidden;
+  box-shadow: v.$shadow-lg;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
 }
 
 .header {
-  padding-bottom: v.$spacing-6;
-  border-bottom: 1px solid v.$border-light;
   margin-bottom: v.$spacing-6;
 }
 
 .logoTitleRow {
-  @include m.flex-between;
+  display: flex;
+  align-items: center;
   gap: v.$spacing-4;
 }
 
 .logo {
   @include m.flex-center;
-  width: 56px;
-  height: 56px;
-  background: v.$primary;
-  color: #fff;
-  border-radius: v.$radius-xl;
-  box-shadow: v.$shadow-lg;
+  width: 52px;
+  height: 52px;
+  border-radius: v.$radius-lg;
+  background: var(--primary);
+  color: white;
+  box-shadow: 0 0 16px rgba(0,0,0,0.1);
 }
 
 .titleBlock {
-  @include m.flex-column;
+  display: flex;
+  flex-direction: column;
 }
 
 .title {
-  margin: 0 0 v.$spacing-1 0;
-  color: v.$text;
-  font-size: v.$font-size-3xl;
+  font-size: v.$font-size-2xl;
   font-weight: v.$font-weight-bold;
-  line-height: v.$line-height-tight;
+  color: v.$text;
 }
 
 .subtitle {
-  margin: 0;
+  font-size: v.$font-size-sm;
   color: v.$text-secondary;
-  font-size: v.$font-size-base;
 }
 
 .form {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: v.$spacing-6 v.$spacing-6;
+  grid-template-columns: repeat(2,1fr);
+  gap: v.$spacing-6;
 }
 
 .fullRow {
-  grid-column: 1 / -1;
+  grid-column: 1 / span 2;
 }
 
 .inputGroup {
-  @include m.flex-column;
+  display: flex;
+  flex-direction: column;
   gap: v.$spacing-2;
 }
 
 .labelRow {
-  @include m.flex-between;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .label {
@@ -84,12 +90,7 @@
 
 .helper {
   font-size: v.$font-size-xs;
-  color: v.$text-muted;
-}
-
-.error {
-  font-size: v.$font-size-xs;
-  color: v.$danger;
+  color: v.$text-secondary;
 }
 
 .inputWrapper {
@@ -102,40 +103,35 @@
   top: 50%;
   transform: translateY(-50%);
   color: v.$text-muted;
-  pointer-events: none;
 }
 
 .input {
   @include m.input-base;
   padding-left: v.$spacing-10;
+  padding-right: v.$spacing-8;
+  border-radius: v.$radius-md;
 }
 
 .select {
   @include m.input-base;
-  appearance: none;
   padding-left: v.$spacing-10;
-  padding-right: v.$spacing-10;
-  background-image: linear-gradient(45deg, transparent 50%, v.$text-muted 50%),
-    linear-gradient(135deg, v.$text-muted 50%, transparent 50%);
-  background-position: calc(100% - 20px) calc(50% - 3px), calc(100% - 15px) calc(50% + 3px);
-  background-size: 5px 5px, 5px 5px;
-  background-repeat: no-repeat;
+  border-radius: v.$radius-md;
 }
 
 .passwordToggle {
   position: absolute;
-  right: v.$spacing-2;
+  right: v.$spacing-3;
   top: 50%;
   transform: translateY(-50%);
-  background: transparent;
+  background: none;
   border: none;
-  color: v.$text-muted;
   cursor: pointer;
+  color: v.$text-muted;
 }
 
-.actions {
-  @include m.flex-between;
-  gap: v.$spacing-4;
+.error {
+  font-size: v.$font-size-xs;
+  color: v.$danger;
 }
 
 .button {
@@ -147,19 +143,20 @@
 }
 
 .footer {
-  text-align: center;
   margin-top: v.$spacing-2;
+  text-align: center;
+  color: v.$text-secondary;
 }
 
 .link {
-  color: v.$primary;
-  text-decoration: none;
-  &:hover { text-decoration: underline; }
+  color: var(--primary);
+  font-size: v.$font-size-sm;
+  cursor: pointer;
+  &:hover { color: var(--primary-hover); text-decoration: underline; }
 }
 
 @include m.media-sm {
-  .container { padding: v.$spacing-4; }
-  .card { padding: v.$spacing-4; }
   .form { grid-template-columns: 1fr; }
-}
-
+  .fullRow { grid-column: 1; }
+  .card { padding: v.$spacing-6; }
+} 

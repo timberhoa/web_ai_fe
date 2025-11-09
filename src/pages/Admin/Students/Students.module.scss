@@ -1,0 +1,282 @@
+@import '../../../styles/variables';
+@import '../../../styles/mixins';
+
+.students {
+  padding: $spacing-6;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  @include media-sm {
+    padding: $spacing-4;
+  }
+
+  @include media-xs {
+    padding: $spacing-3;
+  }
+}
+
+.studentsHeader {
+  @include flex-between;
+  margin-bottom: $spacing-8;
+  align-items: flex-start;
+
+  @include media-sm {
+    flex-direction: column;
+    gap: $spacing-4;
+    align-items: stretch;
+  }
+}
+
+.studentsTitle {
+  @include flex-column;
+  gap: $spacing-2;
+}
+
+.title {
+  font-size: $font-size-4xl;
+  font-weight: $font-weight-bold;
+  color: $text;
+  margin: 0;
+
+  @include media-sm {
+    font-size: $font-size-3xl;
+  }
+
+  @include media-xs {
+    font-size: $font-size-2xl;
+  }
+}
+
+.subtitle {
+  font-size: $font-size-lg;
+  color: $text-secondary;
+  margin: 0;
+
+  @include media-sm {
+    font-size: $font-size-base;
+  }
+}
+
+.addButton {
+  @include button-primary;
+  @include flex-center;
+  gap: $spacing-2;
+  padding: $spacing-3 $spacing-6;
+  font-size: $font-size-base;
+  font-weight: $font-weight-medium;
+  white-space: nowrap;
+
+  @include media-sm {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+.studentsContent {
+  @include flex-column;
+  gap: $spacing-6;
+}
+
+.searchSection {
+  @include flex-center;
+  justify-content: flex-start;
+}
+
+.searchInputWrapper {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  @include flex-center;
+}
+
+.searchIcon {
+  position: absolute;
+  left: $spacing-3;
+  color: $text-muted;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.searchInput {
+  @include input-base;
+  padding-left: $spacing-10;
+  padding-right: $spacing-10;
+  width: 100%;
+  background: $background;
+  border: 1px solid $border;
+
+  &:focus {
+    border-color: $primary;
+    box-shadow: 0 0 0 3px $primary-light;
+  }
+
+  &::placeholder {
+    color: $text-muted;
+  }
+}
+
+.clearButton {
+  position: absolute;
+  right: $spacing-3;
+  @include flex-center;
+  width: 20px;
+  height: 20px;
+  background: none;
+  border: none;
+  color: $text-muted;
+  cursor: pointer;
+  border-radius: $radius-sm;
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    color: $text;
+    background: $background-tertiary;
+  }
+}
+
+.actionButtons {
+  @include flex-center;
+  gap: $spacing-2;
+}
+
+.editButton,
+.deleteButton {
+  @include flex-center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: $radius;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px $primary-light;
+  }
+}
+
+.editButton {
+  background: $info-light;
+  color: $info;
+
+  &:hover {
+    background: $info;
+    color: white;
+  }
+}
+
+.deleteButton {
+  background: $danger-light;
+  color: $danger;
+
+  &:hover {
+    background: $danger;
+    color: white;
+  }
+}
+
+.statusBadge {
+  display: inline-flex;
+  align-items: center;
+  padding: $spacing-1 $spacing-3;
+  border-radius: $radius-full;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.statusBadge--attended {
+  background: $success-light;
+  color: $success;
+}
+
+.statusBadge--absent {
+  background: $warning-light;
+  color: $warning;
+}
+
+// Form styles
+.studentForm {
+  @include flex-column;
+  gap: $spacing-6;
+}
+
+.formGroup {
+  @include flex-column;
+  gap: $spacing-2;
+}
+
+.formLabel {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $text;
+}
+
+.formInput,
+.formSelect {
+  @include input-base;
+  width: 100%;
+}
+
+.formSelect {
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+  background-position: right $spacing-3 center;
+  background-repeat: no-repeat;
+  background-size: 16px;
+  padding-right: $spacing-10;
+  appearance: none;
+}
+
+.formActions {
+  @include flex-end;
+  gap: $spacing-3;
+  padding-top: $spacing-4;
+  border-top: 1px solid $border-light;
+}
+
+.cancelButton {
+  @include button-secondary;
+  padding: $spacing-3 $spacing-6;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+}
+
+.submitButton {
+  @include button-primary;
+  padding: $spacing-3 $spacing-6;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+}
+
+// Responsive adjustments
+@include media-sm {
+  .formActions {
+    flex-direction: column-reverse;
+    width: 100%;
+  }
+
+  .cancelButton,
+  .submitButton {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@include media-xs {
+  .actionButtons {
+    gap: $spacing-1;
+  }
+
+  .editButton,
+  .deleteButton {
+    width: 28px;
+    height: 28px;
+  }
+
+  .statusBadge {
+    padding: $spacing-1 $spacing-2;
+    font-size: 10px;
+  }
+}

@@ -1,278 +1,230 @@
-@use '../../styles/variables' as v;
-@use '../../styles/mixins' as m;
+/* Login.module.scss — green theme version */
 
+/* ===================== Container ===================== */
 .container {
-  @include m.flex-center;
-  height: 100vh;
-  background: linear-gradient(135deg, v.$primary 0%, v.$primary-hover 100%);
-  padding: v.$spacing-4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 2rem;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
   position: relative;
   overflow: hidden;
-
-  &::before {
-    display: none;
-  }
 }
 
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0px) rotate(0deg);
-  }
-  50% {
-    transform: translateY(-20px) rotate(180deg);
-  }
+.container::before,
+.container::after {
+  content: '';
+  position: absolute;
+  width: 520px;
+  height: 520px;
+  border-radius: 50%;
+  filter: blur(60px);
+  opacity: 0.25;
+  z-index: 0;
 }
 
+.container::before {
+  top: -160px;
+  left: -140px;
+  background: var(--primary);
+  animation: blob1 18s ease-in-out infinite;
+}
+
+.container::after {
+  bottom: -180px;
+  right: -160px;
+  background: var(--primary-hover);
+  animation: blob2 22s ease-in-out infinite;
+}
+
+@keyframes blob1 {
+  0%,100% { transform: translate(0,0) scale(1); }
+  50% { transform: translate(40px,30px) scale(1.08); }
+}
+
+@keyframes blob2 {
+  0%,100% { transform: translate(0,0) scale(1); }
+  50% { transform: translate(-30px,-40px) scale(0.95); }
+}
+
+/* ===================== Card ===================== */
 .card {
-  @include m.card;
   width: 100%;
-  max-width: 480px;
-  background: v.$background;
-  border: 1px solid v.$border-light;
-  box-shadow: v.$shadow-xl;
-  position: relative;
+  max-width: 520px;
   z-index: 1;
-  @include m.fade-in(0.5s);
+  padding: 2rem 2.5rem;
+  background: rgba(255,255,255,0.9);
+  border: 1px solid #e5e7eb;
+  border-radius: 1rem;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+  backdrop-filter: blur(14px);
+  animation: fadeIn 0.45s ease-in-out;
 }
 
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ===================== Header ===================== */
 .header {
   text-align: center;
-  margin-bottom: v.$spacing-8;
+  margin-bottom: 2rem;
 }
 
 .logo {
-  @include m.flex-center;
-  width: 64px;
-  height: 64px;
-  background: v.$primary;
-  border-radius: v.$radius-xl;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 1rem;
   color: white;
-  margin: 0 auto v.$spacing-4;
-  box-shadow: v.$shadow-lg;
+  border-radius: 16px;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+  box-shadow: 0 12px 30px rgba(16,185,129,0.35);
 }
 
 .title {
-  font-size: v.$font-size-3xl;
-  font-weight: v.$font-weight-bold;
-  color: v.$text;
-  margin: 0 0 v.$spacing-2;
-  line-height: v.$line-height-tight;
+  margin: 0 0 0.25rem;
+  font-size: 1.875rem;
+  font-weight: 800;
+  color: #111827;
 }
 
 .subtitle {
-  font-size: v.$font-size-base;
-  color: v.$text-secondary;
+  color: #6b7280;
+  font-size: 0.875rem;
   margin: 0;
 }
 
+/* ===================== Form ===================== */
 .form {
-  display: flex;
-  flex-direction: row;
-  @include m.flex-column;
-  gap: v.$spacing-6;
-}
-
-.formGrid {
   display: grid;
-  flex-direction: row;
-  grid-template-columns: repeat(2, minmax(0, 1fr)); 
-  grid-template-rows: repeat(3, auto);
-  gap: v.$spacing-6;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
 }
 
-.formCol {
-  display: flex;
-  flex-direction: column;
-  gap: v.$spacing-6;
-}
+.inputGroup { display: grid; gap: 0.5rem; }
 
-.inputGroup {
-  @include m.flex-column;
-  gap: v.$spacing-2;
-}
+.label { font-size: 0.875rem; font-weight: 500; color: #111827; }
 
-.label {
-  font-size: v.$font-size-sm;
-  font-weight: v.$font-weight-medium;
-  color: v.$text;
-}
-
-.inputWrapper {
-  position: relative;
-  @include m.flex-center;
-}
-
-.inputIcon {
-  position: absolute;
-  left: v.$spacing-3;
-  color: v.$text-muted;
-  z-index: 1;
-  pointer-events: none;
-}
+.inputWrapper { position: relative; }
 
 .input {
-  @include m.input-base;
-  padding-left: v.$spacing-10;
-  padding-right: v.$spacing-4;
   width: 100%;
-  background: v.$background;
-  border: 1px solid v.$border;
-  transition: all 0.2s ease-in-out;
-
-  &:focus {
-    border-color: v.$primary;
-    box-shadow: 0 0 0 3px v.$primary-light;
-  }
-
-  &:focus + .inputIcon {
-    color: v.$primary;
-  }
-
-  &::placeholder {
-    color: v.$text-muted;
-  }
+  padding: 0.75rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  background: #ffffff;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
+.input::placeholder { color: #9ca3af; }
+.input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(16,185,129,0.25);
+}
+
+/* ===================== Checkbox ===================== */
 .checkboxGroup {
-  @include m.flex-start;
-  gap: v.$spacing-2;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .checkboxLabel {
-  @include m.flex-start;
-  gap: v.$spacing-2;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
   cursor: pointer;
   user-select: none;
 }
 
 .checkbox {
-  width: 16px;
-  height: 16px;
-  accent-color: v.$primary;
-  cursor: pointer;
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid #d1d5db;
+  border-radius: 4px;
+  appearance: none;
+  background: #ffffff;
+  transition: background 0.2s ease, border-color 0.2s ease;
 }
 
-.checkboxText {
-  font-size: v.$font-size-sm;
-  color: v.$text-secondary;
-  line-height: v.$line-height-normal;
+.checkbox:checked {
+  background: var(--primary);
+  border-color: var(--primary);
 }
 
+.checkbox:checked::after {
+  content: '';
+  width: 10px;
+  height: 10px;
+  clip-path: polygon(14% 44%, 0 62%, 50% 100%, 100% 16%, 80% 0, 43% 62%);
+  background: white;
+  display: block;
+  margin: auto;
+}
+
+.checkboxText { font-size: 0.875rem; color: #6b7280; }
+
+/* ===================== Button ===================== */
 .button {
-  @include m.button-primary;
-  @include m.flex-center;
-  gap: v.$spacing-2;
-  width: 100%;
-  padding: v.$spacing-4;
-  font-size: v.$font-size-base;
-  font-weight: v.$font-weight-semibold;
-  border-radius: v.$radius-lg;
-  transition: all 0.2s ease-in-out;
-
-  &:hover:not(:disabled) {
-    transform: translateY(-1px);
-    box-shadow: v.$shadow-lg;
-  }
-
-  &:active:not(:disabled) {
-    transform: translateY(0);
-  }
-
-  &:disabled {
-    opacity: 0.7;
-    cursor: not-allowed;
-    transform: none;
-  }
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease;
 }
 
-.spinner {
-  animation: spin 1s linear infinite;
+.button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(16,185,129,0.4);
 }
 
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
 }
 
+/* ===================== Footer ===================== */
 .footer {
   text-align: center;
-  margin-top: v.$spacing-2;
+  margin-top: 0.5rem;
+  color: #6b7280;
 }
 
 .link {
   background: none;
   border: none;
-  color: v.$primary;
-  font-size: v.$font-size-sm;
+  color: var(--primary);
+  font-size: 0.875rem;
   text-decoration: none;
   cursor: pointer;
-  transition: color 0.2s ease-in-out;
-
-  &:hover {
-    color: v.$primary-hover;
-    text-decoration: underline;
-  }
-
-  &:focus {
-    outline: none;
-    text-decoration: underline;
-  }
+  transition: color 0.2s ease;
 }
 
-// Responsive adjustments
-@include m.media-sm {
-  .container {
-    padding: v.$spacing-3;
-  }
+.link:hover {
+  color: var(--primary-hover);
+  text-decoration: underline;
+}
 
+/* ===================== Responsive ===================== */
+@media (max-width: 640px) {
   .card {
-    max-width: 100%;
+    padding: 1.5rem;
   }
-
   .title {
-    font-size: v.$font-size-2xl;
+    font-size: 1.5rem;
   }
-
-  .subtitle {
-    font-size: v.$font-size-sm;
-  }
-}
-
-@include m.media-xs {
-  .container {
-    padding: v.$spacing-2;
-  }
-
-  .card {
-    padding: v.$spacing-4;
-  }
-
-  .header {
-    margin-bottom: v.$spacing-6;
-  }
-
   .logo {
-    width: 48px;
-    height: 48px;
+    width: 60px;
+    height: 60px;
   }
-
-  .title {
-    font-size: v.$font-size-xl;
-  }
-
-  .form {
-    gap: v.$spacing-4;
-  }
-
   .button {
-    padding: v.$spacing-3;
-    font-size: v.$font-size-sm;
+    font-size: 0.875rem;
+    padding: 0.65rem;
   }
 }
-  .formGrid {
-    grid-template-columns: 1fr;
-  }

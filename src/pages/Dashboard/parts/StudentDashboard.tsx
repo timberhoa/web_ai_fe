@@ -1,19 +1,26 @@
-import React, { useMemo } from 'react'
-import { useAuthStore } from '../../../store/useAuthStore'
-import { useAttendanceStore } from '../../../store/useAttendanceStore'
+import React, { useEffect, useMemo, useState } from 'react'
 import styles from '../Dashboard.module.scss'
+import { dashboardApi, type StudentDashboardResponse } from '../../../services/dashboard'
 
 const StudentDashboard: React.FC = () => {
-  const user = useAuthStore((s) => s.user)
-  const { records } = useAttendanceStore()
+  const [data, setData] = useState<StudentDashboardResponse | null>(null)
 
-  const myLastAttendance = useMemo(() => {
-    if (!user) return null
-    const list = records.filter((r) => r.studentId === user.id).sort((a, b) => (a.timestamp < b.timestamp ? 1 : -1))
-    return list[0] || null
-  }, [records, user])
+  useEffect(() => {
+    let mounted = true
+    dashboardApi
+      .student()
+      .then((res) => {
+        if (mounted) setData(res)
+      })
+      .catch(() => {})
+    return () => {
+      mounted = false
+    }
+  }, [])
 
-  const needFaceEnroll = !myLastAttendance || myLastAttendance.method !== 'face_recognition'
+  const needFaceEnroll = useMemo(() => {
+    return !(data?.faceRegistered ?? false)
+  }, [data])
 
   return (
     <div className={styles.dashboard}>
@@ -32,8 +39,27 @@ const StudentDashboard: React.FC = () => {
               <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M7 11H17V13H7V11ZM7 7H17V9H7V7ZM5 3H19C20.1 3 21 3.9 21 5V19C21 20.1 20.1 21 19 21H5C3.9 21 3 20.1 3 19V5C3 3.9 3.9 3 5 3Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
-              <p>Chưa có dữ liệu lịch học</p>
-              <span>Vào mục "Thời khóa biểu" để xem chi tiết</span>
+              {data?.todaySessions && data.todaySessions.length > 0 ? (
+                <div style={{ width: '100%' }}>
+                  <p>{`Có ${data.todaySessions.length} buổi học hôm nay`}</p>
+                  {data.todaySessions.slice(0, 3).map((s) => (
+                    <div key={(s.sessionId || s.id)!} style={{ fontSize: 13, marginTop: 6 }}>
+                      <strong>{s.courseCode}</strong> • {s.courseName}
+                      <br />
+                      {new Date(s.startTime).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}
+                      {' - '}
+                      {new Date(s.endTime).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}
+                      {' • Phòng '}
+                      {s.roomName}
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <>
+                  <p>Chưa có dữ liệu lịch học</p>
+                  <span>Vào mục "Thời khóa biểu" để xem chi tiết</span>
+                </>
+              )}
             </div>
           </div>
 
@@ -45,12 +71,14 @@ const StudentDashboard: React.FC = () => {
               <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
-              {myLastAttendance ? (
+              {data?.latestAttendance ? (
                 <>
                   <p>
-                    {new Date(myLastAttendance.timestamp).toLocaleString('vi-VN')} • {myLastAttendance.method === 'face_recognition' ? 'Khuôn mặt' : 'Thủ công'}
+                    {new Date(data.latestAttendance.checkedAt || data.latestAttendance.startTime).toLocaleString('vi-VN')}
+                    {' • '}
+                    {data.latestAttendance.status}
                   </p>
-                  <span>Mã SV: {myLastAttendance.studentId}</span>
+                  <span>Môn: {data.latestAttendance.courseCode} • {data.latestAttendance.courseName}</span>
                 </>
               ) : (
                 <>

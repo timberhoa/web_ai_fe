@@ -9,6 +9,8 @@ export type RegisterRequest = {
   email: string
   phone: string
   role?: Role
+  facultyId?: string
+  active?: boolean
 }
 export type User = {
   id: string
@@ -19,7 +21,7 @@ export type User = {
   phone?: string
   role: Role
 }
-export type LoginResponse = { token: string; user: User }
+export type LoginResponse = { accessToken: string; tokenType?: string; user?: User }
 
 export const authApi = {
   async login(payload: LoginRequest) {
@@ -31,6 +33,6 @@ export const authApi = {
     return data
   },
   async logout() {
-   
+   await http.post('/auth/logout')
   },
 }

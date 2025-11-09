@@ -1,0 +1,147 @@
+@import '../../../styles/variables';
+@import '../../../styles/mixins';
+
+.root {
+  width: 100%;
+}
+
+.filters {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: $spacing-3;
+  margin-bottom: $spacing-3;
+
+  label {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-1;
+    font-size: $font-size-sm;
+  }
+
+  input,
+  select {
+    @include input-base;
+  }
+
+  button {
+    align-self: flex-end;
+    @include button-primary;
+  }
+}
+
+.error {
+  padding: $spacing-2;
+  border-radius: $radius-md;
+  background: $danger-light;
+  color: $danger;
+  margin-bottom: $spacing-3;
+}
+
+.statLine {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-2;
+  font-size: $font-size-sm;
+}
+
+.locked,
+.unlocked {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+}
+
+.locked {
+  background: rgba($danger, 0.15);
+  color: $danger;
+}
+
+.unlocked {
+  background: rgba($success, 0.15);
+  color: $success;
+}
+
+.actionColumn {
+  display: flex;
+  gap: $spacing-1;
+  justify-content: flex-end;
+
+  button {
+    @include button-secondary;
+    font-size: $font-size-sm;
+  }
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: $spacing-2;
+  margin-top: $spacing-2;
+
+  button {
+    @include button-secondary;
+  }
+}
+
+.detail {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-3;
+}
+
+.detailHeader {
+  display: flex;
+  justify-content: space-between;
+  gap: $spacing-3;
+
+  h3 {
+    margin: 0;
+  }
+
+  p {
+    margin: 0;
+    color: $text-muted;
+  }
+}
+
+.detailActions {
+  display: flex;
+  align-items: center;
+  gap: $spacing-2;
+  flex-wrap: wrap;
+
+  button {
+    @include button-secondary;
+  }
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: $spacing-2;
+
+  p {
+    margin: 0;
+    color: $text-muted;
+  }
+
+  strong {
+    font-size: $font-size-xl;
+  }
+}
+
+.rosterFilters {
+  display: flex;
+  gap: $spacing-2;
+  flex-wrap: wrap;
+
+  input,
+  select {
+    @include input-base;
+    min-width: 200px;
+  }
+}
