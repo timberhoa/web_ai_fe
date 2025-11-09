@@ -1,0 +1,261 @@
+@import '../../styles/variables';
+@import '../../styles/mixins';
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-4;
+}
+
+.title {
+  font-size: $font-size-2xl;
+  font-weight: $font-weight-semibold;
+  margin: 0;
+  color: $text;
+}
+
+.card {
+  @include card;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-2;
+}
+
+.error {
+  @include card;
+  border: 1px solid $danger;
+  background: $danger-light;
+  color: $danger;
+}
+
+.sessionHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: $spacing-4;
+}
+
+.sessionCode {
+  font-size: $font-size-sm;
+  color: $text-secondary;
+  margin: 0 0 $spacing-1 0;
+}
+
+.sessionName {
+  margin: 0;
+  font-size: $font-size-xl;
+  font-weight: $font-weight-semibold;
+  color: $text;
+}
+
+.sessionMeta {
+  margin: 0;
+  color: $text-secondary;
+  font-size: $font-size-sm;
+}
+
+.sessionActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-2;
+  align-items: center;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 $spacing-2;
+  height: 28px;
+  border-radius: $radius-full;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+}
+
+.badgeDanger {
+  background: $danger-light;
+  color: $danger;
+}
+
+.badgeNeutral {
+  background: $background-secondary;
+  color: $text-secondary;
+}
+
+.primaryButton {
+  @include button-primary;
+}
+
+.secondaryButton {
+  @include button-secondary;
+}
+
+.dangerButton {
+  @include button-danger;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: $spacing-2;
+}
+
+.statCard {
+  background: $background-secondary;
+  border-radius: $radius;
+  padding: $spacing-2;
+  text-align: center;
+}
+
+.studentStatus {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-1;
+}
+
+.statusBadge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 $spacing-2;
+  height: 28px;
+  border-radius: $radius-full;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+}
+
+.status-present {
+  background: $success-light;
+  color: $success;
+}
+
+.status-late {
+  background: $warning-light;
+  color: $warning;
+}
+
+.status-excused {
+  background: $info-light;
+  color: $info;
+}
+
+.status-absent {
+  background: $danger-light;
+  color: $danger;
+}
+
+.statusUnknown {
+  background: $background-tertiary;
+  color: $text-secondary;
+}
+
+.warning {
+  color: $warning;
+  font-size: $font-size-sm;
+  margin: 0;
+}
+
+.selfCheck {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: $spacing-2;
+}
+
+.geoInputs {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-1;
+}
+
+.geoHint {
+  margin: 0;
+  font-size: $font-size-sm;
+  color: $text-secondary;
+}
+
+.successText {
+  color: $success;
+  font-size: $font-size-sm;
+}
+
+.errorText {
+  color: $danger;
+  font-size: $font-size-sm;
+}
+
+.quickForm {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-2;
+
+  input,
+  select {
+    @include input-base;
+    flex: 1 1 180px;
+  }
+}
+
+.sectionHeader {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: $spacing-2;
+
+  h3 {
+    margin: 0;
+  }
+}
+
+.rosterActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-2;
+  align-items: center;
+
+  input,
+  select {
+    @include input-base;
+    min-width: 180px;
+  }
+}
+
+.tableWrap {
+  width: 100%;
+  overflow: auto;
+  @include custom-scrollbar;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: $font-size-sm;
+
+  thead tr {
+    text-align: left;
+    border-bottom: 1px solid $border-light;
+  }
+
+  tbody tr {
+    border-bottom: 1px solid $border-light;
+  }
+
+  th,
+  td {
+    padding: $spacing-2 $spacing-3;
+  }
+
+  tbody tr:last-child {
+    border-bottom: none;
+  }
+}
+
+.subtle {
+  font-size: $font-size-sm;
+  color: $text-secondary;
+}
+
+.statusSelect {
+  @include input-base;
+  min-width: 150px;
+}

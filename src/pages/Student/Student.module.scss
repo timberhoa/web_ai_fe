@@ -87,6 +87,16 @@
   color: $text-muted;
 }
 
+.sessionActions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: $spacing-2;
+}
+
+.sessionButton {
+  @include button-primary;
+}
+
 .courseList {
   list-style: none;
   padding: 0;

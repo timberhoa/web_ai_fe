@@ -119,7 +119,7 @@ const MyAttendance: React.FC = () => {
 
   return (
     <div className={styles.page}>
-      <h1 className={styles.title}>My Attendance</h1>
+      <h1 className={styles.title}>Điểm danh</h1>
 
       <div className={styles.toolbar}>
         <label>
@@ -134,15 +134,15 @@ const MyAttendance: React.FC = () => {
           </select>
         </label>
         <label>
-          From
+          Từ ngày
           <input type="date" name="from" value={filters.from} onChange={handleFilterChange} />
         </label>
         <label>
-          To
+          Đến ngày
           <input type="date" name="to" value={filters.to} onChange={handleFilterChange} />
         </label>
         <button type="button" onClick={handleApplyFilters} disabled={historyLoading || statsLoading}>
-          Apply
+          Áp dụng
         </button>
       </div>
 

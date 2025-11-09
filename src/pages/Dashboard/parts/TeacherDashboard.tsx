@@ -1,7 +1,19 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import StatsCard from '../../../components/StatsCard/StatsCard'
 import styles from '../Dashboard.module.scss'
 import { dashboardApi, type TeacherDashboardResponse } from '../../../services/dashboard'
+import { Bar, Doughnut } from 'react-chartjs-2'
+import {
+  Chart as ChartJS,
+  ArcElement,
+  BarElement,
+  CategoryScale,
+  LinearScale,
+  Tooltip,
+  Legend,
+} from 'chart.js'
+
+ChartJS.register(ArcElement, BarElement, CategoryScale, LinearScale, Tooltip, Legend)
 
 const TeacherDashboard: React.FC = () => {
   const [data, setData] = useState<TeacherDashboardResponse | null>(null)
@@ -63,6 +75,103 @@ const TeacherDashboard: React.FC = () => {
     },
   ]
 
+  const productivityChart = useMemo(
+    () => ({
+      labels: ['Môn học', 'Buổi hôm nay', 'Lượt điểm danh'],
+      datasets: [
+        {
+          label: 'Số lượng',
+          data: [data?.totalCourses ?? 0, data?.sessionsToday ?? 0, data?.totalCheckinsToday ?? 0],
+          backgroundColor: ['#6366f1', '#0ea5e9', '#22c55e'],
+          borderRadius: 6,
+        },
+      ],
+    }),
+    [data]
+  )
+
+  const productivityOptions = useMemo(
+    () => ({
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#0f172a',
+          padding: 12,
+          titleFont: { size: 13, weight: '600' },
+          bodyFont: { size: 12 },
+          displayColors: false,
+        },
+      },
+      layout: { padding: { top: 8, right: 12, bottom: 12, left: 12 } },
+      scales: {
+        y: { beginAtZero: true, ticks: { precision: 0 }, grid: { color: '#f1f5f9' } },
+        x: { grid: { display: false } },
+      },
+    }),
+    []
+  )
+
+  const onTime = Math.max(
+    0,
+    (data?.totalCheckinsToday ?? 0) - (data?.absentToday ?? 0) - (data?.lateToday ?? 0)
+  )
+
+  const attendanceBreakdown = useMemo(
+    () => ({
+      labels: ['Đúng giờ', 'Muộn', 'Vắng'],
+      datasets: [
+        {
+          data: [onTime, data?.lateToday ?? 0, data?.absentToday ?? 0],
+          backgroundColor: ['#22c55e', '#f97316', '#ef4444'],
+          borderWidth: 0,
+        },
+      ],
+    }),
+    [onTime, data?.lateToday, data?.absentToday]
+  )
+
+  const attendanceOptions = useMemo(
+    () => ({
+      responsive: true,
+      maintainAspectRatio: false,
+      cutout: '68%',
+      plugins: {
+        legend: {
+          position: 'bottom' as const,
+          labels: {
+            usePointStyle: true,
+            pointStyle: 'rectRounded',
+            padding: 18,
+            font: { size: 12 },
+          },
+        },
+      },
+    }),
+    []
+  )
+
+  const teacherCenterTextPlugin = useMemo(
+    () => ({
+      afterDraw: (chart: any) => {
+        if (!chart?.chartArea) return
+        const total = data?.totalCheckinsToday ?? 0
+        const { ctx, chartArea } = chart
+        const x = (chartArea.left + chartArea.right) / 2
+        const y = (chartArea.top + chartArea.bottom) / 2
+        ctx.save()
+        ctx.font = '600 20px "Inter", sans-serif'
+        ctx.fillStyle = '#0ea5e9'
+        ctx.textAlign = 'center'
+        ctx.textBaseline = 'middle'
+        ctx.fillText(`${total}`, x, y)
+        ctx.restore()
+      },
+    }),
+    [data?.totalCheckinsToday]
+  )
+
   return (
     <div className={styles.dashboard}>
       <div className={styles.dashboardHeader}>
@@ -80,29 +189,19 @@ const TeacherDashboard: React.FC = () => {
         <div className={styles.chartsSection}>
           <div className={styles.chartCard}>
             <div className={styles.chartHeader}>
-              <h3 className={styles.chartTitle}>Điểm danh hôm nay</h3>
+              <h3 className={styles.chartTitle}>Hiệu suất giảng dạy</h3>
             </div>
-            <div className={styles.chartPlaceholder}>
-              <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M3 3V21H21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M9 9L12 6L16 10L20 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-              <p>Tổng lượt điểm danh: {data?.totalCheckinsToday ?? 0}</p>
-              <span>Chi tiết xem tại mục Theo dõi/Review</span>
+            <div className={styles.chartBody}>
+              <Bar data={productivityChart}  />
             </div>
           </div>
 
           <div className={styles.chartCard}>
             <div className={styles.chartHeader}>
-              <h3 className={styles.chartTitle}>SV vắng/muộn</h3>
+              <h3 className={styles.chartTitle}>Cơ cấu điểm danh</h3>
             </div>
-            <div className={styles.chartPlaceholder}>
-              <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 2L2 7V17L12 22L22 17V7L12 2Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M8 12H16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-              <p>Vắng: {data?.absentToday ?? 0} • Muộn: {data?.lateToday ?? 0}</p>
-              <span>Dữ liệu theo ngày hiện tại</span>
+            <div className={styles.chartBody}>
+              <Doughnut data={attendanceBreakdown} options={attendanceOptions} />
             </div>
           </div>
         </div>
@@ -112,4 +211,3 @@ const TeacherDashboard: React.FC = () => {
 }
 
 export default TeacherDashboard
-

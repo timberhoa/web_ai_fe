@@ -83,6 +83,23 @@
   @include card;
   @include flex-column;
   height: 400px;
+  border: 1px solid rgba($primary, 0.08);
+  box-shadow: 0 20px 35px rgba($primary, 0.05);
+  background: linear-gradient(180deg, rgba($primary, 0.02), #fff);
+}
+
+.chartBody {
+  flex: 1;
+  min-height: 0;
+  position: relative;
+  padding: $spacing-3;
+  display: flex;
+  align-items: center;
+
+  canvas {
+    width: 100% !important;
+    height: 100% !important;
+  }
 }
 
 .chartHeader {
@@ -96,6 +113,18 @@
   font-weight: $font-weight-semibold;
   color: $text;
   margin: 0;
+}
+
+.chartBadge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 $spacing-2;
+  height: 28px;
+  border-radius: $radius-full;
+  background: $success-light;
+  color: $success;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
 }
 
 .chartActions {

@@ -21,7 +21,7 @@ import MyClasses from '../pages/Teacher/MyClasses';
 import MyClassDetail from '../pages/Teacher/MyClassDetail';
 import Sessions from '../pages/Teacher/Sessions';
 import AttendanceToday from '../pages/Teacher/AttendanceToday';
-import AttendanceSession from '../pages/Teacher/AttendanceSession';
+import SessionDetail from '../pages/SessionDetail';
 import AdminReports from '../pages/Admin/Reports';
 import MySchedule from '../pages/Student/MySchedule';
 import MyAttendance from '../pages/Student/MyAttendance';
@@ -77,7 +77,7 @@ export default function AppRouter() {
               <Route path="my-classes/:id" element={<MyClassDetail />} />
               <Route path="sessions" element={<Sessions />} />
               <Route path="attendance-today" element={<AttendanceToday />} />
-              <Route path="attendance/:sessionId" element={<AttendanceSession />} />
+              <Route path="attendance/:sessionId" element={<SessionDetail />} />
             </Route>
 
             {/* Student only */}
@@ -86,6 +86,8 @@ export default function AppRouter() {
               <Route path="my-attendance" element={<MyAttendance />} />
               <Route path="my-profile" element={<MyProfile />} />
             </Route>
+
+            <Route path="session/:sessionId" element={<SessionDetail />} />
           </Route>
         </Route>
 

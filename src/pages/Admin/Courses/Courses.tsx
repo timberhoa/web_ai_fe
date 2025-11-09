@@ -34,11 +34,29 @@ const Courses: React.FC = () => {
 
   const [selectedStudentIds, setSelectedStudentIds] = useState<string[]>([])
   const [manualStudentIds, setManualStudentIds] = useState('')
+  const [searchStudentQuery, setSearchStudentQuery] = useState('')
 
   const [modalOpen, setModalOpen] = useState(false)
   const [formValues, setFormValues] = useState<CourseFormState>(defaultFormState)
   const [editingCourse, setEditingCourse] = useState<CourseSummary | null>(null)
   const [formLoading, setFormLoading] = useState(false)
+  
+  // Lọc ra những sinh viên chưa được ghi danh
+  const availableStudents = useMemo(() => {
+    const enrolledIds = new Set(enrollments.map(e => e.studentId))
+    return students.filter(student => !enrolledIds.has(student.id))
+  }, [students, enrollments])
+
+  // Lọc sinh viên theo từ khóa tìm kiếm
+  const filteredStudents = useMemo(() => {
+    if (!searchStudentQuery.trim()) return availableStudents
+    const query = searchStudentQuery.toLowerCase()
+    return availableStudents.filter(
+      student => 
+        student.username.toLowerCase().includes(query) ||
+        (student.fullName || '').toLowerCase().includes(query)
+    )
+  }, [availableStudents, searchStudentQuery])
 
   const { fetchFacultyList, getFacultyList } = useFacultyStore()
   const faculties = getFacultyList()
@@ -371,22 +389,41 @@ const Courses: React.FC = () => {
               <p className={pageStyles.mutedLabel}>Chọn nhanh sinh viên trong hệ thống hoặc nhập danh sách ID/username, mỗi dòng một mã.</p>
 
               <form className={pageStyles.enrollForm} onSubmit={handleBulkEnroll}>
-                <label>
-                  Chọn sinh viên
-                  <select
-                    multiple
-                    value={selectedStudentIds}
-                    onChange={(event) =>
-                      setSelectedStudentIds(Array.from(event.target.selectedOptions).map((option) => option.value))
-                    }
-                  >
-                    {students.map((student) => (
-                      <option key={student.id} value={student.id}>
-                        {student.fullName || student.username} ({student.username})
-                      </option>
-                    ))}
-                  </select>
-                </label>
+                <div className={pageStyles.searchBox}>
+                  <input
+                    type="text"
+                    placeholder="Tìm kiếm sinh viên..."
+                    value={searchStudentQuery}
+                    onChange={(e) => setSearchStudentQuery(e.target.value)}
+                    className={pageStyles.searchInput}
+                  />
+                </div>
+                <div className={pageStyles.studentList}>
+                  {availableStudents.map((student) => (
+                    <label key={student.id} className={pageStyles.studentItem}>
+                      <input
+                        type="checkbox"
+                        checked={selectedStudentIds.includes(student.id)}
+                        onChange={() => {
+                          setSelectedStudentIds(prev => 
+                            prev.includes(student.id) 
+                              ? prev.filter(id => id !== student.id)
+                              : [...prev, student.id]
+                          )
+                        }}
+                      />
+                      <span className={pageStyles.studentInfo}>
+                        <strong>{student.fullName || student.username}</strong>
+                        <span className={pageStyles.studentId}>{student.username}</span>
+                      </span>
+                    </label>
+                  ))}
+                  {filteredStudents.length === 0 && (
+                    <div className={pageStyles.emptyState}>
+                      Không tìm thấy sinh viên phù hợp
+                    </div>
+                  )}
+                </div>
                 {/* <label>
                   Nhập danh sách ID / username
                   <textarea

@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import styles from '../Student.module.scss'
 import type { ClassSession } from '../../../services/schedule'
 import { enrollmentsApi, type StudentCourse } from '../../../services/enrollments'
@@ -45,6 +46,7 @@ const defaultFrom = toDateInput(defaultFromDate)
 const defaultTo = toDateInput(defaultToDate)
 
 const MySchedule: React.FC = () => {
+  const navigate = useNavigate()
   const [from, setFrom] = useState<string>(defaultFrom)
   const [to, setTo] = useState<string>(defaultTo)
   const [keyword, setKeyword] = useState('')
@@ -120,17 +122,19 @@ const MySchedule: React.FC = () => {
 
   return (
     <div className={styles.page}>
-      <h1 className={styles.title}>My schedule</h1>
+      <h1 className={styles.title}>Thời khóa biểu</h1>
 
       <div className={styles.toolbar}>
         <label>
-          From
+          Từ ngày
           <input type="date" value={from} onChange={(event) => setFrom(event.target.value)} />
         </label>
         <label>
-          To
+          Đến ngày
           <input type="date" value={to} onChange={(event) => setTo(event.target.value)} />
         </label>
+        <label>
+          Chọn khóa học
         <select value={courseFilter} onChange={(event) => setCourseFilter(event.target.value)}>
           <option value="ALL">All courses</option>
           {myCourses.map((course) => (
@@ -139,9 +143,13 @@ const MySchedule: React.FC = () => {
             </option>
           ))}
         </select>
-        <input placeholder="Search course or room" value={keyword} onChange={(event) => setKeyword(event.target.value)} />
+        </label>
+        <label>
+          Tìm kiếm môn học hoặc phòng học
+          <input value={keyword} onChange={(event) => setKeyword(event.target.value)} />
+        </label>
         <button onClick={fetchSessions} disabled={loading}>
-          Refresh
+          Làm mới
         </button>
       </div>
 
@@ -152,8 +160,6 @@ const MySchedule: React.FC = () => {
           <h3>Môn học đã ghi danh</h3>
           <ul className={styles.courseList}>
             {myCourses.map((course) => {
-              console.log("🚀 ~ MySchedule ~ course:", course)
-              
               return(
               <li key={course.id} className={styles.courseItem}>
                 <div>
@@ -190,6 +196,15 @@ const MySchedule: React.FC = () => {
                     <span>Room {session.roomName}</span>
                     <span>{session.locked ? 'Locked' : 'Open'}</span>
                   </div>
+                  <div className={styles.sessionActions}>
+                    <button
+                      type="button"
+                      className={styles.sessionButton}
+                      onClick={() => navigate(`/session/${session.sessionId}`)}
+                    >
+                      Điểm danh
+                    </button>
+                  </div>
                 </li>
               ))}
             </ul>
@@ -201,3 +216,4 @@ const MySchedule: React.FC = () => {
 }
 
 export default MySchedule
+

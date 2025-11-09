@@ -1,7 +1,19 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import StatsCard from '../../../components/StatsCard/StatsCard'
 import styles from '../Dashboard.module.scss'
 import { dashboardApi, type AdminDashboardResponse } from '../../../services/dashboard'
+import { Bar, Doughnut } from 'react-chartjs-2'
+import {
+  Chart as ChartJS,
+  ArcElement,
+  BarElement,
+  CategoryScale,
+  LinearScale,
+  Tooltip,
+  Legend,
+} from 'chart.js'
+
+ChartJS.register(ArcElement, BarElement, CategoryScale, LinearScale, Tooltip, Legend)
 
 const AdminDashboard: React.FC = () => {
   const [data, setData] = useState<AdminDashboardResponse | null>(null)
@@ -76,6 +88,109 @@ const AdminDashboard: React.FC = () => {
     },
   ]
 
+  const overviewChart = useMemo(() => {
+    const values = [
+      data?.totalStudents ?? 0,
+      data?.totalCourses ?? 0,
+      data?.sessionsToday ?? 0,
+      data?.checkinsToday ?? 0,
+    ]
+    return {
+      labels: ['Sinh viên', 'Môn học', 'Buổi hôm nay', 'Lượt điểm danh'],
+      datasets: [
+        {
+          label: 'Số lượng',
+          data: values,
+          backgroundColor: ['#6366f1', '#22c55e', '#0ea5e9', '#f97316'],
+          borderRadius: 6,
+        },
+      ],
+    }
+  }, [data])
+
+  const attendanceRate = Math.min(100, Math.max(0, Math.round(data?.attendanceRate ?? 0)))
+  const overviewOptions = useMemo(
+    () => ({
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#0f172a',
+          padding: 12,
+          titleFont: { size: 13, weight: 'bold' },
+          bodyFont: { size: 12 },
+          displayColors: false,
+        },
+      },
+      layout: { padding: { top: 8, right: 12, bottom: 12, left: 12 } },
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: { precision: 0 },
+          grid: { color: '#f1f5f9' },
+        },
+        x: {
+          grid: { display: false },
+        },
+      },
+    }),
+    []
+  )
+
+  const attendanceChart = useMemo(
+    () => ({
+      labels: ['Đã điểm danh', 'Chưa điểm danh'],
+      datasets: [
+        {
+          data: [attendanceRate, Math.max(0, 100 - attendanceRate)],
+          backgroundColor: ['#22c55e', '#e2e8f0'],
+          borderWidth: 0,
+        },
+      ],
+    }),
+    [attendanceRate]
+  )
+
+  const attendanceOptions = useMemo(
+    () => ({
+      responsive: true,
+      maintainAspectRatio: false,
+      cutout: '70%',
+      plugins: {
+        legend: {
+          position: 'bottom' as const,
+          labels: {
+            usePointStyle: true,
+            pointStyle: 'rectRounded',
+            padding: 18,
+            font: { size: 12 },
+          },
+        },
+      },
+    }),
+    []
+  )
+
+  const attendanceCenterTextPlugin = useMemo(
+    () => ({
+      afterDraw: (chart: any) => {
+        if (!chart?.chartArea) return
+        const { ctx, chartArea } = chart
+        const x = (chartArea.left + chartArea.right) / 2
+        const y = (chartArea.top + chartArea.bottom) / 2
+        ctx.save()
+        ctx.font = '600 22px "Inter", sans-serif'
+        ctx.fillStyle = '#047857'
+        ctx.textAlign = 'center'
+        ctx.textBaseline = 'middle'
+        ctx.fillText(`${attendanceRate}%`, x, y)
+        ctx.restore()
+      },
+    }),
+    [attendanceRate]
+  )
+
   return (
     <div className={styles.dashboard}>
       <div className={styles.dashboardHeader}>
@@ -93,30 +208,20 @@ const AdminDashboard: React.FC = () => {
         <div className={styles.chartsSection}>
           <div className={styles.chartCard}>
             <div className={styles.chartHeader}>
-              <h3 className={styles.chartTitle}>Cảnh báo Camera/FR</h3>
+              <h3 className={styles.chartTitle}>Tổng quan số liệu</h3>
             </div>
-            <div className={styles.chartPlaceholder}>
-              <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 2L2 7V17L12 22L22 17V7L12 2Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M8 12H16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-              <p>Không có cảnh báo nào (demo)</p>
-              <span>Tích hợp sau với hệ thống camera/FR</span>
+            <div className={styles.chartBody}>
+              <Bar data={overviewChart}  />
             </div>
           </div>
 
           <div className={styles.chartCard}>
             <div className={styles.chartHeader}>
-              <h3 className={styles.chartTitle}>Biểu đồ tổng quan</h3>
+              <h3 className={styles.chartTitle}>Tỉ lệ điểm danh</h3>
+              <span className={styles.chartBadge}>{attendanceRate}%</span>
             </div>
-            <div className={styles.chartPlaceholder}>
-              <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M3 3V21H21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M2 17L12 22L22 17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M2 12L12 17L22 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-              <p>Biểu đồ sẽ hiển thị ở đây</p>
-              <span>Chuẩn bị tích hợp Chart.js/Recharts</span>
+            <div className={styles.chartBody}>
+              <Doughnut data={attendanceChart} options={attendanceOptions}  />
             </div>
           </div>
         </div>
@@ -126,4 +231,3 @@ const AdminDashboard: React.FC = () => {
 }
 
 export default AdminDashboard
-

@@ -34,7 +34,7 @@ const MainLayout: React.FC = () => {
     if (path.startsWith('/courses')) return 'Môn học'
     if (path.startsWith('/schedule')) return 'Lịch học'
     // if (path.startsWith('/attendance/monitor')) return 'Giám sát điểm danh'
-    if (path.startsWith('/attendance/review')) return 'Rà soát điểm danh'
+    // if (path.startsWith('/attendance/review')) return 'Rà soát điểm danh'
     if (path.startsWith('/faces')) return 'Cài đặt FR'
     if (path.startsWith('/audit-logs')) return 'Nhật ký hoạt động'
     if (path.startsWith('/students')) return 'Quản lý sinh viên'
@@ -43,6 +43,7 @@ const MainLayout: React.FC = () => {
     if (path.startsWith('/settings')) return 'Cài đặt hệ thống'
     if (path.startsWith('/my-classes')) return 'Lớp học của tôi'
     if (path.startsWith('/sessions')) return 'Buổi học'
+    if (path.startsWith('/session/')) return 'Chi tiet buoi hoc'
     if (path.startsWith('/reports')) return 'Báo cáo'
     if (path.startsWith('/face-enrollment')) return 'Đăng ký khuôn mặt'
     if (path.startsWith('/my-schedule')) return 'Thời khóa biểu'
@@ -220,9 +221,9 @@ const MainLayout: React.FC = () => {
       { id: 'schedule', label: 'Sắp xếp lịch học', path: '/schedule', icon: (
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 11H17V13H7V11ZM7 7H17V9H7V7ZM5 3H19C20.1 3 21 3.9 21 5V19C21 20.1 20.1 21 19 21H5C3.9 21 3 20.1 3 19V5C3 3.9 3.9 3 5 3Z" fill="currentColor"/></svg>
       ) },
-      { id: 'attendance-review', label: 'Rà soát điểm danh', path: '/attendance/review', icon: (
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 3H21V21H3V3Z" fill="currentColor"/><path d="M7 13H17V15H7V13ZM7 9H17V11H7V9Z" fill="white"/></svg>
-      ) },
+      // { id: 'attendance-review', label: 'Rà soát điểm danh', path: '/attendance/review', icon: (
+      //   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 3H21V21H3V3Z" fill="currentColor"/><path d="M7 13H17V15H7V13ZM7 9H17V11H7V9Z" fill="white"/></svg>
+      // ) },
       // { id: 'faces', label: 'Cài đặt FR', path: '/faces', icon: (
       //   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 5V3H9V5H5V9H3V5ZM15 3H21V5H19V9H17V5H15V3ZM19 15H21V21H15V19H19V15ZM5 19H9V21H3V15H5V19Z" fill="currentColor"/></svg>
       // ) },

@@ -126,27 +126,65 @@
   flex-direction: column;
   gap: $spacing-2;
 
-  label {
-    display: flex;
-    flex-direction: column;
-    gap: $spacing-1;
-    font-size: $font-size-sm;
-  }
-
-  select {
-    @include input-base;
-    min-height: 120px;
-  }
-
-  textarea {
-    @include input-base;
-    min-height: 120px;
-  }
-
   button {
     align-self: flex-start;
     @include button-primary;
   }
+}
+
+.searchBox {
+  width: 100%;
+  margin-bottom: $spacing-2;
+  
+  .searchInput {
+    @include input-base;
+    width: 100%;
+  }
+}
+
+.studentList {
+  border: 1px solid $border;
+  border-radius: $radius-md;
+  max-height: 400px;
+  overflow-y: auto;
+  @include custom-scrollbar;
+}
+
+.studentItem {
+  display: flex;
+  align-items: center;
+  gap: $spacing-2;
+  padding: $spacing-2;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  
+  &:hover {
+    background-color: rgba($primary, 0.05);
+  }
+
+  &:not(:last-child) {
+    border-bottom: 1px solid $border;
+  }
+
+  input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+.studentInfo {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-1;
+
+  strong {
+    font-size: $font-size-sm;
+  }
+}
+
+.studentId {
+  font-size: $font-size-sm;
+  color: $text-muted;
 }
 
 .panel h3 {
