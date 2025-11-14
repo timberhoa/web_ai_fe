@@ -276,7 +276,7 @@ const Courses: React.FC = () => {
   return (
     <div className={`${styles.page} ${pageStyles.root}`}>
       <div className={pageStyles.headerRow}>
-        <h1 className={styles.title}>Quản lý môn học & ghi danh</h1>
+        <h1 className={styles.title}>Quản lý môn học</h1>
         <button className={pageStyles.primaryBtn} onClick={openCreateModal}>
           + Thêm môn học
         </button>

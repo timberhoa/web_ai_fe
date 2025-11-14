@@ -12,19 +12,145 @@
 }
 
 .pageHeader {
-  display: flex;
-  justify-content: space-between;
+  @include flex-column;
+  gap: $spacing-6;
+  margin-bottom: $spacing-6;
+}
+
+.headerContent {
+  @include flex-between;
   align-items: flex-start;
   flex-wrap: wrap;
-  gap: $spacing-3;
-  margin-bottom: $spacing-4;
-  
+  gap: $spacing-4;
+
+  @include media-sm {
+    flex-direction: column;
+    gap: $spacing-3;
+  }
+}
+
+.headerTitle {
+  @include flex-column;
+  gap: $spacing-2;
+  flex: 1;
+
   h1 {
     font-size: 2rem;
-    font-weight: 600;
-    color: $text-primary;
+    font-weight: 700;
+    color: $text;
     margin: 0;
+    @include flex-start;
+    gap: $spacing-3;
+
+    @include media-sm {
+      font-size: 1.75rem;
+    }
+
+    svg {
+      color: $primary;
+    }
   }
+}
+
+.feedbackBadge {
+  padding: $spacing-2 $spacing-4;
+  background: $info-light;
+  color: $info;
+  border-radius: $radius-full;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  border: 1px solid $info;
+}
+
+.statsCards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: $spacing-4;
+
+  @include media-sm {
+    grid-template-columns: 1fr;
+  }
+}
+
+.statCard {
+  @include card;
+  @include flex-start;
+  gap: $spacing-4;
+  padding: $spacing-5;
+  background: linear-gradient(135deg, $background 0%, $background-secondary 100%);
+  border: 1px solid $border-light;
+  border-radius: $radius-lg;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, $primary 0%, $primary-light 100%);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    border-color: $primary-light;
+
+    &::before {
+      transform: scaleX(1);
+    }
+
+    .statIcon {
+      transform: scale(1.1);
+      box-shadow: 0 4px 12px rgba($primary, 0.3);
+    }
+  }
+}
+
+.statIcon {
+  @include flex-center;
+  width: 56px;
+  height: 56px;
+  border-radius: $radius-lg;
+  background: linear-gradient(135deg, $primary-light 0%, rgba($primary, 0.1) 100%);
+  color: $primary;
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba($primary, 0.15);
+
+  svg {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+.statContent {
+  @include flex-column;
+  gap: $spacing-1;
+  flex: 1;
+  min-width: 0;
+}
+
+.statValue {
+  font-size: $font-size-3xl;
+  font-weight: $font-weight-bold;
+  color: $text;
+  line-height: 1.2;
+
+  @include media-sm {
+    font-size: $font-size-2xl;
+  }
+}
+
+.statLabel {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $text-secondary;
 }
 
 .buttonGroup {

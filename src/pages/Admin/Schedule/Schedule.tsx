@@ -444,11 +444,57 @@ const defaultFilters: FilterState = {
   return (
     <div className={`${adminStyles.page} ${styles.root}`}>
       <div className={styles.pageHeader}>
-        <div>
-          <h1 className={adminStyles.title}>Sắp xếp lịch học</h1>
-          <p className={styles.subtitle}>Sắp xếp lịch học cho sinh viên trong hệ thống</p>
+        <div className={styles.headerContent}>
+          <div className={styles.headerTitle}>
+            <h1 className={adminStyles.title}>
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M8 7V3M16 7V3M7 11H17M5 21H19C20.1046 21 21 20.1046 21 19V7C21 5.89543 20.1046 5 19 5H5C3.89543 5 3 5.89543 3 7V19C3 20.1046 3.89543 21 5 21Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+              Sắp xếp lịch học
+            </h1>
+            <p className={styles.subtitle}>Quản lý và sắp xếp lịch học cho sinh viên trong hệ thống</p>
+          </div>
+          {lookupLabel && (
+            <div className={styles.feedbackBadge}>
+              <span>{lookupLabel}</span>
+            </div>
+          )}
         </div>
-        {lookupLabel && <span className={styles.feedback}>{lookupLabel}</span>}
+        <div className={styles.statsCards}>
+          <div className={styles.statCard}>
+            <div className={styles.statIcon}>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M8 7V3M16 7V3M7 11H17M5 21H19C20.1046 21 21 20.1046 21 19V7C21 5.89543 20.1046 5 19 5H5C3.89543 5 3 5.89543 3 7V19C3 20.1046 3.89543 21 5 21Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </div>
+            <div className={styles.statContent}>
+              <div className={styles.statValue}>{totalElements}</div>
+              <div className={styles.statLabel}>Tổng buổi học</div>
+            </div>
+          </div>
+          <div className={styles.statCard}>
+            <div className={styles.statIcon}>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </div>
+            <div className={styles.statContent}>
+              <div className={styles.statValue}>{sessions.filter(s => !s.locked).length}</div>
+              <div className={styles.statLabel}>Buổi học mở</div>
+            </div>
+          </div>
+          <div className={styles.statCard}>
+            <div className={styles.statIcon}>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 6V12M12 16H12.01M7 21H17C18.1046 21 19 20.1046 19 19V5C19 3.89543 18.1046 3 17 3H7C5.89543 3 5 3.89543 5 5V19C5 20.1046 5.89543 21 7 21Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </div>
+            <div className={styles.statContent}>
+              <div className={styles.statValue}>{sessions.filter(s => s.locked).length}</div>
+              <div className={styles.statLabel}>Buổi học đã khóa</div>
+            </div>
+          </div>
+        </div>
       </div>
 
             <section className={styles.buttonGroup}>

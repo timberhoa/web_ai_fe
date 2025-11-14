@@ -1,7 +1,475 @@
 @import '../../../styles/variables';
 @import '../../../styles/mixins';
 
-.root {}
+.reports {
+  padding: $spacing-6;
+  max-width: 1400px;
+  margin: 0 auto;
 
-.exportBtn { @include button-secondary; }
+  @include media-sm {
+    padding: $spacing-4;
+  }
 
+  @include media-xs {
+    padding: $spacing-3;
+  }
+}
+
+.reportsHeader {
+  margin-bottom: $spacing-8;
+  align-items: flex-start;
+
+  @include media-sm {
+    margin-bottom: $spacing-6;
+  }
+}
+
+.reportsTitle {
+  @include flex-column;
+  gap: $spacing-2;
+}
+
+.title {
+  font-size: $font-size-4xl;
+  font-weight: $font-weight-bold;
+  color: $text;
+  margin: 0;
+
+  @include media-sm {
+    font-size: $font-size-3xl;
+  }
+
+  @include media-xs {
+    font-size: $font-size-2xl;
+  }
+}
+
+.subtitle {
+  font-size: $font-size-lg;
+  color: $text-secondary;
+  margin: 0;
+
+  @include media-sm {
+    font-size: $font-size-base;
+  }
+}
+
+// Tabs
+.tabs {
+  display: flex;
+  gap: $spacing-2;
+  margin-bottom: $spacing-6;
+  border-bottom: 2px solid $border-light;
+
+  @include media-sm {
+    gap: $spacing-1;
+  }
+}
+
+.tab {
+  @include flex-center;
+  gap: $spacing-2;
+  padding: $spacing-3 $spacing-5;
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  color: $text-secondary;
+  font-size: $font-size-base;
+  font-weight: $font-weight-medium;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  margin-bottom: -2px;
+
+  @include media-sm {
+    padding: $spacing-2 $spacing-3;
+    font-size: $font-size-sm;
+  }
+
+  svg {
+    width: 20px;
+    height: 20px;
+
+    @include media-sm {
+      width: 18px;
+      height: 18px;
+    }
+  }
+
+  &:hover {
+    color: $primary;
+    background: $primary-light;
+  }
+
+  &.tabActive {
+    color: $primary;
+    border-bottom-color: $primary;
+    background: $primary-light;
+  }
+}
+
+.reportsContent {
+  @include flex-column;
+  gap: $spacing-6;
+}
+
+// Filter Form
+.filterForm {
+  @include card;
+  padding: $spacing-6;
+  background: $background;
+  border: 1px solid $border;
+
+  @include media-sm {
+    padding: $spacing-4;
+  }
+}
+
+.filterRow {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: $spacing-4;
+  margin-bottom: $spacing-4;
+
+  @include media-sm {
+    grid-template-columns: 1fr;
+    gap: $spacing-3;
+  }
+}
+
+.filterGroup {
+  @include flex-column;
+  gap: $spacing-2;
+}
+
+.filterLabel {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $text;
+}
+
+.filterSelect,
+.filterInput {
+  @include input-base;
+  width: 100%;
+  padding: $spacing-3;
+  font-size: $font-size-sm;
+}
+
+.filterSelect {
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+  background-position: right $spacing-3 center;
+  background-repeat: no-repeat;
+  background-size: 16px;
+  padding-right: $spacing-10;
+  appearance: none;
+}
+
+.filterActions {
+  @include flex-between;
+  gap: $spacing-3;
+  padding-top: $spacing-4;
+  border-top: 1px solid $border-light;
+
+  @include media-sm {
+    flex-direction: column;
+    gap: $spacing-2;
+  }
+}
+
+.filterButton {
+  @include button-primary;
+  padding: $spacing-3 $spacing-6;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  min-width: 140px;
+
+  @include media-sm {
+    width: 100%;
+    justify-content: center;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.exportButton {
+  @include button-secondary;
+  @include flex-center;
+  gap: $spacing-2;
+  padding: $spacing-3 $spacing-5;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $success;
+  border-color: $success;
+  white-space: nowrap;
+
+  @include media-sm {
+    width: 100%;
+    justify-content: center;
+  }
+
+  svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  &:hover:not(:disabled) {
+    background: $success-light;
+    color: $success;
+    border-color: $success;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+// Error Message
+.errorMessage {
+  @include flex-center;
+  gap: $spacing-2;
+  padding: $spacing-4;
+  background: $danger-light;
+  color: $danger;
+  border: 1px solid $danger;
+  border-radius: $radius;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+
+  svg {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+  }
+}
+
+// Report Summary
+.reportSummary {
+  @include card;
+  padding: $spacing-6;
+  background: $background;
+  border: 1px solid $border;
+
+  @include media-sm {
+    padding: $spacing-4;
+  }
+}
+
+.summaryHeader {
+  margin-bottom: $spacing-6;
+  padding-bottom: $spacing-4;
+  border-bottom: 2px solid $border-light;
+}
+
+.summaryTitle {
+  font-size: $font-size-2xl;
+  font-weight: $font-weight-bold;
+  color: $text;
+  margin: 0 0 $spacing-2 0;
+
+  @include media-sm {
+    font-size: $font-size-xl;
+  }
+}
+
+.summaryMeta {
+  @include flex-center;
+  gap: $spacing-4;
+  flex-wrap: wrap;
+  font-size: $font-size-sm;
+  color: $text-secondary;
+
+  @include media-sm {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: $spacing-1;
+  }
+}
+
+.summaryStats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: $spacing-4;
+  margin-bottom: $spacing-6;
+
+  @include media-xs {
+    grid-template-columns: repeat(2, 1fr);
+    gap: $spacing-3;
+  }
+}
+
+.statCard {
+  @include flex-column;
+  gap: $spacing-2;
+  padding: $spacing-4;
+  background: $background-secondary;
+  border: 1px solid $border-light;
+  border-radius: $radius;
+  text-align: center;
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    border-color: $primary;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  }
+}
+
+.statLabel {
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  color: $text-secondary;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.statValue {
+  font-size: $font-size-2xl;
+  font-weight: $font-weight-bold;
+  color: $text;
+
+  @include media-sm {
+    font-size: $font-size-xl;
+  }
+
+  &.statPresent {
+    color: $success;
+  }
+
+  &.statLate {
+    color: $warning;
+  }
+
+  &.statAbsent {
+    color: $danger;
+  }
+
+  &.statExcused {
+    color: $info;
+  }
+
+  &.statRate {
+    color: $primary;
+  }
+}
+
+.summaryInfo {
+  @include flex-column;
+  gap: $spacing-2;
+  padding: $spacing-4;
+  background: $background-tertiary;
+  border-radius: $radius;
+  font-size: $font-size-sm;
+  color: $text;
+
+  div {
+    @include flex-center;
+    justify-content: flex-start;
+    gap: $spacing-2;
+
+    @include media-sm {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+
+  strong {
+    font-weight: $font-weight-semibold;
+    color: $text;
+  }
+}
+
+// Table Styling Enhancements
+.primaryText {
+  font-weight: $font-weight-medium;
+  color: $text;
+}
+
+.subText {
+  font-size: $font-size-xs;
+  color: $text-secondary;
+  margin-top: $spacing-1;
+}
+
+// Status Badges
+.statusBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: $spacing-1 $spacing-3;
+  border-radius: $radius-full;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+.statusBadgePresent {
+  background: $success-light;
+  color: $success;
+}
+
+.statusBadgeLate {
+  background: $warning-light;
+  color: $warning;
+}
+
+.statusBadgeAbsent {
+  background: $danger-light;
+  color: $danger;
+}
+
+.statusBadgeExcused {
+  background: $info-light;
+  color: $info;
+}
+
+.statusBadgeDefault {
+  background: $background-tertiary;
+  color: $text-secondary;
+}
+
+.statusBadgeLocked {
+  background: $danger-light;
+  color: $danger;
+}
+
+.statusBadgeOpen {
+  background: $success-light;
+  color: $success;
+}
+
+// Count Styling
+.countPresent {
+  font-weight: $font-weight-bold;
+  color: $success;
+}
+
+.countLate {
+  font-weight: $font-weight-bold;
+  color: $warning;
+}
+
+.countAbsent {
+  font-weight: $font-weight-bold;
+  color: $danger;
+}
+
+.attendanceRate {
+  font-weight: $font-weight-bold;
+  color: $primary;
+  font-size: $font-size-base;
+}
+
+// Root (for backward compatibility)
+.root {
+  @extend .reports;
+}
+
+.exportBtn {
+  @extend .exportButton;
+}
