@@ -5,6 +5,7 @@ import { reportsApi, type AttendanceReportResponse, type SessionReportResponse, 
 import { coursesApi, type CourseSummary } from '../../../services/courses'
 import { adminUsersApi, type AdminUser } from '../../../services/adminUsers'
 import { exportAttendanceReportToExcel, exportSessionReportToExcel } from '../../../utils/reportExcelExport'
+import { useAuthStore } from '../../../store/useAuthStore'
 
 type ReportTab = 'attendance' | 'session'
 
@@ -86,6 +87,8 @@ const defaultSessionFilter: SessionFilterForm = {
 }
 
 const Reports: React.FC = () => {
+  const {user} = useAuthStore();
+
   const [activeTab, setActiveTab] = useState<ReportTab>('attendance')
   
   // Data states
@@ -110,14 +113,12 @@ const Reports: React.FC = () => {
     const loadLookups = async () => {
       setLookupsLoading(true)
       try {
-        const [coursesRes, teachersRes, studentsRes] = await Promise.all([
+        const [coursesRes] = await Promise.all([
           coursesApi.adminList({ page: 0, size: 200, sort: 'name,asc' }),
-          adminUsersApi.listByRole('TEACHER', { page: 0, size: 200, sort: 'fullName,asc' }),
-          adminUsersApi.listByRole('STUDENT', { page: 0, size: 500, sort: 'fullName,asc' }),
+        
         ])
         setCourses(coursesRes.content || [])
-        setTeachers(teachersRes.content || [])
-        setStudents(studentsRes.content || [])
+      
       } catch (err: any) {
         console.warn('Failed to load lookup data', err)
       } finally {
@@ -126,6 +127,24 @@ const Reports: React.FC = () => {
     }
     loadLookups()
   }, [])
+
+  useEffect(() => {
+    const loadUsersData = async () => {
+      if (user?.role === 'ADMIN') {
+        try {
+          const [teachersRes, studentsRes] = await Promise.all([
+            adminUsersApi.listByRole('TEACHER', { page: 0, size: 200, sort: 'fullName,asc' }),
+            adminUsersApi.listByRole('STUDENT', { page: 0, size: 500, sort: 'fullName,asc' }),
+          ])
+          setTeachers(teachersRes.content || [])
+          setStudents(studentsRes.content || [])
+        } catch (err: any) {
+          console.warn('Failed to load users data', err)
+        }
+      }
+    }
+    loadUsersData()
+  }, [user])
 
   // Load attendance report
   const loadAttendanceReport = useCallback(async () => {

@@ -649,7 +649,7 @@ const defaultFilters: FilterState = {
                         className={styles.viewButton}
                         type="button"
                         onClick={() => navigate(`/session/${session.sessionId}`)}
-                        title="Mo trang diem danh"
+                        title="Mở trang điểm danh"
                       >
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                           <path d="M1 12C1 12 5 5 12 5C19 5 23 12 23 12C23 12 19 19 12 19C5 19 1 12 1 12Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>

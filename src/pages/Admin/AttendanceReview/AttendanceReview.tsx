@@ -316,7 +316,7 @@ const AttendanceReview: React.FC = () => {
                       Roster
                     </button>
                     <button type="button" onClick={() => navigate('/session/' + session.sessionId)}>
-                      Mo trang diem danh
+                      Mở trang điểm danh
                     </button>
                     <button type="button" onClick={() => handleToggleLock(session.sessionId, !!session.locked)}>
                       {session.locked ? 'Mở khóa' : 'Khóa'}
@@ -362,7 +362,7 @@ const AttendanceReview: React.FC = () => {
                   {detail.locked ? 'Đã khóa' : 'Đang mở'}
                 </span>
                 <button type="button" onClick={() => navigate('/session/' + detail.sessionId)}>
-                  Mo trang diem danh
+                  Mở trang điểm danh
                 </button>
                 <button type="button" onClick={() => handleToggleLock(detail.sessionId, !!detail.locked)}>
                   {detail.locked ? 'Mở khóa' : 'Khóa'}

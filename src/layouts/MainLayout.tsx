@@ -88,16 +88,16 @@ const MainLayout: React.FC = () => {
     if (role === 'TEACHER') {
       return [
         dashboard,
-        {
-          id: 'my-classes',
-          label: 'Lớp học',
-          path: '/my-classes',
-          icon: (
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M16 4C18.2 4 20 5.8 20 8C20 10.2 18.2 12 16 12C13.8 12 12 10.2 12 8C12 5.8 13.8 4 16 4ZM16 14C20.4 14 24 15.8 24 18V20H8V18C8 15.8 11.6 14 16 14ZM8 4C10.2 4 12 5.8 12 8C12 10.2 10.2 12 8 12C5.8 12 4 10.2 4 8C4 5.8 5.8 4 8 4ZM8 14C12.4 14 16 15.8 16 18V20H0V18C0 15.8 3.6 14 8 14Z" fill="currentColor"/>
-            </svg>
-          ),
-        },
+        // {
+        //   id: 'my-classes',
+        //   label: 'Lớp học',
+        //   path: '/my-classes',
+        //   icon: (
+        //     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        //       <path d="M16 4C18.2 4 20 5.8 20 8C20 10.2 18.2 12 16 12C13.8 12 12 10.2 12 8C12 5.8 13.8 4 16 4ZM16 14C20.4 14 24 15.8 24 18V20H8V18C8 15.8 11.6 14 16 14ZM8 4C10.2 4 12 5.8 12 8C12 10.2 10.2 12 8 12C5.8 12 4 10.2 4 8C4 5.8 5.8 4 8 4ZM8 14C12.4 14 16 15.8 16 18V20H0V18C0 15.8 3.6 14 8 14Z" fill="currentColor"/>
+        //     </svg>
+        //   ),
+        // },
         {
           id: 'sessions',
           label: 'Lịch theo buổi dạy',
@@ -108,16 +108,16 @@ const MainLayout: React.FC = () => {
             </svg>
           ),
         },
-        {
-          id: 'attendance',
-          label: 'Điểm danh',
-          path: '/attendance',
-          icon: (
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 6.5V7.5C15 8.3 14.3 9 13.5 9H10.5C9.7 9 9 8.3 9 7.5V6.5L3 7V9L9 8.5V9.5C9 10.3 9.7 11 10.5 11H13.5C14.3 11 15 10.3 15 9.5V8.5L21 9ZM6 12H8V20H6V12ZM10 12H12V20H10V12ZM14 12H16V20H14V12Z" fill="currentColor"/>
-            </svg>
-          ),
-        },
+        // {
+        //   id: 'attendance',
+        //   label: 'Điểm danh',
+        //   path: '/attendance',
+        //   icon: (
+        //     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        //       <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 6.5V7.5C15 8.3 14.3 9 13.5 9H10.5C9.7 9 9 8.3 9 7.5V6.5L3 7V9L9 8.5V9.5C9 10.3 9.7 11 10.5 11H13.5C14.3 11 15 10.3 15 9.5V8.5L21 9ZM6 12H8V20H6V12ZM10 12H12V20H10V12ZM14 12H16V20H14V12Z" fill="currentColor"/>
+        //     </svg>
+        //   ),
+        // },
         {
           id: 'attendance-today',
           label: 'Điểm danh hôm nay',

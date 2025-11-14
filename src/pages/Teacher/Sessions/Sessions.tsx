@@ -148,7 +148,7 @@ const Sessions: React.FC = () => {
                         type="button"
                         onClick={() => navigate(`/session/${session.sessionId}`)}
                       >
-                        Mo trang diem danh
+                       Mở trang điểm danh
                       </button>
                     </div>
                   </td>

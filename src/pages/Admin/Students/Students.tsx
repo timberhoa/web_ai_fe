@@ -232,7 +232,7 @@ const Students: React.FC = () => {
       <div className={styles.studentsHeader}>
         <div className={styles.studentsTitle}>
           <h1 className={styles.title}>Quản lý sinh viên</h1>
-          <p className={styles.subtitle}>Danh sách tài khoản role STUDENT</p>
+          <p className={styles.subtitle}>Danh sách tài khoản sinh viên</p>
         </div>
         <button className={styles.addButton} onClick={handleAddStudent}>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

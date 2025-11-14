@@ -283,6 +283,461 @@
   color: $text-muted;
 }
 
+.skipLink {
+  position: absolute;
+  left: $spacing-6;
+  top: $spacing-4;
+  padding: $spacing-2 $spacing-3;
+  background: $primary;
+  color: #fff;
+  border-radius: $radius;
+  transform: translateY(-200%);
+  transition: transform 0.2s ease;
+  z-index: 10;
+  font-weight: $font-weight-semibold;
+
+  &:focus {
+    transform: translateY(0);
+    outline: 3px solid rgba($primary, 0.3);
+  }
+}
+
+.sectionHeader {
+  @include flex-between;
+  gap: $spacing-4;
+  margin-bottom: $spacing-4;
+  flex-wrap: wrap;
+}
+
+.sectionTitle {
+  font-size: $font-size-2xl;
+  font-weight: $font-weight-semibold;
+  margin: 0;
+  color: $text;
+}
+
+.sectionDescription {
+  color: $text-secondary;
+  max-width: 420px;
+  margin: 0;
+  font-size: $font-size-sm;
+}
+
+.panelSection {
+  @include flex-column;
+  gap: $spacing-6;
+}
+
+.panelGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: $spacing-6;
+}
+
+.panelCard {
+  @include card;
+  @include flex-column;
+  gap: $spacing-4;
+  min-height: 320px;
+  border: 1px solid rgba($primary, 0.08);
+  background: linear-gradient(180deg, rgba($primary, 0.01), #fff);
+}
+
+.panelCardHeader {
+  @include flex-between;
+  gap: $spacing-2;
+}
+
+.panelSubtitle {
+  margin: 0;
+  font-size: $font-size-base;
+  color: $text-secondary;
+}
+
+.metricList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-3;
+}
+
+.metricItem {
+  @include flex-column;
+  gap: $spacing-2;
+}
+
+.metricLabel {
+  font-size: $font-size-sm;
+  color: $text-secondary;
+}
+
+.metricValue {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-semibold;
+  color: $text;
+}
+
+.metricTrend {
+  font-size: $font-size-xs;
+  color: $success;
+
+  &.isNegative {
+    color: $danger;
+  }
+}
+
+.progressTrack {
+  width: 100%;
+  height: 6px;
+  border-radius: $radius-full;
+  background: $background-secondary;
+  overflow: hidden;
+}
+
+.progressBar {
+  height: 100%;
+  border-radius: inherit;
+  background: $primary;
+}
+
+.statusList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-3;
+}
+
+.statusRow {
+  @include flex-between;
+  gap: $spacing-3;
+  padding: $spacing-3;
+  border-radius: $radius-lg;
+  background: $background-secondary;
+}
+
+.statusBadge {
+  padding: $spacing-1 $spacing-3;
+  border-radius: $radius-full;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+
+  &.isSuccess {
+    background: $success-light;
+    color: $success;
+  }
+
+  &.isWarning {
+    background: $warning-light;
+    color: $warning;
+  }
+
+  &.isDanger {
+    background: $danger-light;
+    color: $danger;
+  }
+}
+
+.timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-4;
+}
+
+.timelineItem {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: $spacing-3;
+}
+
+.timelineTime {
+  font-size: $font-size-sm;
+  color: $text-muted;
+}
+
+.timelineContent {
+  position: relative;
+  padding-left: $spacing-4;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: $spacing-1;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: $primary;
+    box-shadow: 0 0 0 4px rgba($primary, 0.1);
+  }
+}
+
+.insightTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: $font-size-sm;
+
+  th {
+    text-align: left;
+    color: $text-secondary;
+    padding-bottom: $spacing-2;
+    font-weight: $font-weight-medium;
+  }
+
+  td {
+    padding: $spacing-2 0;
+    border-top: 1px solid $border;
+  }
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 $spacing-2;
+  height: 24px;
+  border-radius: $radius-full;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+
+  &.badgePrimary {
+    background: rgba($primary, 0.12);
+    color: $primary;
+  }
+
+  &.badgeWarning {
+    background: rgba($warning, 0.15);
+    color: darken($warning, 8%);
+  }
+
+  &.badgeBordered {
+    border: 1px solid $border;
+    color: $text-secondary;
+    background: transparent;
+  }
+}
+
+.overviewGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: $spacing-4;
+}
+
+.overviewCard {
+  @include card;
+  min-height: 160px;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-2;
+  border: 1px solid rgba($primary, 0.12);
+}
+
+.overviewValue {
+  font-size: $font-size-3xl;
+  font-weight: $font-weight-semibold;
+}
+
+.overviewMeta {
+  color: $text-secondary;
+  font-size: $font-size-sm;
+}
+
+.overviewDelta {
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-1;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+  color: $success;
+
+  &.isNegative {
+    color: $danger;
+  }
+}
+
+.suggestionList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-3;
+}
+
+.suggestionItem {
+  padding: $spacing-3;
+  border-radius: $radius-lg;
+  border: 1px dashed rgba($primary, 0.3);
+  background: rgba($primary, 0.03);
+}
+
+.suggestionText {
+  margin: 0;
+  font-weight: $font-weight-medium;
+}
+
+.suggestionHint {
+  margin: $spacing-1 0 0;
+  font-size: $font-size-xs;
+  color: $text-secondary;
+}
+
+.quickActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-3;
+}
+
+.quickActionButton {
+  flex: 1;
+  min-width: 160px;
+  padding: $spacing-3;
+  border-radius: $radius-lg;
+  border: 1px solid $border;
+  background: #fff;
+  font-weight: $font-weight-semibold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+
+  &:hover,
+  &:focus {
+    border-color: $primary;
+    color: $primary;
+    box-shadow: 0 0 0 3px rgba($primary, 0.1);
+  }
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 $spacing-2;
+  height: 26px;
+  border-radius: $radius-full;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+  letter-spacing: 0.05em;
+
+  &.tagMuted {
+    background: $background-secondary;
+    color: $text-secondary;
+  }
+
+  &.tagPositive {
+    background: rgba($success, 0.12);
+    color: $success;
+  }
+
+  &.tagNegative {
+    background: rgba($danger, 0.12);
+    color: $danger;
+  }
+}
+
+.dualColumn {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: $spacing-4;
+}
+
+.focusList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-3;
+}
+
+.focusItem {
+  @include flex-between;
+  gap: $spacing-3;
+  padding: $spacing-3;
+  border-radius: $radius-lg;
+  background: $background-secondary;
+}
+
+.focusTitle {
+  margin: 0;
+  font-size: $font-size-sm;
+  color: $text-secondary;
+}
+
+.focusValue {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-semibold;
+}
+
+.focusAction {
+  font-size: $font-size-xs;
+  color: $primary;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.sessionList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-3;
+}
+
+.sessionItem {
+  border: 1px solid $border;
+  border-radius: $radius-lg;
+  padding: $spacing-3;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-1;
+}
+
+.sessionTime {
+  font-size: $font-size-sm;
+  color: $text-secondary;
+}
+
+.sessionMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-2;
+  font-size: $font-size-xs;
+  color: $text-muted;
+}
+
+.progressPill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 $spacing-2;
+  height: 22px;
+  border-radius: $radius-full;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  background: rgba($info, 0.12);
+  color: darken($info, 8%);
+}
+
 // Responsive adjustments
 @include media-sm {
   .chartCard,
