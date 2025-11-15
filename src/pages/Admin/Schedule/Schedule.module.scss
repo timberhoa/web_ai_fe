@@ -5,20 +5,188 @@
   display: flex;
   flex-direction: column;
   gap: $spacing-4;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: $spacing-4;
+  width: 100%;
 }
 
 .pageHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  @include flex-column;
+  gap: $spacing-6;
+  margin-bottom: $spacing-6;
+}
+
+.headerContent {
+  @include flex-between;
+  align-items: flex-start;
   flex-wrap: wrap;
+  gap: $spacing-4;
+
+  @include media-sm {
+    flex-direction: column;
+    gap: $spacing-3;
+  }
+}
+
+.headerTitle {
+  @include flex-column;
   gap: $spacing-2;
+  flex: 1;
+
+  h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: $text;
+    margin: 0;
+    @include flex-start;
+    gap: $spacing-3;
+
+    @include media-sm {
+      font-size: 1.75rem;
+    }
+
+    svg {
+      color: $primary;
+    }
+  }
+}
+
+.feedbackBadge {
+  padding: $spacing-2 $spacing-4;
+  background: $info-light;
+  color: $info;
+  border-radius: $radius-full;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  border: 1px solid $info;
+}
+
+.statsCards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: $spacing-4;
+
+  @include media-sm {
+    grid-template-columns: 1fr;
+  }
+}
+
+.statCard {
+  @include card;
+  @include flex-start;
+  gap: $spacing-4;
+  padding: $spacing-5;
+  background: linear-gradient(135deg, $background 0%, $background-secondary 100%);
+  border: 1px solid $border-light;
+  border-radius: $radius-lg;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, $primary 0%, $primary-light 100%);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    border-color: $primary-light;
+
+    &::before {
+      transform: scaleX(1);
+    }
+
+    .statIcon {
+      transform: scale(1.1);
+      box-shadow: 0 4px 12px rgba($primary, 0.3);
+    }
+  }
+}
+
+.statIcon {
+  @include flex-center;
+  width: 56px;
+  height: 56px;
+  border-radius: $radius-lg;
+  background: linear-gradient(135deg, $primary-light 0%, rgba($primary, 0.1) 100%);
+  color: $primary;
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba($primary, 0.15);
+
+  svg {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+.statContent {
+  @include flex-column;
+  gap: $spacing-1;
+  flex: 1;
+  min-width: 0;
+}
+
+.statValue {
+  font-size: $font-size-3xl;
+  font-weight: $font-weight-bold;
+  color: $text;
+  line-height: 1.2;
+
+  @include media-sm {
+    font-size: $font-size-2xl;
+  }
+}
+
+.statLabel {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $text-secondary;
+}
+
+.buttonGroup {
+  display: flex;
+  gap: $spacing-4;
+  margin-bottom: $spacing-4;
+}
+
+.addButton {
+  @include button-primary;
+  height: 42px;
+  padding: 0 $spacing-4;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-2;
+  
+  svg {
+    width: 20px;
+    height: 20px;
+    stroke: currentColor;
+  }
+  
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba($primary, 0.2);
+  }
 }
 
 .subtitle {
   margin: $spacing-1 0 0;
   color: $text-muted;
-  font-size: $font-size-sm;
+  font-size: $font-size-base;
+  line-height: 1.5;
 }
 
 .feedback {
@@ -31,22 +199,44 @@
   display: flex;
   flex-direction: column;
   gap: $spacing-3;
+  padding: $spacing-4;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+  border-radius: 12px;
+  margin-bottom: $spacing-4;
 }
 
 .filterFields {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: $spacing-2;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: $spacing-3;
 
   label {
     display: flex;
     flex-direction: column;
-    gap: $spacing-1;
-    font-size: $font-size-sm;
+    gap: $spacing-2;
+    font-size: $font-size-base;
+    font-weight: 500;
+    color: $text-primary;
 
     input,
     select {
       @include input-base;
+      height: 42px;
+      border-radius: 8px;
+      border: 1px solid rgba(0, 0, 0, 0.15);
+      transition: all 0.2s ease;
+      
+      &:hover {
+        border-color: rgba(0, 0, 0, 0.3);
+      }
+      
+      &:focus {
+        border-color: $primary;
+        box-shadow: 0 0 0 3px rgba($primary, 0.1);
+      }
     }
   }
 }
@@ -54,48 +244,100 @@
 .filterActions {
   display: flex;
   justify-content: flex-end;
+  margin-top: $spacing-2;
 
   button {
     @include button-secondary;
+    height: 42px;
+    padding: 0 $spacing-4;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
   }
 }
 
 .formGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
   gap: $spacing-4;
+  margin-bottom: $spacing-4;
 }
 
 .card {
   @include card;
+  padding: $spacing-4;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  }
 
   h2 {
-    margin-top: 0;
-    margin-bottom: $spacing-3;
-    font-size: $font-size-lg;
+    margin: 0 0 $spacing-4;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: $text-primary;
+    border-bottom: 2px solid rgba($primary, 0.1);
+    padding-bottom: $spacing-2;
   }
 }
 
 .form {
   display: flex;
   flex-direction: column;
-  gap: $spacing-2;
+  gap: $spacing-3;
 
   label {
     display: flex;
     flex-direction: column;
-    gap: $spacing-1;
-    font-size: $font-size-sm;
+    gap: $spacing-2;
+    font-size: $font-size-base;
+    font-weight: 500;
+    color: $text-primary;
 
     input,
     select {
       @include input-base;
+      height: 42px;
+      border-radius: 8px;
+      border: 1px solid rgba(0, 0, 0, 0.15);
+      transition: all 0.2s ease;
+      
+      &:hover {
+        border-color: rgba(0, 0, 0, 0.3);
+      }
+      
+      &:focus {
+        border-color: $primary;
+        box-shadow: 0 0 0 3px rgba($primary, 0.1);
+      }
     }
   }
 
   button[type='submit'] {
     @include button-primary;
     align-self: flex-start;
+    height: 42px;
+    padding: 0 $spacing-4;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba($primary, 0.2);
+    }
   }
 }
 
@@ -127,22 +369,128 @@
   @include card;
   display: flex;
   flex-direction: column;
-  gap: $spacing-3;
+  gap: $spacing-4;
+  padding: $spacing-4;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+  border-radius: 12px;
+  margin-bottom: $spacing-4;
 }
 
 .sessionsHeader {
   display: flex;
   justify-content: space-between;
-  gap: $spacing-2;
+  gap: $spacing-3;
   flex-wrap: wrap;
+  border-bottom: 2px solid rgba($primary, 0.1);
+  padding-bottom: $spacing-3;
 
   h2 {
     margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: $text-primary;
   }
 
   p {
     margin: 0;
     color: $text-muted;
+    font-size: $font-size-base;
+  }
+}
+
+.searchForm {
+  margin-top: $spacing-3;
+  
+  .searchRow {
+    display: flex;
+    gap: $spacing-3;
+    margin-bottom: $spacing-3;
+    align-items: flex-end;
+
+    label {
+      display: flex;
+      flex-direction: column;
+      gap: $spacing-2;
+      font-size: $font-size-base;
+      font-weight: 500;
+      color: $text-primary;
+    }
+  }
+
+  .searchSelect {
+    @include input-base;
+    min-width: 180px;
+    height: 42px;
+    border-radius: 8px;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    transition: all 0.2s ease;
+    
+    &:hover {
+      border-color: rgba(0, 0, 0, 0.3);
+    }
+    
+    &:focus {
+      border-color: $primary;
+      box-shadow: 0 0 0 3px rgba($primary, 0.1);
+    }
+  }
+
+  .searchInput {
+    @include input-base;
+    flex: 1;
+    height: 42px;
+    border-radius: 8px;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    transition: all 0.2s ease;
+    
+    &:hover {
+      border-color: rgba(0, 0, 0, 0.3);
+    }
+    
+    &:focus {
+      border-color: $primary;
+      box-shadow: 0 0 0 3px rgba($primary, 0.1);
+    }
+  }
+
+  .searchButton {
+    @include button-primary;
+    height: 42px;
+    padding: 0 $spacing-4;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    min-width: 120px;
+    
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba($primary, 0.2);
+    }
+  }
+}
+
+.resultInfo {
+  color: $text-muted;
+  font-size: $font-size-sm;
+  margin-top: $spacing-1;
+}
+
+.pageNumbers {
+  display: flex;
+  gap: $spacing-1;
+  align-items: center;
+
+  button {
+    @include button-secondary;
+    min-width: 40px;
+    padding: $spacing-1;
+    
+    &.currentPage {
+      @include button-primary;
+    }
   }
 }
 
@@ -183,7 +531,60 @@
   flex-wrap: wrap;
 
   button {
-    @include button-secondary;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: none;
+    border-radius: 6px;
+    background: transparent;
+    color: $text-muted;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: rgba($primary, 0.1);
+      color: $primary;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    svg {
+      width: 16px;
+      height: 16px;
+    }
+  }
+}
+
+.viewButton {
+  &:hover {
+    background: rgba($info, 0.1) !important;
+    color: $info !important;
+  }
+}
+
+.editButton {
+  &:hover {
+    background: rgba($primary, 0.1) !important;
+    color: $primary !important;
+  }
+}
+
+.deleteButton {
+  &:hover {
+    background: rgba($danger, 0.1) !important;
+    color: $danger !important;
+  }
+}
+
+.lockButton {
+  &:hover {
+    background: rgba($warning, 0.1) !important;
+    color: $warning !important;
   }
 }
 

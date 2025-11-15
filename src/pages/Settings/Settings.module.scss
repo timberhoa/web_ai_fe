@@ -48,19 +48,52 @@
   color: $text-secondary;
   background: transparent;
   border: 1px solid transparent;
-  transition: background .2s ease, color .2s ease, border-color .2s ease;
+  transition: all .2s ease;
   cursor: pointer;
+  @include flex-start;
+  gap: $spacing-3;
+  position: relative;
 
   &:hover {
     background: $background-secondary;
     color: $text;
+    transform: translateX(4px);
   }
 }
 
 .tabItemActive {
-  background: $background-secondary;
-  color: $text;
-  border-color: $border-light;
+  background: linear-gradient(135deg, $primary-light 0%, rgba($primary, 0.1) 100%);
+  color: $primary;
+  border-color: $primary;
+  font-weight: $font-weight-semibold;
+  box-shadow: 0 2px 8px rgba($primary, 0.15);
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 70%;
+    background: $primary;
+    border-radius: 0 $radius $radius 0;
+  }
+}
+
+.tabIcon {
+  font-size: $font-size-lg;
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+
+  .tabItem:hover & {
+    transform: scale(1.1);
+  }
+}
+
+.tabLabel {
+  font-size: $font-size-sm;
+  font-weight: inherit;
 }
 
 .content {
@@ -129,7 +162,14 @@
   color: $text;
   margin: 0;
   padding-bottom: $spacing-4;
-  border-bottom: 1px solid $border-light;
+  border-bottom: 2px solid $border-light;
+  @include flex-start;
+  gap: $spacing-3;
+
+  svg {
+    color: $primary;
+    flex-shrink: 0;
+  }
 }
 
 .settingsList {
@@ -170,7 +210,8 @@
   line-height: $line-height-relaxed;
 }
 
-.settingSelect {
+.settingSelect,
+.settingInput {
   @include input-base;
   min-width: 150px;
   cursor: pointer;
@@ -180,10 +221,21 @@
   background-size: 16px;
   padding-right: $spacing-10;
   appearance: none;
+  transition: all 0.2s ease;
+
+  &:focus {
+    border-color: $primary;
+    box-shadow: 0 0 0 3px $primary-light;
+  }
 
   @include media-sm {
     width: 100%;
   }
+}
+
+.settingInput {
+  background-image: none;
+  padding-right: $spacing-3;
 }
 
 .settingRange {

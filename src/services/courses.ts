@@ -52,6 +52,19 @@ export const coursesApi = {
   async remove(id: string) {
     await http.delete(`/course/${id}`)
   },
+
+  async getById(id: string) {
+    const { data } = await http.get<CourseSummary>(`/course/${id}`)
+    return data
+  },
+
+  async listByFaculty(facultyCode: string, params: { page?: number; size?: number; sort?: string } = {}) {
+    const { page = 0, size = 10, sort = 'name' } = params
+    const { data } = await http.get<Page<CourseSummary>>(`/course/by-faculty/${facultyCode}`, {
+      params: { page, size, sort },
+    })
+    return data
+  },
 }
 
 export default coursesApi

@@ -119,13 +119,13 @@ const MyAttendance: React.FC = () => {
 
   return (
     <div className={styles.page}>
-      <h1 className={styles.title}>My Attendance</h1>
+      <h1 className={styles.title}>Lịch sử điểm danh</h1>
 
       <div className={styles.toolbar}>
         <label>
-          Course
+          Môn học
           <select name="courseId" value={filters.courseId} onChange={handleFilterChange}>
-            <option value="">All courses</option>
+            <option value="">Tất cả môn học</option>
             {courses.map((course) => (
               <option key={course.id} value={course.id}>
                 {course.code} - {course.name}
@@ -134,24 +134,29 @@ const MyAttendance: React.FC = () => {
           </select>
         </label>
         <label>
-          From
+          Từ ngày
           <input type="date" name="from" value={filters.from} onChange={handleFilterChange} />
         </label>
         <label>
-          To
+          Đến ngày
           <input type="date" name="to" value={filters.to} onChange={handleFilterChange} />
         </label>
         <button type="button" onClick={handleApplyFilters} disabled={historyLoading || statsLoading}>
-          Apply
+          {historyLoading || statsLoading ? 'Đang tải...' : 'Áp dụng'}
         </button>
       </div>
 
       {statsError && <div className={styles.error}>{statsError}</div>}
-      {statsLoading && <div className={styles.card}>Đang tải thống kê...</div>}
+      
+      {statsLoading && (
+        <div className={styles.card}>
+          <div className={styles.loading}>Đang tải thống kê...</div>
+        </div>
+      )}
 
       {!statsLoading && stats.length > 0 && (
         <div className={styles.card}>
-          <h3>Tổng quan</h3>
+          <h3>Tổng quan điểm danh</h3>
           <div className={styles.statsGrid}>
             <div className={styles.statCard}>
               <p>Tổng buổi</p>
@@ -159,47 +164,58 @@ const MyAttendance: React.FC = () => {
             </div>
             <div className={styles.statCard}>
               <p>Có mặt</p>
-              <strong>{statusCounts.present}</strong>
+              <strong style={{color: 'var(--success)'}}>{statusCounts.present}</strong>
             </div>
             <div className={styles.statCard}>
               <p>Đi trễ</p>
-              <strong>{statusCounts.late}</strong>
+              <strong style={{color: 'var(--warning)'}}>{statusCounts.late}</strong>
             </div>
             <div className={styles.statCard}>
               <p>Miễn</p>
-              <strong>{statusCounts.excused}</strong>
+              <strong style={{color: '#2b6cb0'}}>{statusCounts.excused}</strong>
             </div>
             <div className={styles.statCard}>
               <p>Vắng</p>
-              <strong>{statusCounts.absent}</strong>
+              <strong style={{color: 'var(--danger)'}}>{statusCounts.absent}</strong>
+            </div>
+            <div className={styles.statCard}>
+              <p>Tỷ lệ</p>
+              <strong style={{color: 'var(--primary)'}}>
+                {statusCounts.totalSessions > 0 
+                  ? ((statusCounts.present + statusCounts.late + statusCounts.excused) / statusCounts.totalSessions * 100).toFixed(1)
+                  : 0}%
+              </strong>
             </div>
           </div>
         </div>
       )}
 
       {!statsLoading && stats.length > 0 && (
-        <div className={styles.scheduleGrid}>
-          {stats.map((item) => (
-            <div key={item.courseId} className={styles.card}>
-              <div className={styles.courseHeader}>
-                <strong>{item.courseCode}</strong>
-                <span>{item.attendanceRate.toFixed(1)}%</span>
+        <div className={styles.card}>
+          <h3>Chi tiết theo môn học</h3>
+          <div className={styles.scheduleGrid}>
+            {stats.map((item) => (
+              <div key={item.courseId} className={styles.courseItem}>
+                <div className={styles.courseHeader}>
+                  <strong>{item.courseCode}</strong>
+                  <span>{item.attendanceRate.toFixed(1)}%</span>
+                </div>
+                <p style={{marginBottom: '12px', color: 'var(--text)'}}>{item.courseName}</p>
+                <div className={styles.statsRow}>
+                  <span>Có mặt: {item.presentCount}</span>
+                  <span>Trễ: {item.lateCount}</span>
+                  <span>Miễn: {item.excusedCount}</span>
+                  <span>Vắng: {item.absentCount}</span>
+                </div>
               </div>
-              <p>{item.courseName}</p>
-              <div className={styles.statsRow}>
-                <span>Có mặt: {item.presentCount}</span>
-                <span>Trễ: {item.lateCount}</span>
-                <span>Miễn: {item.excusedCount}</span>
-                <span>Vắng: {item.absentCount}</span>
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       )}
 
       <div className={styles.card}>
         <div className={styles.sectionHeader}>
-          <h3>Lịch sử điểm danh</h3>
+          <h3>Lịch sử điểm danh chi tiết</h3>
           <span>
             Tổng {pageMeta.totalElements} bản ghi · Trang {page + 1}/{Math.max(pageMeta.totalPages, 1)}
           </span>
@@ -219,12 +235,19 @@ const MyAttendance: React.FC = () => {
             <tbody>
               {historyLoading && (
                 <tr>
-                  <td colSpan={5}>Đang tải lịch sử...</td>
+                  <td colSpan={5} style={{textAlign: 'center', padding: '32px'}}>
+                    <div className={styles.loading}>Đang tải lịch sử...</div>
+                  </td>
                 </tr>
               )}
               {!historyLoading && history.length === 0 && (
                 <tr>
-                  <td colSpan={5}>Không có bản ghi nào.</td>
+                  <td colSpan={5} style={{textAlign: 'center', padding: '32px'}}>
+                    <div className={styles.emptyState}>
+                      <p>Không có bản ghi điểm danh nào</p>
+                      <small>Thử thay đổi bộ lọc hoặc khoảng thời gian</small>
+                    </div>
+                  </td>
                 </tr>
               )}
               {!historyLoading &&
@@ -235,7 +258,11 @@ const MyAttendance: React.FC = () => {
                       <div>{record.courseName}</div>
                     </td>
                     <td>
-                      {new Date(record.startTime).toLocaleDateString()} ·{' '}
+                      {new Date(record.startTime).toLocaleDateString('vi-VN', {
+                        weekday: 'short',
+                        day: '2-digit',
+                        month: '2-digit'
+                      })} ·{' '}
                       {new Date(record.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </td>
                     <td>{record.roomName}</td>
@@ -252,14 +279,17 @@ const MyAttendance: React.FC = () => {
         </div>
         <div className={styles.pagination}>
           <button type="button" disabled={page === 0 || historyLoading} onClick={() => fetchHistory(page - 1)}>
-            Prev
+            ← Trang trước
           </button>
+          <span style={{display: 'flex', alignItems: 'center', color: 'var(--text-muted)', fontSize: '14px'}}>
+            Trang {page + 1} / {Math.max(pageMeta.totalPages, 1)}
+          </span>
           <button
             type="button"
             disabled={page + 1 >= pageMeta.totalPages || historyLoading}
             onClick={() => fetchHistory(page + 1)}
           >
-            Next
+            Trang sau →
           </button>
         </div>
       </div>

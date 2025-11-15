@@ -55,6 +55,19 @@ export type SessionAttendanceDetail = {
   records: SessionAttendanceRecord[]
 }
 
+export type SessionRosterRow = {
+  studentId: string
+  studentCode?: string
+  studentName: string
+  studentEmail?: string
+  marked: boolean
+  status?: AttendanceStatus | null
+  checkedAt?: string | null
+  studentLat?: number | null
+  studentLng?: number | null
+  note?: string | null
+}
+
 export type MonitorWindowRequest = {
   courseId?: string
   teacherId?: string
@@ -164,6 +177,11 @@ export const attendanceApi = {
 
   async sessionDetail(sessionId: string) {
     const { data } = await http.get<SessionAttendanceDetail>(`/attendance/session/${sessionId}`)
+    return data
+  },
+
+  async sessionRoster(sessionId: string) {
+    const { data } = await http.get<SessionRosterRow[]>(`/attendance/session/${sessionId}/roster`)
     return data
   },
 

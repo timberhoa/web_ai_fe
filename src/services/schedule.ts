@@ -2,6 +2,7 @@ import http from './http'
 import type { Page } from './adminUsers'
 
 export type ClassSession = {
+  
   sessionId: string
   courseId: string
   courseName: string
@@ -102,17 +103,19 @@ export const scheduleApi = {
     await http.delete(`/schedule/${sessionId}`)
   },
 
-  async lock(sessionId: string) {
+  async lock(sessionId: string | undefined ) {
+    console.log("🚀 ~ sessionId:", sessionId)
     const { data } = await http.post<ClassSession>(`/attendance/review/${sessionId}/lock`, {})
     return data
   },
 
-  async unlock(sessionId: string) {
+  async unlock(sessionId: string | undefined  ) {
+    console.log("🚀 ~ (sessionId:", sessionId)
     const { data } = await http.post<ClassSession>(`/attendance/review/${sessionId}/unlock`, {})
     return data
   },
 
-  async stats(sessionId: string) {
+  async stats(sessionId: string | undefined) {
     const { data } = await http.get<AttendanceStatsResponse>(`/admin/stats/attendance/${sessionId}`)
     return data
   },

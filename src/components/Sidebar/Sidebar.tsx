@@ -97,13 +97,27 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose, items, role }
         <div className={styles.sidebarContent}>
           <div className={styles.logo}>
             <div className={styles.logoIcon}>
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M2 17L12 22L22 17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M2 12L12 17L22 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              <svg width="40" height="40" viewBox="0 0 40 40" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+                {/* Gradient Background Circle */}
+                <defs>
+                  <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#4F46E5" />
+                    <stop offset="100%" stopColor="#7C3AED" />
+                  </linearGradient>
+                </defs>
+                <circle cx="20" cy="20" r="20" fill="url(#logoGradient)"/>
+                {/* Face Recognition Icon */}
+                <circle cx="20" cy="15" r="4" fill="white" opacity="0.9"/>
+                <path d="M13 25C13 21 16 19 20 19C24 19 27 21 27 25" stroke="white" strokeWidth="2" strokeLinecap="round" fill="none"/>
+                {/* Check Mark for Attendance */}
+                <circle cx="28" cy="12" r="6" fill="#10B981"/>
+                <path d="M26 12L28 14L31 11" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </div>
-            <span className={styles.logoText}>{role === 'STUDENT' ? 'Hệ thống điểm danh' : 'STUDENT ADMIN'}</span>
+            <div className={styles.logoContent}>
+              <span className={styles.logoText}>{role === 'STUDENT' ? 'Hệ thống điểm danh' : 'STUDENT ADMIN'}</span>
+              <span className={styles.logoTagline}>Smart Attendance</span>
+            </div>
           </div>
 
           <nav className={styles.nav} aria-label="Điều hướng chính">

@@ -1,23 +1,263 @@
 @import '../../../styles/variables';
 @import '../../../styles/mixins';
 
-.root {}
+.root {
+  .toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $spacing-2;
+    align-items: center;
+    margin-bottom: $spacing-4;
+  }
+}
+
+.loading,
+.error {
+  @include flex-center;
+  gap: $spacing-2;
+  padding: $spacing-4;
+  margin: $spacing-4 0;
+  border-radius: $radius;
+  
+  .spinner {
+    width: 24px;
+    height: 24px;
+    border: 3px solid $border-light;
+    border-top-color: $primary;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+  }
+}
+
+.error {
+  background: $danger-light;
+  color: $danger;
+  border: 1px solid $danger;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
 
 .actor {
   display: inline-block;
-  padding: 2px 8px;
+  padding: 4px 10px;
   border-radius: 999px;
   background: $background-tertiary;
   border: 1px solid $border-light;
   font-weight: $font-weight-medium;
+  font-size: $font-size-sm;
+}
+
+.role {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: $radius;
+  background: $background-secondary;
+  border: 1px solid $border-light;
+  font-weight: $font-weight-medium;
+  font-size: $font-size-sm;
+  text-transform: uppercase;
 }
 
 .action {
   display: inline-block;
-  padding: 2px 8px;
+  padding: 4px 10px;
   border-radius: $radius;
   background: $primary-light;
   color: $primary;
   border: 1px solid $primary-light;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
 }
 
+.method {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: $radius;
+  font-weight: $font-weight-semibold;
+  font-size: $font-size-sm;
+  text-transform: uppercase;
+  
+  &--get {
+    background: #e3f2fd;
+    color: #1976d2;
+    border: 1px solid #90caf9;
+  }
+  
+  &--post {
+    background: #e8f5e9;
+    color: #388e3c;
+    border: 1px solid #81c784;
+  }
+  
+  &--put,
+  &--patch {
+    background: #fff3e0;
+    color: #f57c00;
+    border: 1px solid #ffb74d;
+  }
+  
+  &--delete {
+    background: #ffebee;
+    color: #d32f2f;
+    border: 1px solid #ef5350;
+  }
+  
+  &--default {
+    background: $background-tertiary;
+    color: $text;
+    border: 1px solid $border-light;
+  }
+}
+
+.status {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: $radius;
+  font-weight: $font-weight-semibold;
+  font-size: $font-size-sm;
+  
+  &--success {
+    background: #e8f5e9;
+    color: #2e7d32;
+    border: 1px solid #81c784;
+  }
+  
+  &--warning {
+    background: #fff3e0;
+    color: #f57c00;
+    border: 1px solid #ffb74d;
+  }
+  
+  &--error {
+    background: #ffebee;
+    color: #c62828;
+    border: 1px solid #ef5350;
+  }
+  
+  &--default {
+    background: $background-tertiary;
+    color: $text;
+    border: 1px solid $border-light;
+  }
+}
+
+.logRow {
+  cursor: pointer;
+  transition: background-color 0.2s;
+  
+  &:hover {
+    background: $background-secondary;
+  }
+}
+
+.viewButton {
+  @include button-secondary;
+  padding: 4px 12px;
+  font-size: $font-size-sm;
+  cursor: pointer;
+  
+  &:hover {
+    background: $primary;
+    color: white;
+  }
+}
+
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: $spacing-4;
+  padding: $spacing-3;
+  background: $background-secondary;
+  border-radius: $radius;
+  gap: $spacing-4;
+  
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: $spacing-2;
+  }
+}
+
+.paginationInfo {
+  display: flex;
+  align-items: center;
+  gap: $spacing-2;
+  font-size: $font-size-sm;
+  color: $text-secondary;
+  
+  select {
+    @include input-base;
+    padding: 4px 8px;
+    font-size: $font-size-sm;
+    min-width: auto;
+  }
+}
+
+.paginationControls {
+  display: flex;
+  align-items: center;
+  gap: $spacing-2;
+}
+
+.paginationButton {
+  @include button-secondary;
+  padding: 6px 12px;
+  font-size: $font-size-sm;
+  min-width: 36px;
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  &:not(:disabled):hover {
+    background: $primary;
+    color: white;
+  }
+}
+
+.paginationPage {
+  padding: 0 $spacing-2;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $text;
+}
+
+.detailContent {
+  @include flex-column;
+  gap: $spacing-3;
+  padding: $spacing-2;
+}
+
+.detailRow {
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  gap: $spacing-3;
+  padding: $spacing-2;
+  border-bottom: 1px solid $border-light;
+  
+  &:last-child {
+    border-bottom: none;
+  }
+  
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: $spacing-1;
+  }
+}
+
+.detailLabel {
+  font-weight: $font-weight-semibold;
+  color: $text-secondary;
+  font-size: $font-size-sm;
+}
+
+.detailValue {
+  color: $text;
+  word-break: break-word;
+  font-size: $font-size-sm;
+}

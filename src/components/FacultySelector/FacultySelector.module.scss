@@ -1,0 +1,28 @@
+@import '../../styles/variables';
+@import '../../styles/mixins';
+
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-1;
+}
+
+.label {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $text;
+}
+
+.required {
+  color: $danger;
+}
+
+.select {
+  @include input-base;
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}

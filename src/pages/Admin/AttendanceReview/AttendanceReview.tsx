@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import styles from '../Admin.module.scss'
 import pageStyles from './AttendanceReview.module.scss'
 import Modal from '../../../components/Modal/Modal'
@@ -32,6 +32,7 @@ const formatDateTime = (value?: string) => {
 }
 
 const AttendanceReview: React.FC = () => {
+  const navigate = useNavigate()
   const location = useLocation()
   const searchParams = useMemo(() => new URLSearchParams(location.search), [location.search])
   const focusSessionId = searchParams.get('sessionId')
@@ -314,6 +315,9 @@ const AttendanceReview: React.FC = () => {
                     <button type="button" onClick={() => openDetail(session.sessionId)}>
                       Roster
                     </button>
+                    <button type="button" onClick={() => navigate('/session/' + session.sessionId)}>
+                      Mở trang điểm danh
+                    </button>
                     <button type="button" onClick={() => handleToggleLock(session.sessionId, !!session.locked)}>
                       {session.locked ? 'Mở khóa' : 'Khóa'}
                     </button>
@@ -357,6 +361,9 @@ const AttendanceReview: React.FC = () => {
                 <span className={detail.locked ? pageStyles.locked : pageStyles.unlocked}>
                   {detail.locked ? 'Đã khóa' : 'Đang mở'}
                 </span>
+                <button type="button" onClick={() => navigate('/session/' + detail.sessionId)}>
+                  Mở trang điểm danh
+                </button>
                 <button type="button" onClick={() => handleToggleLock(detail.sessionId, !!detail.locked)}>
                   {detail.locked ? 'Mở khóa' : 'Khóa'}
                 </button>

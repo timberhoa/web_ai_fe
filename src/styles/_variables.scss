@@ -63,11 +63,13 @@ $danger: #e5484d;
 $danger-light: #fecaca;
 $info: #06b6d4;
 $info-light: #cffafe;
+$black: #0000;
 
 $background: var(--background);
 $background-secondary: var(--background-secondary);
 $background-tertiary: var(--background-tertiary);
 $text: var(--text);
+$text-primary: var(--black);
 $text-secondary: var(--text-secondary);
 $text-muted: var(--text-muted);
 $border: var(--border);

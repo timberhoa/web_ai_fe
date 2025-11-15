@@ -9,8 +9,8 @@ const Dashboard: React.FC = () => {
 
   if (role === 'TEACHER') return <TeacherDashboard />
   if (role === 'STUDENT') return <StudentDashboard />
-  // Mặc định: ADMIN
-  return <AdminDashboard />
+  if (role === 'ADMIN') return <AdminDashboard />
+  return <div>Loading ... </div>
 }
 
 export default Dashboard

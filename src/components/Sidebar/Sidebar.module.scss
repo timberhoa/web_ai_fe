@@ -40,25 +40,60 @@
 
 .logo {
   @include flex-start;
-  padding: 0 $spacing-6 $spacing-8;
+  padding: $spacing-5 $spacing-6 $spacing-6;
   border-bottom: 1px solid $border-light;
   margin-bottom: $spacing-6;
+  gap: $spacing-3;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: $background-secondary;
+  }
 }
 
 .logoIcon {
   @include flex-center;
-  width: 40px;
-  height: 40px;
-  background: $primary;
+  width: 48px;
+  height: 48px;
   border-radius: $radius-lg;
-  color: white;
-  margin-right: $spacing-3;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 16px rgba(79, 70, 229, 0.4);
+  }
+
+  svg {
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+  }
+}
+
+.logoContent {
+  @include flex-column;
+  gap: $spacing-1;
+  flex: 1;
+  min-width: 0;
 }
 
 .logoText {
   font-size: $font-size-lg;
   font-weight: $font-weight-bold;
   color: $text;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.logoTagline {
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  color: $text-secondary;
+  opacity: 0.8;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
 }
 
 .nav {
