@@ -27,8 +27,11 @@ import MySchedule from '../pages/Student/MySchedule';
 import MyAttendance from '../pages/Student/MyAttendance';
 import MyProfile from '../pages/Student/MyProfile';
 import FaceEnrollment from '../pages/FaceEnrollment/FaceEnrollment';
-
-
+import Faculties from '../pages/Admin/Faculties';
+import FacultyBrowser from '../pages/FacultyBrowser';
+import CoursesByFaculty from '../pages/CoursesByFaculty';
+import CourseDetail from '../pages/CourseDetail';
+import FacultyDetail from '../pages/FacultyDetail';
 
 export default function AppRouter() {
   return (
@@ -49,6 +52,7 @@ export default function AppRouter() {
             <Route element={<RequireRole allow={["ADMIN", "TEACHER"]} />}>
               <Route path="attendance" element={<Attendance />} />
               <Route path="reports" element={<AdminReports />} />
+              <Route path="courses/:courseId" element={<CourseDetail />} />
             </Route>
             <Route element={<RequireRole allow={["TEACHER", "STUDENT"]} />}>
               <Route path="face-enrollment" element={<FaceEnrollment />} />
@@ -64,6 +68,8 @@ export default function AppRouter() {
               <Route path="lecturers" element={<Lecturers />} />
               <Route path="classes" element={<Classes />} />
               <Route path="courses" element={<Courses />} />
+              <Route path="faculties" element={<Faculties />} />
+              <Route path="faculties/:facultyCode" element={<FacultyDetail />} />
               <Route path="schedule" element={<Schedule />} />
               {/* <Route path="attendance/monitor" element={<AttendanceMonitor />} /> */}
               <Route path="attendance/review" element={<AttendanceReview />} />
@@ -78,6 +84,8 @@ export default function AppRouter() {
               <Route path="sessions" element={<Sessions />} />
               <Route path="attendance-today" element={<AttendanceToday />} />
               <Route path="attendance/:sessionId" element={<SessionDetail />} />
+              <Route path="browse-faculties" element={<FacultyBrowser />} />
+              <Route path="faculties/:facultyCode/courses" element={<CoursesByFaculty />} />
             </Route>
 
             {/* Student only */}

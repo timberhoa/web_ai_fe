@@ -120,9 +120,28 @@ const MySchedule: React.FC = () => {
     return Array.from(map.entries()).sort((a, b) => a[0].localeCompare(b[0]))
   }, [filteredSessions])
 
+  const totalSessions = filteredSessions.length
+  const upcomingSessions = filteredSessions.filter(s => new Date(s.startTime) > new Date()).length
+
   return (
     <div className={styles.page}>
-      <h1 className={styles.title}>Thời khóa biểu</h1>
+      <h1 className={styles.title}>Thời khóa biểu của tôi</h1>
+
+      {/* Quick Stats */}
+      <div className={styles.statsGrid}>
+        <div className={styles.statCard}>
+          <p>Tổng buổi học</p>
+          <strong>{totalSessions}</strong>
+        </div>
+        <div className={styles.statCard}>
+          <p>Sắp diễn ra</p>
+          <strong>{upcomingSessions}</strong>
+        </div>
+        <div className={styles.statCard}>
+          <p>Môn học</p>
+          <strong>{myCourses.length}</strong>
+        </div>
+      </div>
 
       <div className={styles.toolbar}>
         <label>
@@ -134,9 +153,9 @@ const MySchedule: React.FC = () => {
           <input type="date" value={to} onChange={(event) => setTo(event.target.value)} />
         </label>
         <label>
-          Chọn khóa học
+          Lọc theo môn học
         <select value={courseFilter} onChange={(event) => setCourseFilter(event.target.value)}>
-          <option value="ALL">All courses</option>
+          <option value="ALL">Tất cả môn học</option>
           {myCourses.map((course) => (
             <option key={course.id} value={course.id}>
               {course.code} - {course.name}
@@ -145,29 +164,40 @@ const MySchedule: React.FC = () => {
         </select>
         </label>
         <label>
-          Tìm kiếm môn học hoặc phòng học
-          <input value={keyword} onChange={(event) => setKeyword(event.target.value)} />
+          Tìm kiếm
+          <input 
+            value={keyword} 
+            onChange={(event) => setKeyword(event.target.value)}
+            placeholder="Tìm môn học hoặc phòng..."
+          />
         </label>
         <button onClick={fetchSessions} disabled={loading}>
-          Làm mới
+          {loading ? 'Đang tải...' : 'Làm mới'}
         </button>
       </div>
 
-      {coursesLoading && <div className={styles.card}>Đang tải danh sách môn học...</div>}
+      {coursesLoading && (
+        <div className={styles.card}>
+          <div className={styles.loading}>Đang tải danh sách môn học...</div>
+        </div>
+      )}
+      
       {coursesError && <div className={styles.error}>{coursesError}</div>}
+      
       {!coursesLoading && myCourses.length > 0 && (
         <div className={styles.card}>
-          <h3>Môn học đã ghi danh</h3>
+          <h3>Môn học đã ghi danh ({myCourses.length})</h3>
           <ul className={styles.courseList}>
             {myCourses.map((course) => {
+              const sessionsCount = sessions.filter(s => s.courseId === course.id).length
               return(
               <li key={course.id} className={styles.courseItem}>
                 <div>
                   <strong>{course.code}</strong> - {course.name}
                 </div>
                 <div className={styles.courseMeta}>
-                  <span>Giảng viên: {course.teacher_name || '-'}</span>
-                  <span>Tín chỉ: {course.credits ?? '-'}</span>
+                  <span>Giảng viên: {course.teacher_name || 'Chưa có giảng viên'}</span>
+                  <span>Tín chỉ: {course.credits ?? 0} · Buổi học: {sessionsCount}</span>
                 </div>
               </li>
             )})}
@@ -177,9 +207,20 @@ const MySchedule: React.FC = () => {
 
       {error && <div className={styles.error}>{error}</div>}
 
-      {loading && <div className={styles.card}>Loading schedule...</div>}
+      {loading && (
+        <div className={styles.card}>
+          <div className={styles.loading}>Đang tải lịch học...</div>
+        </div>
+      )}
 
-      {!loading && groupedSessions.length === 0 && <div className={styles.card}>No sessions in this range.</div>}
+      {!loading && groupedSessions.length === 0 && (
+        <div className={styles.card}>
+          <div className={styles.emptyState}>
+            <p>Không có buổi học nào trong khoảng thời gian này</p>
+            <small>Thử thay đổi bộ lọc hoặc khoảng thời gian</small>
+          </div>
+        </div>
+      )}
 
       <div className={styles.scheduleGrid}>
         {groupedSessions.map(([date, items]) => (

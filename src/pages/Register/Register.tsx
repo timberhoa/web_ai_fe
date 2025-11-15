@@ -145,7 +145,7 @@ const Register: React.FC = () => {
   useEffect(() => {
     const getListFaculty = async () => {
       const data = await facultyApi.getFacultyList()
-      setFacultyList(data?.data || [])
+      setFacultyList(data || [])
     }
     getListFaculty()
   }, [])

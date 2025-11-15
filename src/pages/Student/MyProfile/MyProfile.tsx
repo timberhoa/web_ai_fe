@@ -55,28 +55,54 @@ const MyProfile: React.FC = () => {
 
   return (
     <div className={styles.page}>
-      <h1 className={styles.title}>My Profile</h1>
+      <h1 className={styles.title}>Hồ sơ cá nhân</h1>
 
       {error && <div className={styles.error}>{error}</div>}
 
-      <div className={styles.card}>
-        <h3>Thông tin cá nhân</h3>
+      {/* Profile Header Card */}
+      <div className={styles.card} style={{background: 'linear-gradient(135deg, rgba(var(--primary-rgb), 0.08) 0%, rgba(255, 255, 255, 0.95) 100%)'}}>
+        <div style={{display: 'flex', alignItems: 'center', gap: '24px', marginBottom: '24px'}}>
+          <div style={{
+            width: '80px',
+            height: '80px',
+            borderRadius: '50%',
+            background: 'linear-gradient(135deg, var(--primary) 0%, #667eea 100%)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: 'white',
+            fontSize: '32px',
+            fontWeight: 'bold',
+            boxShadow: '0 4px 12px rgba(var(--primary-rgb), 0.3)'
+          }}>
+            {(user?.fullName || user?.username || 'U').charAt(0).toUpperCase()}
+          </div>
+          <div>
+            <h2 style={{margin: '0 0 8px 0', fontSize: '28px', color: 'var(--primary)'}}>
+              {user?.fullName || user?.name || user?.username}
+            </h2>
+            <p style={{margin: 0, color: 'var(--text-muted)', fontSize: '16px'}}>
+              Sinh viên · {user?.email || 'Chưa có email'}
+            </p>
+          </div>
+        </div>
+        
         <div className={styles.profileGrid}>
           <div>
-            <p>Tên</p>
-            <strong>{user?.fullName || user?.name || user?.username}</strong>
-          </div>
-          <div>
             <p>Email</p>
-            <strong>{user?.email || '-'}</strong>
+            <strong>{user?.email || 'Chưa cập nhật'}</strong>
           </div>
           <div>
-            <p>Username</p>
+            <p>Tên đăng nhập</p>
             <strong>{user?.username || '-'}</strong>
           </div>
           <div>
-            <p>Role</p>
-            <strong>{user?.role || '-'}</strong>
+            <p>Vai trò</p>
+            <strong>{user?.role === 'STUDENT' ? 'Sinh viên' : user?.role || '-'}</strong>
+          </div>
+          <div>
+            <p>Số điện thoại</p>
+            <strong>{user?.phone || 'Chưa cập nhật'}</strong>
           </div>
         </div>
       </div>
