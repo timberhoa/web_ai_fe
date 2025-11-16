@@ -26,6 +26,7 @@ import AdminReports from '../pages/Admin/Reports';
 import MySchedule from '../pages/Student/MySchedule';
 import MyAttendance from '../pages/Student/MyAttendance';
 import MyProfile from '../pages/Student/MyProfile';
+import AIAssistant from '../pages/Student/AIAssistant';
 import FaceEnrollment from '../pages/FaceEnrollment/FaceEnrollment';
 import Faculties from '../pages/Admin/Faculties';
 import FacultyBrowser from '../pages/FacultyBrowser';
@@ -93,6 +94,7 @@ export default function AppRouter() {
               <Route path="my-schedule" element={<MySchedule />} />
               <Route path="my-attendance" element={<MyAttendance />} />
               <Route path="my-profile" element={<MyProfile />} />
+              <Route path="ai-assistant" element={<AIAssistant />} />
             </Route>
 
             <Route path="session/:sessionId" element={<SessionDetail />} />
