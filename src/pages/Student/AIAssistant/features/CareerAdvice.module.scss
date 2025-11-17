@@ -1,0 +1,262 @@
+@import '../../../../styles/variables';
+@import '../../../../styles/mixins';
+
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: $spacing-4;
+  animation: slideIn 0.4s ease;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.backButton {
+  @include button-secondary;
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-2;
+  padding: $spacing-2 $spacing-3;
+  margin-bottom: $spacing-4;
+
+  svg {
+    display: block;
+  }
+}
+
+.header {
+  text-align: center;
+  margin-bottom: $spacing-6;
+  padding: $spacing-6 $spacing-4;
+  background: linear-gradient(135deg, rgba(#6366f1, 0.1) 0%, rgba(#8b5cf6, 0.05) 100%);
+  border-radius: $radius-xl;
+  border: 1px solid rgba(#6366f1, 0.2);
+}
+
+.headerIcon {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto $spacing-4;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  box-shadow: 0 8px 24px rgba(#6366f1, 0.3);
+}
+
+.title {
+  font-size: $font-size-3xl;
+  font-weight: $font-weight-bold;
+  margin: 0 0 $spacing-2 0;
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.subtitle {
+  font-size: $font-size-lg;
+  color: $text-muted;
+  margin: 0;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-6;
+}
+
+.form {
+  @include card;
+  padding: $spacing-6;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.98) 100%);
+  border: 1px solid rgba(#6366f1, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-4;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-2;
+
+  label {
+    font-size: $font-size-base;
+    font-weight: $font-weight-semibold;
+    color: $text;
+  }
+
+  input,
+  textarea {
+    @include input-base;
+    border: 2px solid rgba(#6366f1, 0.15);
+    transition: all 0.2s ease;
+
+    &:focus {
+      border-color: #6366f1;
+      box-shadow: 0 0 0 3px rgba(#6366f1, 0.1);
+    }
+  }
+
+  textarea {
+    resize: vertical;
+    font-family: inherit;
+  }
+}
+
+.submitButton {
+  @include button-primary;
+  padding: $spacing-3 $spacing-6;
+  font-size: $font-size-lg;
+  font-weight: $font-weight-bold;
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  border: none;
+  box-shadow: 0 4px 16px rgba(#6366f1, 0.3);
+
+  &:hover:not(:disabled) {
+    box-shadow: 0 6px 24px rgba(#6366f1, 0.4);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.error {
+  @include card;
+  display: flex;
+  align-items: center;
+  gap: $spacing-2;
+  padding: $spacing-3;
+  background: linear-gradient(135deg, rgba($danger, 0.1) 0%, rgba($danger, 0.05) 100%);
+  border: 1px solid rgba($danger, 0.2);
+  color: $danger;
+  font-weight: $font-weight-medium;
+
+  svg {
+    flex-shrink: 0;
+  }
+}
+
+.loading {
+  @include card;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: $spacing-8;
+  gap: $spacing-3;
+  background: linear-gradient(135deg, rgba(#6366f1, 0.05) 0%, rgba(255, 255, 255, 0.95) 100%);
+  border: 1px solid rgba(#6366f1, 0.1);
+
+  .spinner {
+    width: 48px;
+    height: 48px;
+    border: 4px solid rgba(#6366f1, 0.1);
+    border-top-color: #6366f1;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  p {
+    color: $text-muted;
+    font-size: $font-size-lg;
+    margin: 0;
+  }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.response {
+  @include card;
+  padding: 0;
+  background: linear-gradient(135deg, rgba(#10b981, 0.05) 0%, rgba(255, 255, 255, 0.95) 100%);
+  border: 1px solid rgba(#10b981, 0.2);
+  overflow: hidden;
+}
+
+.responseHeader {
+  display: flex;
+  align-items: center;
+  gap: $spacing-3;
+  padding: $spacing-4;
+  background: linear-gradient(135deg, rgba(#10b981, 0.1) 0%, rgba(#10b981, 0.05) 100%);
+  border-bottom: 1px solid rgba(#10b981, 0.2);
+
+  svg {
+    color: #10b981;
+    flex-shrink: 0;
+  }
+
+  h3 {
+    font-size: $font-size-xl;
+    font-weight: $font-weight-bold;
+    color: #10b981;
+    margin: 0;
+  }
+}
+
+.responseContent {
+  padding: $spacing-5;
+  line-height: 1.8;
+  color: $text;
+
+  p {
+    margin: 0 0 $spacing-3 0;
+    font-size: $font-size-base;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    &:empty {
+      display: none;
+    }
+  }
+
+  strong {
+    color: #10b981;
+    font-weight: $font-weight-bold;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: $spacing-2;
+  }
+
+  .header {
+    padding: $spacing-4 $spacing-3;
+  }
+
+  .headerIcon {
+    width: 64px;
+    height: 64px;
+  }
+
+  .title {
+    font-size: $font-size-2xl;
+  }
+
+  .form {
+    padding: $spacing-4;
+  }
+
+  .submitButton {
+    width: 100%;
+  }
+}
