@@ -1,0 +1,326 @@
+@import '../../../../styles/variables';
+@import '../../../../styles/mixins';
+
+.container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%);
+  overflow: hidden;
+}
+
+.header {
+  background: white;
+  padding: $spacing-4;
+  border-bottom: 3px solid #e9d5ff;
+  box-shadow: 0 2px 12px rgba(139, 92, 246, 0.1);
+}
+
+.backBtn {
+  padding: $spacing-2 $spacing-3;
+  background: #faf5ff;
+  border: 2px solid #e9d5ff;
+  border-radius: $radius-lg;
+  color: #8b5cf6;
+  font-weight: $font-weight-semibold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-bottom: $spacing-3;
+
+  &:hover {
+    background: #e9d5ff;
+    transform: translateX(-4px);
+  }
+}
+
+.headerContent {
+  display: flex;
+  align-items: center;
+  gap: $spacing-4;
+
+  .headerIcon {
+    font-size: 48px;
+  }
+
+  h1 {
+    font-size: $font-size-2xl;
+    font-weight: $font-weight-bold;
+    color: #8b5cf6;
+    margin: 0 0 $spacing-1 0;
+  }
+
+  p {
+    font-size: $font-size-base;
+    color: $text-muted;
+    margin: 0;
+  }
+}
+
+.workspace {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.chatPanel {
+  flex: 1;
+  overflow-y: auto;
+  padding: $spacing-4;
+  @include custom-scrollbar;
+}
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  text-align: center;
+
+  .emptyIcon {
+    font-size: 100px;
+    margin-bottom: $spacing-4;
+    filter: drop-shadow(0 4px 12px rgba(139, 92, 246, 0.2));
+  }
+
+  h2 {
+    font-size: $font-size-3xl;
+    font-weight: $font-weight-bold;
+    color: #8b5cf6;
+    margin: 0 0 $spacing-2 0;
+  }
+
+  p {
+    font-size: $font-size-lg;
+    color: $text-muted;
+    margin: 0 0 $spacing-6 0;
+  }
+}
+
+.templates {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $spacing-4;
+  max-width: 900px;
+}
+
+.template {
+  background: white;
+  padding: $spacing-4;
+  border-radius: $radius-xl;
+  border: 2px solid #e9d5ff;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+
+  &:hover {
+    border-color: #8b5cf6;
+    transform: translateY(-8px);
+    box-shadow: 0 12px 24px rgba(139, 92, 246, 0.2);
+  }
+
+  .templateIcon {
+    font-size: 40px;
+    margin-bottom: $spacing-2;
+  }
+
+  .templateTitle {
+    font-size: $font-size-lg;
+    font-weight: $font-weight-bold;
+    color: #8b5cf6;
+    margin-bottom: $spacing-1;
+  }
+
+  .templateDesc {
+    font-size: $font-size-sm;
+    color: $text-muted;
+  }
+}
+
+.errorBox {
+  padding: $spacing-3;
+  background: rgba($danger, 0.1);
+  border: 2px solid rgba($danger, 0.3);
+  border-radius: $radius-lg;
+  color: $danger;
+  margin-bottom: $spacing-3;
+  font-weight: $font-weight-medium;
+}
+
+.messagesList {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-4;
+  max-width: 1000px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.userMessage,
+.aiMessage {
+  background: white;
+  padding: $spacing-4;
+  border-radius: $radius-xl;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  animation: fadeInUp 0.4s ease;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.userMessage {
+  border-left: 4px solid #8b5cf6;
+  background: linear-gradient(135deg, #faf5ff 0%, white 100%);
+}
+
+.aiMessage {
+  border-left: 4px solid #10b981;
+  background: linear-gradient(135deg, #ecfdf5 0%, white 100%);
+}
+
+.messageHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-3;
+  padding-bottom: $spacing-2;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.messageSender {
+  font-weight: $font-weight-bold;
+  font-size: $font-size-base;
+  color: $text;
+}
+
+.messageTimestamp {
+  font-size: $font-size-xs;
+  color: $text-muted;
+}
+
+.messageBody {
+  font-size: $font-size-base;
+  line-height: 1.8;
+  color: $text;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.loadingDots {
+  display: flex;
+  gap: 8px;
+
+  span {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #8b5cf6;
+    animation: bounce 1.4s infinite;
+
+    &:nth-child(2) { animation-delay: 0.2s; }
+    &:nth-child(3) { animation-delay: 0.4s; }
+  }
+}
+
+@keyframes bounce {
+  0%, 60%, 100% {
+    transform: translateY(0);
+    opacity: 0.4;
+  }
+  30% {
+    transform: translateY(-15px);
+    opacity: 1;
+  }
+}
+
+.inputPanel {
+  background: white;
+  padding: $spacing-4;
+  border-top: 3px solid #e9d5ff;
+  box-shadow: 0 -2px 12px rgba(139, 92, 246, 0.1);
+
+  textarea {
+    width: 100%;
+    padding: $spacing-3;
+    border: 2px solid #e9d5ff;
+    border-radius: $radius-lg;
+    font-size: $font-size-base;
+    font-family: inherit;
+    resize: vertical;
+    transition: all 0.2s ease;
+
+    &:focus {
+      outline: none;
+      border-color: #8b5cf6;
+      box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      background: rgba(0, 0, 0, 0.02);
+    }
+  }
+}
+
+.inputActions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: $spacing-3;
+}
+
+.inputHint {
+  font-size: $font-size-sm;
+  color: $text-muted;
+  font-style: italic;
+}
+
+.inputActions button {
+  padding: $spacing-3 $spacing-5;
+  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+  border: none;
+  border-radius: $radius-lg;
+  color: white;
+  font-weight: $font-weight-bold;
+  font-size: $font-size-base;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(139, 92, 246, 0.4);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .templates {
+    grid-template-columns: 1fr;
+  }
+
+  .headerContent {
+    .headerIcon {
+      font-size: 32px;
+    }
+
+    h1 {
+      font-size: $font-size-xl;
+    }
+  }
+}

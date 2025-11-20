@@ -3,10 +3,9 @@
 
 .page {
   @include flex-column;
-  gap: $spacing-5;
-  padding: $spacing-4;
-  max-width: 1400px;
-  margin: 0 auto;
+  height: 100vh;
+  overflow: hidden;
+  background: linear-gradient(135deg, rgba($primary, 0.02) 0%, rgba(255, 255, 255, 1) 100%);
   animation: fadeIn 0.4s ease;
 }
 
@@ -23,7 +22,9 @@
 
 .header {
   text-align: center;
-  margin-bottom: $spacing-4;
+  padding: $spacing-6 $spacing-4 $spacing-4;
+  background: white;
+  border-bottom: 1px solid rgba($border-light, 0.3);
 }
 
 .title {
@@ -47,31 +48,25 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: $spacing-4;
+  padding: $spacing-4;
+  overflow-y: auto;
+  @include custom-scrollbar;
 }
 
 .featureCard {
   @include card;
   padding: $spacing-5;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.98) 100%);
-  border: 1px solid rgba($primary, 0.1);
+  background: white;
+  border: 1px solid rgba($border-light, 0.5);
+  border-top: 4px solid;
   cursor: pointer;
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
 
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, $primary 0%, #667eea 100%);
-  }
-
   &:hover {
-    box-shadow: 0 12px 40px rgba($primary, 0.2);
-    border-color: rgba($primary, 0.3);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+    transform: translateY(-4px);
 
     .featureIcon {
       transform: scale(1.1);
@@ -79,6 +74,7 @@
 
     .featureAction {
       opacity: 1;
+      transform: translateX(4px);
     }
   }
 }
@@ -87,13 +83,17 @@
   width: 64px;
   height: 64px;
   border-radius: $radius-lg;
-  background: linear-gradient(135deg, rgba($primary, 0.1) 0%, rgba($primary, 0.05) 100%);
+  background: rgba(0, 0, 0, 0.03);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: $primary;
   margin-bottom: $spacing-3;
   transition: transform 0.3s ease;
+
+  svg {
+    width: 32px;
+    height: 32px;
+  }
 }
 
 .featureTitle {
@@ -114,32 +114,31 @@
   display: flex;
   align-items: center;
   gap: $spacing-2;
-  color: $primary;
   font-weight: $font-weight-semibold;
   font-size: $font-size-sm;
   opacity: 0.7;
-  transition: opacity 0.3s ease;
+  transition: all 0.3s ease;
 
   svg {
     flex-shrink: 0;
   }
 }
 
-.chatContainer {
-  @include card;
+.fullScreenChat {
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 250px);
-  min-height: 600px;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.98) 100%);
-  border: 1px solid rgba($primary, 0.1);
+  height: 100vh;
+  background: white;
   overflow: hidden;
 }
 
 .chatHeader {
   padding: $spacing-4;
-  border-bottom: 1px solid rgba($border-light, 0.5);
-  background: linear-gradient(135deg, rgba($primary, 0.05) 0%, rgba(255, 255, 255, 0.8) 100%);
+  border-bottom: 2px solid rgba($border-light, 0.3);
+  background: white;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  z-index: 10;
 }
 
 .backButton {
@@ -149,9 +148,15 @@
   gap: $spacing-2;
   padding: $spacing-2 $spacing-3;
   margin-bottom: $spacing-3;
+  border: 1px solid rgba($border-light, 0.5);
 
   svg {
     display: block;
+  }
+
+  &:hover {
+    background: rgba($primary, 0.05);
+    border-color: $primary;
   }
 }
 
@@ -165,12 +170,17 @@
   width: 48px;
   height: 48px;
   border-radius: $radius-lg;
-  background: linear-gradient(135deg, rgba($primary, 0.1) 0%, rgba($primary, 0.05) 100%);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: $primary;
+  color: white;
   flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+  svg {
+    width: 24px;
+    height: 24px;
+  }
 }
 
 .chatHeaderTitle {
@@ -190,7 +200,19 @@
   flex: 1;
   overflow-y: auto;
   padding: $spacing-4;
+  background: linear-gradient(135deg, rgba($primary, 0.01) 0%, rgba(255, 255, 255, 1) 100%);
   @include custom-scrollbar;
+  display: flex;
+  flex-direction: column;
+}
+
+.messagesContainer {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-4;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
 }
 
 .emptyState {
@@ -198,35 +220,36 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100%;
+  flex: 1;
   text-align: center;
   color: $text-muted;
+  padding: $spacing-8;
 
   .emptyIcon {
-    width: 80px;
-    height: 80px;
-    border-radius: $radius-lg;
-    background: linear-gradient(135deg, rgba($primary, 0.1) 0%, rgba($primary, 0.05) 100%);
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.03);
     display: flex;
     align-items: center;
     justify-content: center;
-    color: $primary;
     margin-bottom: $spacing-4;
 
     svg {
-      width: 40px;
-      height: 40px;
+      width: 48px;
+      height: 48px;
     }
   }
 
   h3 {
-    font-size: $font-size-xl;
+    font-size: $font-size-2xl;
     color: $text;
     margin: 0 0 $spacing-2 0;
+    font-weight: $font-weight-bold;
   }
 
   p {
-    font-size: $font-size-base;
+    font-size: $font-size-lg;
     color: $text-muted;
     margin: 0;
   }
@@ -235,32 +258,41 @@
 .errorMessage {
   display: flex;
   align-items: center;
-  gap: $spacing-2;
-  padding: $spacing-3;
-  background: linear-gradient(135deg, rgba($danger, 0.1) 0%, rgba($danger, 0.05) 100%);
-  border: 1px solid rgba($danger, 0.2);
+  gap: $spacing-3;
+  padding: $spacing-4;
+  background: rgba($danger, 0.05);
+  border: 2px solid rgba($danger, 0.2);
   border-radius: $radius-lg;
   color: $danger;
   font-weight: $font-weight-medium;
   margin-bottom: $spacing-3;
+  max-width: 1200px;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
 
   svg {
     flex-shrink: 0;
   }
 }
 
-.responseContainer {
-  display: flex;
-  flex-direction: column;
-  gap: $spacing-4;
-}
-
 .userMessage,
-.aiMessage,
-.loadingMessage {
+.aiMessage {
   display: flex;
   gap: $spacing-3;
   align-items: flex-start;
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .userMessage {
@@ -272,73 +304,75 @@
 
   .messageContent {
     background: linear-gradient(135deg, rgba($primary, 0.1) 0%, rgba($primary, 0.05) 100%);
-    border: 1px solid rgba($primary, 0.2);
+    border: 1px solid rgba($primary, 0.15);
+    align-items: flex-end;
+  }
+
+  .messageText {
+    text-align: right;
   }
 }
 
 .aiMessage {
-  .messageAvatar {
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-  }
-
   .messageContent {
-    background: linear-gradient(135deg, rgba(#10b981, 0.1) 0%, rgba(#10b981, 0.05) 100%);
-    border: 1px solid rgba(#10b981, 0.2);
+    background: white;
+    border: 1px solid rgba($border-light, 0.5);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   }
 }
 
 .messageAvatar {
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   color: white;
   font-weight: $font-weight-bold;
-  font-size: $font-size-sm;
+  font-size: $font-size-xs;
   flex-shrink: 0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .messageContent {
   flex: 1;
-  padding: $spacing-3;
-  border-radius: $radius-lg;
-  font-size: $font-size-base;
-  line-height: 1.6;
-  color: $text;
-  max-width: 80%;
+  max-width: 75%;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-2;
 }
 
-.markdown {
+.messageText {
+  padding: $spacing-4;
+  border-radius: $radius-lg;
+  font-size: $font-size-base;
+  line-height: 1.8;
+  color: $text;
   white-space: pre-wrap;
   word-wrap: break-word;
+  overflow-wrap: break-word;
+}
 
-  strong {
-    font-weight: $font-weight-bold;
-    color: $primary;
-  }
-
-  code {
-    background: rgba($primary, 0.1);
-    padding: 2px 6px;
-    border-radius: $radius-sm;
-    font-family: 'Courier New', monospace;
-    font-size: $font-size-sm;
-  }
+.messageTime {
+  padding: 0 $spacing-4;
+  font-size: $font-size-xs;
+  color: $text-muted;
 }
 
 .typingIndicator {
   display: flex;
-  gap: 6px;
-  padding: $spacing-2 0;
+  gap: 8px;
+  padding: $spacing-4;
+  background: white;
+  border-radius: $radius-lg;
+  border: 1px solid rgba($border-light, 0.5);
 
   span {
-    width: 8px;
-    height: 8px;
+    width: 10px;
+    height: 10px;
     border-radius: 50%;
-    background: $primary;
+    background: currentColor;
     animation: typing 1.4s infinite;
 
     &:nth-child(2) {
@@ -354,120 +388,133 @@
 @keyframes typing {
   0%, 60%, 100% {
     transform: translateY(0);
-    opacity: 0.7;
+    opacity: 0.4;
   }
   30% {
-    transform: translateY(-10px);
+    transform: translateY(-12px);
     opacity: 1;
-  }
-}
-
-.historySection {
-  margin-top: $spacing-6;
-  padding-top: $spacing-4;
-  border-top: 2px solid rgba($border-light, 0.5);
-}
-
-.historyTitle {
-  font-size: $font-size-lg;
-  font-weight: $font-weight-bold;
-  color: $text;
-  margin: 0 0 $spacing-3 0;
-}
-
-.historyItem {
-  padding: $spacing-3;
-  background: rgba($primary, 0.02);
-  border: 1px solid rgba($primary, 0.1);
-  border-radius: $radius-lg;
-  margin-bottom: $spacing-2;
-  transition: all 0.3s ease;
-
-  &:hover {
-    box-shadow: 0 4px 16px rgba($primary, 0.1);
-    border-color: rgba($primary, 0.3);
-  }
-}
-
-.historyQuestion,
-.historyAnswer {
-  font-size: $font-size-sm;
-  line-height: 1.6;
-  margin-bottom: $spacing-2;
-
-  &:last-child {
-    margin-bottom: 0;
-  }
-
-  strong {
-    color: $primary;
-    font-weight: $font-weight-semibold;
   }
 }
 
 .chatInput {
   padding: $spacing-4;
-  border-top: 1px solid rgba($border-light, 0.5);
-  background: linear-gradient(135deg, rgba($primary, 0.02) 0%, rgba(255, 255, 255, 0.8) 100%);
+  border-top: 2px solid rgba($border-light, 0.3);
+  background: white;
   display: flex;
   gap: $spacing-3;
+  align-items: flex-end;
+  flex-shrink: 0;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
+  z-index: 10;
 
   textarea {
     flex: 1;
     @include input-base;
     resize: none;
     font-family: inherit;
-    border: 2px solid rgba($primary, 0.15);
+    border: 2px solid rgba($border-light, 0.5);
     transition: all 0.2s ease;
+    min-height: 48px;
+    max-height: 200px;
+    padding: $spacing-3;
+    line-height: 1.5;
 
     &:focus {
-      border-color: $primary;
-      box-shadow: 0 0 0 3px rgba($primary, 0.1);
+      box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
+      outline: none;
     }
 
     &:disabled {
       opacity: 0.6;
       cursor: not-allowed;
+      background: rgba(0, 0, 0, 0.02);
     }
   }
 
   button {
-    @include button-primary;
-    padding: $spacing-3 $spacing-5;
-    font-weight: $font-weight-semibold;
-    white-space: nowrap;
-    align-self: flex-end;
+    width: 48px;
+    height: 48px;
+    border-radius: $radius-lg;
+    border: none;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+    &:hover:not(:disabled) {
+      transform: scale(1.05);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    &:active:not(:disabled) {
+      transform: scale(0.95);
+    }
 
     &:disabled {
-      opacity: 0.6;
+      opacity: 0.5;
       cursor: not-allowed;
+      transform: none;
+    }
+
+    svg {
+      flex-shrink: 0;
     }
   }
 }
 
-@media (max-width: 768px) {
-  .page {
-    padding: $spacing-2;
-  }
+.spinner {
+  animation: spin 0.8s linear infinite;
+}
 
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (max-width: 768px) {
   .featuresGrid {
     grid-template-columns: 1fr;
+    padding: $spacing-3;
   }
 
-  .chatContainer {
-    height: calc(100vh - 200px);
-    min-height: 500px;
+  .featureCard {
+    padding: $spacing-4;
+  }
+
+  .chatHeader {
+    padding: $spacing-3;
+  }
+
+  .chatBody {
+    padding: $spacing-3;
+  }
+
+  .messagesContainer {
+    gap: $spacing-3;
   }
 
   .messageContent {
-    max-width: 90%;
+    max-width: 85%;
+  }
+
+  .messageText {
+    padding: $spacing-3;
   }
 
   .chatInput {
-    flex-direction: column;
+    padding: $spacing-3;
+    gap: $spacing-2;
+
+    textarea {
+      font-size: $font-size-sm;
+    }
 
     button {
-      width: 100%;
+      width: 44px;
+      height: 44px;
     }
   }
 }

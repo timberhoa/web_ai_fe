@@ -1,17 +1,29 @@
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import styles from './AIAssistant.module.scss'
+import { geminiApi, GeminiMessage } from '../../../services/gemini'
+import { getErrorMessage } from '../../../utils/errorHandler'
 import CareerAdvice from './features/CareerAdvice'
 import HomeworkHelp from './features/HomeworkHelp'
-import { geminiApi } from '../../../services/gemini'
-import { getErrorMessage } from '../../../utils/errorHandler'
+import StudyPlanner from './features/StudyPlanner'
+import EssayWriter from './features/EssayWriter'
+import LanguageTutor from './features/LanguageTutor'
+import CodeHelper from './features/CodeHelper'
+
+type Message = {
+  id: string
+  role: 'user' | 'assistant'
+  content: string
+  timestamp: Date
+}
 
 type AIFeature = {
   id: string
   title: string
   description: string
   icon: React.ReactNode
-  prompt: string
+  systemPrompt: string
   placeholder: string
+  color: string
 }
 
 const AI_FEATURES: AIFeature[] = [
@@ -25,8 +37,14 @@ const AI_FEATURES: AIFeature[] = [
         <path d="M16 21V5C16 4.46957 15.7893 3.96086 15.4142 3.58579C15.0391 3.21071 14.5304 3 14 3H10C9.46957 3 8.96086 3.21071 8.58579 3.58579C8.21071 3.96086 8 4.46957 8 5V21" stroke="currentColor" strokeWidth="2"/>
       </svg>
     ),
-    prompt: 'Bạn là chuyên gia tư vấn hướng nghiệp. Hãy tư vấn chi tiết về:',
+    systemPrompt: `Bạn là chuyên gia tư vấn hướng nghiệp với 20 năm kinh nghiệm. Nhiệm vụ của bạn là:
+- Phân tích điểm mạnh và cơ hội nghề nghiệp phù hợp
+- Đề xuất các vị trí công việc cụ thể
+- Tư vấn kỹ năng cần phát triển
+- Đưa ra lộ trình phát triển sự nghiệp thực tế
+- Trả lời bằng tiếng Việt, chi tiết và dễ hiểu`,
     placeholder: 'Ví dụ: Tôi đang học ngành Công nghệ thông tin, thích lập trình web...',
+    color: '#6366f1',
   },
   {
     id: 'homework',
@@ -41,8 +59,15 @@ const AI_FEATURES: AIFeature[] = [
         <path d="M10 9H8" stroke="currentColor" strokeWidth="2"/>
       </svg>
     ),
-    prompt: 'Bạn là trợ lý học tập. Hãy giúp sinh viên hiểu và giải quyết vấn đề sau:',
+    systemPrompt: `Bạn là giáo viên dạy kèm chuyên nghiệp. Nhiệm vụ của bạn là:
+- Giải thích khái niệm một cách dễ hiểu
+- Hướng dẫn từng bước để giải quyết vấn đề
+- Đưa ra ví dụ minh họa cụ thể
+- Giải thích tại sao cách làm đó đúng
+- Gợi ý cách tránh sai lầm thường gặp
+- Trả lời bằng tiếng Việt, chi tiết như đang dạy trực tiếp`,
     placeholder: 'Ví dụ: Giải thích thuật toán sắp xếp nhanh (Quick Sort)...',
+    color: '#f59e0b',
   },
   {
     id: 'study',
@@ -56,8 +81,15 @@ const AI_FEATURES: AIFeature[] = [
         <line x1="3" y1="10" x2="21" y2="10" stroke="currentColor" strokeWidth="2"/>
       </svg>
     ),
-    prompt: 'Bạn là chuyên gia lập kế hoạch học tập. Hãy tạo kế hoạch chi tiết cho:',
+    systemPrompt: `Bạn là chuyên gia lập kế hoạch học tập. Nhiệm vụ của bạn là:
+- Tạo lịch trình học tập chi tiết và khoa học
+- Phân bổ thời gian hợp lý cho từng môn học
+- Đề xuất phương pháp học hiệu quả
+- Tư vấn kỹ thuật ghi nhớ và ôn tập
+- Cân bằng giữa học tập và nghỉ ngơi
+- Trả lời bằng tiếng Việt, cụ thể và dễ áp dụng`,
     placeholder: 'Ví dụ: Tôi có 2 tuần để ôn thi 3 môn: Toán, Lý, Hóa...',
+    color: '#10b981',
   },
   {
     id: 'essay',
@@ -69,8 +101,15 @@ const AI_FEATURES: AIFeature[] = [
         <path d="M18.5 2.50001C18.8978 2.10219 19.4374 1.87869 20 1.87869C20.5626 1.87869 21.1022 2.10219 21.5 2.50001C21.8978 2.89784 22.1213 3.4374 22.1213 4.00001C22.1213 4.56262 21.8978 5.10219 21.5 5.50001L12 15L8 16L9 12L18.5 2.50001Z" stroke="currentColor" strokeWidth="2"/>
       </svg>
     ),
-    prompt: 'Bạn là chuyên gia viết luận văn học thuật. Hãy hỗ trợ về:',
+    systemPrompt: `Bạn là chuyên gia viết luận văn học thuật. Nhiệm vụ của bạn là:
+- Hướng dẫn xây dựng outline chi tiết
+- Đề xuất cấu trúc luận văn khoa học
+- Tư vấn cách tìm và trích dẫn tài liệu
+- Cải thiện văn phong học thuật
+- Kiểm tra logic và tính mạch lạc
+- Trả lời bằng tiếng Việt, chuyên nghiệp và học thuật`,
     placeholder: 'Ví dụ: Tôi cần viết luận văn về Trí tuệ nhân tạo trong giáo dục...',
+    color: '#8b5cf6',
   },
   {
     id: 'language',
@@ -83,8 +122,15 @@ const AI_FEATURES: AIFeature[] = [
         <path d="M12 2C14.5013 4.73835 15.9228 8.29203 16 12C15.9228 15.708 14.5013 19.2616 12 22C9.49872 19.2616 8.07725 15.708 8 12C8.07725 8.29203 9.49872 4.73835 12 2Z" stroke="currentColor" strokeWidth="2"/>
       </svg>
     ),
-    prompt: 'Bạn là giáo viên tiếng Anh. Hãy giúp học sinh với:',
+    systemPrompt: `Bạn là giáo viên tiếng Anh chuyên nghiệp. Nhiệm vụ của bạn là:
+- Giải thích ngữ pháp một cách dễ hiểu
+- Hướng dẫn cách sử dụng từ vựng đúng ngữ cảnh
+- Sửa lỗi và cải thiện câu văn
+- Luyện tập kỹ năng giao tiếp
+- Đưa ra ví dụ thực tế
+- Trả lời bằng tiếng Việt, giải thích rõ ràng với ví dụ tiếng Anh`,
     placeholder: 'Ví dụ: Giải thích sự khác biệt giữa Present Perfect và Past Simple...',
+    color: '#06b6d4',
   },
   {
     id: 'code',
@@ -96,34 +142,74 @@ const AI_FEATURES: AIFeature[] = [
         <path d="M8 6L2 12L8 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
       </svg>
     ),
-    prompt: 'Bạn là chuyên gia lập trình. Hãy phân tích và giải thích:',
+    systemPrompt: `Bạn là chuyên gia lập trình với kinh nghiệm nhiều năm. Nhiệm vụ của bạn là:
+- Giải thích code một cách dễ hiểu
+- Tìm và sửa lỗi trong code
+- Đề xuất cải thiện hiệu suất và cấu trúc
+- Giải thích thuật toán và độ phức tạp
+- Đưa ra best practices
+- Trả lời bằng tiếng Việt, giải thích kỹ thuật rõ ràng`,
     placeholder: 'Ví dụ: Giải thích đoạn code Python này hoặc tìm lỗi trong code...',
+    color: '#ef4444',
   },
 ]
 
 const AIAssistant: React.FC = () => {
   const [selectedFeature, setSelectedFeature] = useState<AIFeature | null>(null)
+  const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState('')
-  const [response, setResponse] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [history, setHistory] = useState<{ question: string; answer: string }[]>([])
+  const messagesEndRef = useRef<HTMLDivElement>(null)
+  const chatBodyRef = useRef<HTMLDivElement>(null)
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }
+
+  useEffect(() => {
+    scrollToBottom()
+  }, [messages, loading])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!input.trim() || !selectedFeature) return
+    if (!input.trim() || !selectedFeature || loading) return
 
+    const userMessage: Message = {
+      id: Date.now().toString(),
+      role: 'user',
+      content: input.trim(),
+      timestamp: new Date(),
+    }
+
+    setMessages((prev) => [...prev, userMessage])
+    setInput('')
     setLoading(true)
     setError(null)
-    setResponse('')
 
     try {
-      const fullPrompt = `${selectedFeature.prompt}\n\n${input}\n\nHãy trả lời bằng tiếng Việt một cách chi tiết và dễ hiểu.`
-      const result = await geminiApi.generateContent(fullPrompt)
-      
-      setResponse(result)
-      setHistory([{ question: input, answer: result }, ...history])
-      setInput('')
+      // Chuyển đổi messages sang format Gemini
+      const geminiMessages: GeminiMessage[] = messages.map((msg) => ({
+        role: msg.role === 'user' ? 'user' : 'model',
+        parts: [{ text: msg.content }],
+      }))
+
+      // Thêm tin nhắn mới
+      geminiMessages.push({
+        role: 'user',
+        parts: [{ text: userMessage.content }],
+      })
+
+      const result = await geminiApi.chat(geminiMessages, selectedFeature.systemPrompt)
+
+      const assistantMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        role: 'assistant',
+        content: result,
+        timestamp: new Date(),
+      }
+
+      setMessages((prev) => [...prev, assistantMessage])
     } catch (err: any) {
       setError(getErrorMessage(err))
     } finally {
@@ -133,51 +219,71 @@ const AIAssistant: React.FC = () => {
 
   const handleFeatureSelect = (feature: AIFeature) => {
     setSelectedFeature(feature)
-    setResponse('')
+    setMessages([])
     setError(null)
     setInput('')
   }
 
   const handleBack = () => {
     setSelectedFeature(null)
-    setResponse('')
+    setMessages([])
     setError(null)
     setInput('')
   }
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault()
+      handleSubmit(e as any)
+    }
+  }
+
   return (
     <div className={styles.page}>
-      <div className={styles.header}>
-        <h1 className={styles.title}>Trợ lý AI</h1>
-        <p className={styles.subtitle}>Sử dụng AI để hỗ trợ học tập và phát triển kỹ năng</p>
-      </div>
-
       {!selectedFeature ? (
-        <div className={styles.featuresGrid}>
-          {AI_FEATURES.map((feature) => (
-            <div
-              key={feature.id}
-              className={styles.featureCard}
-              onClick={() => handleFeatureSelect(feature)}
-            >
-              <div className={styles.featureIcon}>{feature.icon}</div>
-              <h3 className={styles.featureTitle}>{feature.title}</h3>
-              <p className={styles.featureDescription}>{feature.description}</p>
-              <div className={styles.featureAction}>
-                <span>Bắt đầu</span>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                  <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
+        <>
+          <div className={styles.header}>
+            <h1 className={styles.title}>Trợ lý AI</h1>
+            <p className={styles.subtitle}>Sử dụng AI để hỗ trợ học tập và phát triển kỹ năng</p>
+          </div>
+
+          <div className={styles.featuresGrid}>
+            {AI_FEATURES.map((feature) => (
+              <div
+                key={feature.id}
+                className={styles.featureCard}
+                onClick={() => handleFeatureSelect(feature)}
+                style={{ borderTopColor: feature.color }}
+              >
+                <div className={styles.featureIcon} style={{ color: feature.color }}>
+                  {feature.icon}
+                </div>
+                <h3 className={styles.featureTitle}>{feature.title}</h3>
+                <p className={styles.featureDescription}>{feature.description}</p>
+                <div className={styles.featureAction} style={{ color: feature.color }}>
+                  <span>Bắt đầu</span>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        </>
       ) : selectedFeature.id === 'career' ? (
         <CareerAdvice onBack={handleBack} />
       ) : selectedFeature.id === 'homework' ? (
         <HomeworkHelp onBack={handleBack} />
+      ) : selectedFeature.id === 'study' ? (
+        <StudyPlanner onBack={handleBack} />
+      ) : selectedFeature.id === 'essay' ? (
+        <EssayWriter onBack={handleBack} />
+      ) : selectedFeature.id === 'language' ? (
+        <LanguageTutor onBack={handleBack} />
+      ) : selectedFeature.id === 'code' ? (
+        <CodeHelper onBack={handleBack} />
       ) : (
-        <div className={styles.chatContainer}>
+        <div className={styles.fullScreenChat}>
           <div className={styles.chatHeader}>
             <button className={styles.backButton} onClick={handleBack}>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
@@ -186,7 +292,9 @@ const AIAssistant: React.FC = () => {
               Quay lại
             </button>
             <div className={styles.chatHeaderInfo}>
-              <div className={styles.chatHeaderIcon}>{selectedFeature.icon}</div>
+              <div className={styles.chatHeaderIcon} style={{ backgroundColor: selectedFeature.color }}>
+                {selectedFeature.icon}
+              </div>
               <div>
                 <h2 className={styles.chatHeaderTitle}>{selectedFeature.title}</h2>
                 <p className={styles.chatHeaderDesc}>{selectedFeature.description}</p>
@@ -194,10 +302,12 @@ const AIAssistant: React.FC = () => {
             </div>
           </div>
 
-          <div className={styles.chatBody}>
-            {!response && history.length === 0 && (
+          <div className={styles.chatBody} ref={chatBodyRef}>
+            {messages.length === 0 && !loading && (
               <div className={styles.emptyState}>
-                <div className={styles.emptyIcon}>{selectedFeature.icon}</div>
+                <div className={styles.emptyIcon} style={{ color: selectedFeature.color }}>
+                  {selectedFeature.icon}
+                </div>
                 <h3>Bắt đầu cuộc trò chuyện</h3>
                 <p>Nhập câu hỏi của bạn bên dưới để nhận hỗ trợ từ AI</p>
               </div>
@@ -214,61 +324,73 @@ const AIAssistant: React.FC = () => {
               </div>
             )}
 
-            {response && (
-              <div className={styles.responseContainer}>
-                <div className={styles.userMessage}>
-                  <div className={styles.messageAvatar}>Bạn</div>
-                  <div className={styles.messageContent}>{history[0]?.question}</div>
-                </div>
-                <div className={styles.aiMessage}>
-                  <div className={styles.messageAvatar}>AI</div>
+            <div className={styles.messagesContainer}>
+              {messages.map((message) => (
+                <div
+                  key={message.id}
+                  className={message.role === 'user' ? styles.userMessage : styles.aiMessage}
+                >
+                  <div 
+                    className={styles.messageAvatar}
+                    style={message.role === 'assistant' ? { backgroundColor: selectedFeature.color } : {}}
+                  >
+                    {message.role === 'user' ? 'Bạn' : 'AI'}
+                  </div>
                   <div className={styles.messageContent}>
-                    <div className={styles.markdown}>{response}</div>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {loading && (
-              <div className={styles.loadingMessage}>
-                <div className={styles.messageAvatar}>AI</div>
-                <div className={styles.messageContent}>
-                  <div className={styles.typingIndicator}>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {history.length > 1 && (
-              <div className={styles.historySection}>
-                <h4 className={styles.historyTitle}>Lịch sử trò chuyện</h4>
-                {history.slice(1).map((item, index) => (
-                  <div key={index} className={styles.historyItem}>
-                    <div className={styles.historyQuestion}>
-                      <strong>Câu hỏi:</strong> {item.question}
-                    </div>
-                    <div className={styles.historyAnswer}>
-                      <strong>Trả lời:</strong> {item.answer.substring(0, 200)}...
+                    <div className={styles.messageText}>{message.content}</div>
+                    <div className={styles.messageTime}>
+                      {message.timestamp.toLocaleTimeString('vi-VN', { 
+                        hour: '2-digit', 
+                        minute: '2-digit' 
+                      })}
                     </div>
                   </div>
-                ))}
-              </div>
-            )}
+                </div>
+              ))}
+
+              {loading && (
+                <div className={styles.aiMessage}>
+                  <div className={styles.messageAvatar} style={{ backgroundColor: selectedFeature.color }}>
+                    AI
+                  </div>
+                  <div className={styles.messageContent}>
+                    <div className={styles.typingIndicator}>
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                    </div>
+                  </div>
+                </div>
+              )}
+              <div ref={messagesEndRef} />
+            </div>
           </div>
 
           <form className={styles.chatInput} onSubmit={handleSubmit}>
             <textarea
               value={input}
               onChange={(e) => setInput(e.target.value)}
+              onKeyDown={handleKeyDown}
               placeholder={selectedFeature.placeholder}
-              rows={3}
+              rows={1}
               disabled={loading}
+              style={{ borderColor: selectedFeature.color }}
             />
-            <button type="submit" disabled={loading || !input.trim()}>
-              {loading ? 'Đang xử lý...' : 'Gửi'}
+            <button 
+              type="submit" 
+              disabled={loading || !input.trim()}
+              style={{ backgroundColor: selectedFeature.color }}
+            >
+              {loading ? (
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className={styles.spinner}>
+                  <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" opacity="0.25"/>
+                  <path d="M12 2a10 10 0 0 1 10 10" stroke="currentColor" strokeWidth="4" strokeLinecap="round"/>
+                </svg>
+              ) : (
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                  <path d="M22 2L11 13M22 2L15 22L11 13M22 2L2 9L11 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              )}
             </button>
           </form>
         </div>

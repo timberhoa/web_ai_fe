@@ -1,22 +1,21 @@
 @import '../../../../styles/variables';
 @import '../../../../styles/mixins';
 
-.container {
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: $spacing-4;
-  animation: slideIn 0.4s ease;
+.fullScreenChat {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: white;
+  overflow: hidden;
 }
 
-@keyframes slideIn {
-  from {
-    opacity: 0;
-    transform: translateX(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
+.chatHeader {
+  padding: $spacing-4;
+  border-bottom: 2px solid rgba($border-light, 0.3);
+  background: white;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  z-index: 10;
 }
 
 .backButton {
@@ -25,238 +24,405 @@
   align-items: center;
   gap: $spacing-2;
   padding: $spacing-2 $spacing-3;
-  margin-bottom: $spacing-4;
+  margin-bottom: $spacing-3;
+  border: 1px solid rgba($border-light, 0.5);
 
   svg {
     display: block;
   }
+
+  &:hover {
+    background: rgba(#6366f1, 0.05);
+    border-color: #6366f1;
+  }
 }
 
-.header {
-  text-align: center;
-  margin-bottom: $spacing-6;
-  padding: $spacing-6 $spacing-4;
-  background: linear-gradient(135deg, rgba(#6366f1, 0.1) 0%, rgba(#8b5cf6, 0.05) 100%);
-  border-radius: $radius-xl;
-  border: 1px solid rgba(#6366f1, 0.2);
+.chatHeaderInfo {
+  display: flex;
+  align-items: center;
+  gap: $spacing-3;
 }
 
-.headerIcon {
-  width: 80px;
-  height: 80px;
-  margin: 0 auto $spacing-4;
-  border-radius: 50%;
+.chatHeaderIcon {
+  width: 48px;
+  height: 48px;
+  border-radius: $radius-lg;
   background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
   display: flex;
   align-items: center;
   justify-content: center;
   color: white;
-  box-shadow: 0 8px 24px rgba(#6366f1, 0.3);
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(#6366f1, 0.3);
+
+  svg {
+    width: 24px;
+    height: 24px;
+  }
 }
 
-.title {
-  font-size: $font-size-3xl;
+.chatHeaderTitle {
+  font-size: $font-size-xl;
   font-weight: $font-weight-bold;
-  margin: 0 0 $spacing-2 0;
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: $text;
+  margin: 0 0 $spacing-1 0;
 }
 
-.subtitle {
-  font-size: $font-size-lg;
+.chatHeaderDesc {
+  font-size: $font-size-sm;
   color: $text-muted;
   margin: 0;
 }
 
-.content {
+.chatBody {
+  flex: 1;
+  overflow-y: auto;
+  padding: $spacing-4;
+  background: linear-gradient(135deg, rgba(#6366f1, 0.02) 0%, rgba(255, 255, 255, 1) 100%);
+  @include custom-scrollbar;
   display: flex;
   flex-direction: column;
-  gap: $spacing-6;
 }
 
-.form {
-  @include card;
-  padding: $spacing-6;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.98) 100%);
-  border: 1px solid rgba(#6366f1, 0.1);
+.messagesContainer {
   display: flex;
   flex-direction: column;
   gap: $spacing-4;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
 }
 
-.formGroup {
+.emptyState {
   display: flex;
   flex-direction: column;
-  gap: $spacing-2;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  text-align: center;
+  color: $text-muted;
+  padding: $spacing-8;
 
-  label {
-    font-size: $font-size-base;
-    font-weight: $font-weight-semibold;
-    color: $text;
-  }
+  .emptyIcon {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: rgba(#6366f1, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6366f1;
+    margin-bottom: $spacing-4;
 
-  input,
-  textarea {
-    @include input-base;
-    border: 2px solid rgba(#6366f1, 0.15);
-    transition: all 0.2s ease;
-
-    &:focus {
-      border-color: #6366f1;
-      box-shadow: 0 0 0 3px rgba(#6366f1, 0.1);
+    svg {
+      opacity: 0.8;
     }
   }
 
-  textarea {
-    resize: vertical;
-    font-family: inherit;
+  h3 {
+    font-size: $font-size-2xl;
+    color: $text;
+    margin: 0 0 $spacing-2 0;
+    font-weight: $font-weight-bold;
+  }
+
+  p {
+    font-size: $font-size-lg;
+    color: $text-muted;
+    margin: 0 0 $spacing-4 0;
   }
 }
 
-.submitButton {
-  @include button-primary;
-  padding: $spacing-3 $spacing-6;
-  font-size: $font-size-lg;
-  font-weight: $font-weight-bold;
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-  border: none;
-  box-shadow: 0 4px 16px rgba(#6366f1, 0.3);
+.suggestions {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-2;
+  margin-top: $spacing-4;
+  max-width: 600px;
 
-  &:hover:not(:disabled) {
-    box-shadow: 0 6px 24px rgba(#6366f1, 0.4);
-  }
+  button {
+    padding: $spacing-3 $spacing-4;
+    background: white;
+    border: 2px solid rgba(#6366f1, 0.2);
+    border-radius: $radius-lg;
+    color: $text;
+    font-size: $font-size-sm;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
 
-  &:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
+    &:hover {
+      background: rgba(#6366f1, 0.05);
+      border-color: #6366f1;
+      transform: translateX(4px);
+    }
   }
 }
 
-.error {
-  @include card;
+.errorMessage {
   display: flex;
   align-items: center;
-  gap: $spacing-2;
-  padding: $spacing-3;
-  background: linear-gradient(135deg, rgba($danger, 0.1) 0%, rgba($danger, 0.05) 100%);
-  border: 1px solid rgba($danger, 0.2);
+  gap: $spacing-3;
+  padding: $spacing-4;
+  background: rgba($danger, 0.05);
+  border: 2px solid rgba($danger, 0.2);
+  border-radius: $radius-lg;
   color: $danger;
   font-weight: $font-weight-medium;
+  margin-bottom: $spacing-3;
+  max-width: 1200px;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
 
   svg {
     flex-shrink: 0;
   }
 }
 
-.loading {
-  @include card;
+.userMessage,
+.aiMessage {
   display: flex;
-  flex-direction: column;
+  gap: $spacing-3;
+  align-items: flex-start;
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.userMessage {
+  flex-direction: row-reverse;
+
+  .messageAvatar {
+    background: linear-gradient(135deg, $primary 0%, #667eea 100%);
+  }
+
+  .messageContent {
+    background: linear-gradient(135deg, rgba($primary, 0.1) 0%, rgba($primary, 0.05) 100%);
+    border: 1px solid rgba($primary, 0.15);
+    align-items: flex-end;
+  }
+
+  .messageText {
+    text-align: right;
+  }
+}
+
+.aiMessage {
+  .messageAvatar {
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  }
+
+  .messageContent {
+    background: white;
+    border: 1px solid rgba($border-light, 0.5);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+}
+
+.messageAvatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
   align-items: center;
   justify-content: center;
-  padding: $spacing-8;
-  gap: $spacing-3;
-  background: linear-gradient(135deg, rgba(#6366f1, 0.05) 0%, rgba(255, 255, 255, 0.95) 100%);
-  border: 1px solid rgba(#6366f1, 0.1);
+  color: white;
+  font-weight: $font-weight-bold;
+  font-size: $font-size-xs;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
 
-  .spinner {
+.messageContent {
+  flex: 1;
+  max-width: 75%;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-2;
+}
+
+.messageText {
+  padding: $spacing-4;
+  border-radius: $radius-lg;
+  font-size: $font-size-base;
+  line-height: 1.8;
+  color: $text;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.messageTime {
+  padding: 0 $spacing-4;
+  font-size: $font-size-xs;
+  color: $text-muted;
+}
+
+.typingIndicator {
+  display: flex;
+  gap: 8px;
+  padding: $spacing-4;
+  background: white;
+  border-radius: $radius-lg;
+  border: 1px solid rgba($border-light, 0.5);
+
+  span {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #6366f1;
+    animation: typing 1.4s infinite;
+
+    &:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    &:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+  }
+}
+
+@keyframes typing {
+  0%, 60%, 100% {
+    transform: translateY(0);
+    opacity: 0.4;
+  }
+  30% {
+    transform: translateY(-12px);
+    opacity: 1;
+  }
+}
+
+.chatInput {
+  padding: $spacing-4;
+  border-top: 2px solid rgba($border-light, 0.3);
+  background: white;
+  display: flex;
+  gap: $spacing-3;
+  align-items: flex-end;
+  flex-shrink: 0;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
+  z-index: 10;
+
+  textarea {
+    flex: 1;
+    @include input-base;
+    resize: none;
+    font-family: inherit;
+    border: 2px solid rgba(#6366f1, 0.2);
+    transition: all 0.2s ease;
+    min-height: 48px;
+    max-height: 200px;
+    padding: $spacing-3;
+    line-height: 1.5;
+
+    &:focus {
+      border-color: #6366f1;
+      box-shadow: 0 0 0 3px rgba(#6366f1, 0.1);
+      outline: none;
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      background: rgba(0, 0, 0, 0.02);
+    }
+  }
+
+  button {
     width: 48px;
     height: 48px;
-    border: 4px solid rgba(#6366f1, 0.1);
-    border-top-color: #6366f1;
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-  }
+    border-radius: $radius-lg;
+    border: none;
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(#6366f1, 0.3);
 
-  p {
-    color: $text-muted;
-    font-size: $font-size-lg;
-    margin: 0;
+    &:hover:not(:disabled) {
+      transform: scale(1.05);
+      box-shadow: 0 6px 16px rgba(#6366f1, 0.4);
+    }
+
+    &:active:not(:disabled) {
+      transform: scale(0.95);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    svg {
+      flex-shrink: 0;
+    }
   }
+}
+
+.spinner {
+  animation: spin 0.8s linear infinite;
 }
 
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
 
-.response {
-  @include card;
-  padding: 0;
-  background: linear-gradient(135deg, rgba(#10b981, 0.05) 0%, rgba(255, 255, 255, 0.95) 100%);
-  border: 1px solid rgba(#10b981, 0.2);
-  overflow: hidden;
-}
-
-.responseHeader {
-  display: flex;
-  align-items: center;
-  gap: $spacing-3;
-  padding: $spacing-4;
-  background: linear-gradient(135deg, rgba(#10b981, 0.1) 0%, rgba(#10b981, 0.05) 100%);
-  border-bottom: 1px solid rgba(#10b981, 0.2);
-
-  svg {
-    color: #10b981;
-    flex-shrink: 0;
-  }
-
-  h3 {
-    font-size: $font-size-xl;
-    font-weight: $font-weight-bold;
-    color: #10b981;
-    margin: 0;
-  }
-}
-
-.responseContent {
-  padding: $spacing-5;
-  line-height: 1.8;
-  color: $text;
-
-  p {
-    margin: 0 0 $spacing-3 0;
-    font-size: $font-size-base;
-
-    &:last-child {
-      margin-bottom: 0;
-    }
-
-    &:empty {
-      display: none;
-    }
-  }
-
-  strong {
-    color: #10b981;
-    font-weight: $font-weight-bold;
-  }
-}
-
 @media (max-width: 768px) {
-  .container {
-    padding: $spacing-2;
+  .chatHeader {
+    padding: $spacing-3;
   }
 
-  .header {
-    padding: $spacing-4 $spacing-3;
+  .chatBody {
+    padding: $spacing-3;
   }
 
-  .headerIcon {
-    width: 64px;
-    height: 64px;
+  .messagesContainer {
+    gap: $spacing-3;
   }
 
-  .title {
-    font-size: $font-size-2xl;
+  .messageContent {
+    max-width: 85%;
   }
 
-  .form {
-    padding: $spacing-4;
+  .messageText {
+    padding: $spacing-3;
   }
 
-  .submitButton {
-    width: 100%;
+  .chatInput {
+    padding: $spacing-3;
+    gap: $spacing-2;
+
+    textarea {
+      font-size: $font-size-sm;
+    }
+
+    button {
+      width: 44px;
+      height: 44px;
+    }
+  }
+
+  .suggestions {
+    button {
+      font-size: $font-size-xs;
+      padding: $spacing-2 $spacing-3;
+    }
   }
 }
