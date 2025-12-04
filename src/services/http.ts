@@ -21,12 +21,12 @@ http.interceptors.request.use((config) => {
           const parsed = JSON.parse(raw)
           token = (parsed?.state?.token as string | null | undefined) ?? null
         }
-      } catch {}
+      } catch { }
     }
 
     if (token) {
       config.headers = config.headers || {}
-      ;(config.headers as any).Authorization = `Bearer ${token}`
+        ; (config.headers as any).Authorization = `Bearer ${token}`
     }
   } catch (e) {
     // Swallow errors in token retrieval to avoid breaking requests
@@ -38,31 +38,40 @@ http.interceptors.response.use(
   (res) => res,
   (error) => {
     const status = error?.response?.status
-    if (status === 401) {
+    const data = error?.response?.data
+    const isFaceVerificationError = status === 401 && data?.error === 'Face Verification Failed'
+    const isUnregisteredFaceError = status === 400 && data?.message === 'User has not registered face data'
+
+    if (status === 401 && !isFaceVerificationError) {
       try {
         useAuthStore.getState().logout()
       } catch (e) {
         throw new Error('Không thể đăng xuất')
       }
     }
-    try {
-      const data = error?.response?.data
-      const method = error?.config?.method?.toUpperCase?.() || ''
-      const url = error?.config?.url || ''
-      const serverMessage =
-        (typeof data?.message === 'string' && data.message) ||
-        (Array.isArray(data?.errors) ? data.errors.join(', ') : '') ||
-        error?.message ||
-        'Yêu cầu không thành công.'
 
-      useErrorStore.getState().show({
-        title: 'Lỗi từ máy chủ',
-        message: `${serverMessage}${url ? ` (${method} ${url})` : ''}`,
-        details: data ? JSON.stringify(data, null, 2) : undefined,
-      })
-    } catch (e) {
-      throw new Error('Không thể xử lý lỗi')
+    // Skip global error notification for Face Verification Failed errors
+    // so they can be handled locally by the component
+    if (!isFaceVerificationError && !isUnregisteredFaceError) {
+      try {
+        const method = error?.config?.method?.toUpperCase?.() || ''
+        const url = error?.config?.url || ''
+        const serverMessage =
+          (typeof data?.message === 'string' && data.message) ||
+          (Array.isArray(data?.errors) ? data.errors.join(', ') : '') ||
+          error?.message ||
+          'Yêu cầu không thành công.'
+
+        useErrorStore.getState().show({
+          title: 'Lỗi từ máy chủ',
+          message: `${serverMessage}${url ? ` (${method} ${url})` : ''}`,
+          details: data ? JSON.stringify(data, null, 2) : undefined,
+        })
+      } catch (e) {
+        throw new Error('Không thể xử lý lỗi')
+      }
     }
+
     return Promise.reject(error)
   }
 )

@@ -212,4 +212,85 @@ export const attendanceApi = {
     const { data } = await http.post<unknown>('/attendance/self', payload)
     return data
   },
+
+  // --- Face Management (Admin) ---
+  async registerFace(userId: string, formData: FormData) {
+    // Endpoint: POST /api/admin/user/{userId}/face/register
+    // Content-Type: multipart/form-data
+    const { data } = await http.post<{
+      success: boolean
+      message: string
+      imagesProcessed: number
+      registeredAt: string
+    }>(`/admin/user/${userId}/face/register`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    })
+    return data
+  },
+
+  async deleteFace(userId: string) {
+    // Endpoint: DELETE /api/admin/user/{userId}/face
+    await http.delete(`/admin/user/${userId}/face`)
+  },
+
+  // --- Face Status (Student/Admin) ---
+  async checkFaceStatus() {
+    // Endpoint: GET /api/user/face/status
+    const { data } = await http.get<{
+      isRegistered: boolean
+      registeredAt?: string
+      qualityScore?: number
+    }>('/user/face/status')
+    return data
+  },
+
+  async getFaceStatus(userId: string) {
+    // Endpoint: GET /api/admin/user/{userId}/face/status
+    const { data } = await http.get<{
+      isRegistered: boolean
+      registeredAt?: string
+      qualityScore?: number
+    }>(`/admin/user/${userId}/face/status`)
+    return data
+  },
+
+  // --- Hybrid Attendance (Student) ---
+  async checkInHybrid(formData: FormData) {
+    // Endpoint: POST /api/attendance/check-in-hybrid
+    // Content-Type: multipart/form-data
+    const { data } = await http.post<{
+      success: boolean
+      isMatch: boolean
+      confidence: number
+      status: AttendanceStatus
+      message: string
+      checkInType: string
+    }>('/attendance/check-in-hybrid', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    })
+    return data
+  },
+
+  // --- Teacher Face Scan Attendance ---
+  async teacherCheckInFace(formData: FormData) {
+    // Endpoint: POST /api/attendance/teacher-check-in-face
+    // Content-Type: multipart/form-data
+    const { data } = await http.post<{
+      success: boolean
+      studentId: string
+      studentName: string
+      studentCode: string
+      status: AttendanceStatus
+      message: string
+    }>('/attendance/teacher-check-in-face', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    })
+    return data
+  },
 }

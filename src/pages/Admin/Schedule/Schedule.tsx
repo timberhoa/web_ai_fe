@@ -66,6 +66,24 @@ const sanitizeTimeValue = (value: string) => {
   return value
 }
 
+// Location presets for quick selection
+const LOCATION_PRESETS = {
+  'nong-lam': {
+    name: 'Đại học Nông Lâm TP.HCM',
+    latitude: '10.871283565071982',
+    longitude: '106.79176401813622',
+    radiusMeters: '300'
+  },
+  'cong-nghiep': {
+    name: 'Đại học Công Nghiệp TP.HCM',
+    latitude: '10.822170852595844',
+    longitude: '106.68684822027657',
+    radiusMeters: '300'
+  }
+} as const
+
+type LocationPresetKey = keyof typeof LOCATION_PRESETS | ''
+
 const parseOptionalNumber = (value: string) => {
   if (!value) return undefined
   const parsed = parseFloat(value)
@@ -114,7 +132,7 @@ const defaultFilters: FilterState = {
   sort: 'startTime,asc',
 }
 
- const Schedule: React.FC = () => {
+const Schedule: React.FC = () => {
   const navigate = useNavigate()
   const [courses, setCourses] = useState<CourseSummary[]>([])
   const [teachers, setTeachers] = useState<AdminUser[]>([])
@@ -142,7 +160,7 @@ const defaultFilters: FilterState = {
   const [actionSessionId, setActionSessionId] = useState<string | null>(null)
   const [searchField, setSearchField] = useState('courseName')
   const [searchQuery, setSearchQuery] = useState('')
-  
+
   const [activeModalType, setActiveModalType] = useState<'single' | 'recurring' | null>(null)
 
   const lookupLabel = useMemo(() => {
@@ -154,7 +172,7 @@ const defaultFilters: FilterState = {
     const range = []
     const current = currentPage + 1
     const total = totalPages
-    
+
     if (total <= 5) {
       for (let i = 1; i <= total; i++) range.push(i)
     } else {
@@ -176,19 +194,19 @@ const defaultFilters: FilterState = {
     // Tìm ID dựa trên searchField và searchQuery
     switch (searchField) {
       case 'courseName':
-        const foundCourse = courses.find(c => 
+        const foundCourse = courses.find(c =>
           c.name.toLowerCase().includes(searchQuery.toLowerCase())
         )
         searchParams.courseId = foundCourse?.id || ''
         break
       case 'courseCode':
-        const foundCourseByCode = courses.find(c => 
+        const foundCourseByCode = courses.find(c =>
           c.code?.toLowerCase().includes(searchQuery.toLowerCase())
         )
         searchParams.courseId = foundCourseByCode?.id || ''
         break
       case 'teacherName':
-        const foundTeacher = teachers.find(t => 
+        const foundTeacher = teachers.find(t =>
           (t.fullName || t.username).toLowerCase().includes(searchQuery.toLowerCase())
         )
         searchParams.teacherId = foundTeacher?.id || ''
@@ -273,6 +291,46 @@ const defaultFilters: FilterState = {
     })
   }
 
+  // Location preset handlers
+  const handleSingleLocationPreset = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const presetKey = event.target.value as LocationPresetKey
+    if (presetKey && LOCATION_PRESETS[presetKey]) {
+      const preset = LOCATION_PRESETS[presetKey]
+      setSingleForm((prev) => ({
+        ...prev,
+        latitude: preset.latitude,
+        longitude: preset.longitude,
+        radiusMeters: preset.radiusMeters,
+      }))
+    }
+  }
+
+  const handleRecurringLocationPreset = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const presetKey = event.target.value as LocationPresetKey
+    if (presetKey && LOCATION_PRESETS[presetKey]) {
+      const preset = LOCATION_PRESETS[presetKey]
+      setRecurringForm((prev) => ({
+        ...prev,
+        latitude: preset.latitude,
+        longitude: preset.longitude,
+        radiusMeters: preset.radiusMeters,
+      }))
+    }
+  }
+
+  const handleEditLocationPreset = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const presetKey = event.target.value as LocationPresetKey
+    if (presetKey && LOCATION_PRESETS[presetKey]) {
+      const preset = LOCATION_PRESETS[presetKey]
+      setEditForm((prev) => ({
+        ...prev,
+        latitude: preset.latitude,
+        longitude: preset.longitude,
+        radiusMeters: preset.radiusMeters,
+      }))
+    }
+  }
+
   const handleFiltersChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = event.target
     setFilters((prev) => ({ ...prev, page: 0, [name]: value }))
@@ -285,8 +343,8 @@ const defaultFilters: FilterState = {
         nextPage = pageOrDirection - 1
       } else {
         const currentPage = prev.page
-        nextPage = pageOrDirection === 'prev' 
-          ? Math.max(0, currentPage - 1) 
+        nextPage = pageOrDirection === 'prev'
+          ? Math.max(0, currentPage - 1)
           : Math.min(totalPages - 1, currentPage + 1)
       }
       return { ...prev, page: nextPage }
@@ -412,7 +470,7 @@ const defaultFilters: FilterState = {
       setActionSessionId(null)
     }
   }
-  
+
   const handleToggleLock = async (session: ClassSession) => {
     const sessionID = await window.location.pathname.split('/')[2];
     console.log("🚀 ~ handleToggleLock ~ sessionID:", sessionID)
@@ -448,7 +506,7 @@ const defaultFilters: FilterState = {
           <div className={styles.headerTitle}>
             <h1 className={adminStyles.title}>
               <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M8 7V3M16 7V3M7 11H17M5 21H19C20.1046 21 21 20.1046 21 19V7C21 5.89543 20.1046 5 19 5H5C3.89543 5 3 5.89543 3 7V19C3 20.1046 3.89543 21 5 21Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M8 7V3M16 7V3M7 11H17M5 21H19C20.1046 21 21 20.1046 21 19V7C21 5.89543 20.1046 5 19 5H5C3.89543 5 3 5.89543 3 7V19C3 20.1046 3.89543 21 5 21Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
               Sắp xếp lịch học
             </h1>
@@ -464,7 +522,7 @@ const defaultFilters: FilterState = {
           <div className={styles.statCard}>
             <div className={styles.statIcon}>
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M8 7V3M16 7V3M7 11H17M5 21H19C20.1046 21 21 20.1046 21 19V7C21 5.89543 20.1046 5 19 5H5C3.89543 5 3 5.89543 3 7V19C3 20.1046 3.89543 21 5 21Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M8 7V3M16 7V3M7 11H17M5 21H19C20.1046 21 21 20.1046 21 19V7C21 5.89543 20.1046 5 19 5H5C3.89543 5 3 5.89543 3 7V19C3 20.1046 3.89543 21 5 21Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </div>
             <div className={styles.statContent}>
@@ -475,7 +533,7 @@ const defaultFilters: FilterState = {
           <div className={styles.statCard}>
             <div className={styles.statIcon}>
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </div>
             <div className={styles.statContent}>
@@ -486,7 +544,7 @@ const defaultFilters: FilterState = {
           <div className={styles.statCard}>
             <div className={styles.statIcon}>
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 6V12M12 16H12.01M7 21H17C18.1046 21 19 20.1046 19 19V5C19 3.89543 18.1046 3 17 3H7C5.89543 3 5 3.89543 5 5V19C5 20.1046 5.89543 21 7 21Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M12 6V12M12 16H12.01M7 21H17C18.1046 21 19 20.1046 19 19V5C19 3.89543 18.1046 3 17 3H7C5.89543 3 5 3.89543 5 5V19C5 20.1046 5.89543 21 7 21Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </div>
             <div className={styles.statContent}>
@@ -497,28 +555,28 @@ const defaultFilters: FilterState = {
         </div>
       </div>
 
-            <section className={styles.buttonGroup}>
-        <button 
-          className={styles.addButton} 
+      <section className={styles.buttonGroup}>
+        <button
+          className={styles.addButton}
           onClick={() => setActiveModalType('single')}
         >
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 5V19M5 12H19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M12 5V19M5 12H19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
           Sắp xếp 1 buổi học
         </button>
-        <button 
-          className={styles.addButton} 
+        <button
+          className={styles.addButton}
           onClick={() => setActiveModalType('recurring')}
         >
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 5V19M5 12H19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M12 5V19M5 12H19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
           Buổi học định kỳ trong kỳ
         </button>
       </section>
 
-       <section className={styles.filters}>
+      <section className={styles.filters}>
         <div className={styles.filterFields}>
           <label>
             Khóa học
@@ -567,8 +625,8 @@ const defaultFilters: FilterState = {
               <div className={styles.searchRow}>
                 <label>
                   <span>Tìm theo</span>
-                  <select 
-                    value={searchField} 
+                  <select
+                    value={searchField}
                     onChange={(e) => setSearchField(e.target.value)}
                     className={styles.searchSelect}
                   >
@@ -586,7 +644,7 @@ const defaultFilters: FilterState = {
                   placeholder="Nhập từ khóa tìm kiếm..."
                   className={styles.searchInput}
                 />
-                <button 
+                <button
                   onClick={handleSearch}
                   className={styles.searchButton}
                   disabled={sessionsLoading}
@@ -601,9 +659,9 @@ const defaultFilters: FilterState = {
               </div>
             </div>
           </div>
-         
+
         </div>
-        
+
         <div className={adminStyles.tableWrap}>
           <table className={`${adminStyles.table} ${styles.sessionTable}`}>
             <thead>
@@ -652,8 +710,8 @@ const defaultFilters: FilterState = {
                         title="Mở trang điểm danh"
                       >
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M1 12C1 12 5 5 12 5C19 5 23 12 23 12C23 12 19 19 12 19C5 19 1 12 1 12Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                          <path d="M12 15C10.3431 15 9 13.6569 9 12C9 10.3431 10.3431 9 12 9C13.6569 9 15 10.3431 15 12C15 13.6569 13.6569 15 12 15Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                          <path d="M1 12C1 12 5 5 12 5C19 5 23 12 23 12C23 12 19 19 12 19C5 19 1 12 1 12Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                          <path d="M12 15C10.3431 15 9 13.6569 9 12C9 10.3431 10.3431 9 12 9C13.6569 9 15 10.3431 15 12C15 13.6569 13.6569 15 12 15Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
                       </button>
                       <button
@@ -662,35 +720,35 @@ const defaultFilters: FilterState = {
                         title="Sửa"
                       >
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M11 4H4C3.46957 4 2.96086 4.21071 2.58579 4.58579C2.21071 4.96086 2 5.46957 2 6V20C2 20.5304 2.21071 21.0391 2.58579 21.4142C2.96086 21.7893 3.46957 22 4 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                          <path d="M18.5 2.5C18.8978 2.10218 19.4374 1.87868 20 1.87868C20.5626 1.87868 21.1022 2.10218 21.5 2.5C21.8978 2.89782 22.1213 3.43739 22.1213 4C22.1213 4.56261 21.8978 5.10218 21.5 5.5L12 15L8 16L9 12L18.5 2.5Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                          <path d="M11 4H4C3.46957 4 2.96086 4.21071 2.58579 4.58579C2.21071 4.96086 2 5.46957 2 6V20C2 20.5304 2.21071 21.0391 2.58579 21.4142C2.96086 21.7893 3.46957 22 4 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                          <path d="M18.5 2.5C18.8978 2.10218 19.4374 1.87868 20 1.87868C20.5626 1.87868 21.1022 2.10218 21.5 2.5C21.8978 2.89782 22.1213 3.43739 22.1213 4C22.1213 4.56261 21.8978 5.10218 21.5 5.5L12 15L8 16L9 12L18.5 2.5Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
                       </button>
-                      <button 
+                      <button
                         className={styles.deleteButton}
-                        onClick={() => handleDeleteSession(session)} 
+                        onClick={() => handleDeleteSession(session)}
                         disabled={actionSessionId === session.sessionId}
                         title="Xóa"
                       >
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M3 6H5H21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                          <path d="M8 6V4C8 3.46957 8.21071 2.96086 8.58579 2.58579C8.96086 2.21071 9.46957 2 10 2H14C14.5304 2 15.0391 2.21071 15.4142 2.58579C15.7893 2.96086 16 3.46957 16 4V6M19 6V20C19 20.5304 18.7893 21.0391 18.4142 21.4142C18.0391 21.7893 17.5304 22 17 22H7C6.46957 22 5.96086 21.7893 5.58579 21.4142C5.21071 21.0391 5 20.5304 5 20V6H19Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                          <path d="M3 6H5H21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                          <path d="M8 6V4C8 3.46957 8.21071 2.96086 8.58579 2.58579C8.96086 2.21071 9.46957 2 10 2H14C14.5304 2 15.0391 2.21071 15.4142 2.58579C15.7893 2.96086 16 3.46957 16 4V6M19 6V20C19 20.5304 18.7893 21.0391 18.4142 21.4142C18.0391 21.7893 17.5304 22 17 22H7C6.46957 22 5.96086 21.7893 5.58579 21.4142C5.21071 21.0391 5 20.5304 5 20V6H19Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
                       </button>
-                      <button 
-                        className={styles.lockButton} 
-                        onClick={() => handleToggleLock(session)} 
+                      <button
+                        className={styles.lockButton}
+                        onClick={() => handleToggleLock(session)}
                         disabled={actionSessionId === session.sessionId}
                         title={session.locked ? 'Mở khóa' : 'Khóa'}
                       >
                         {session.locked ? (
                           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M7 11V7C7 5.67392 7.52678 4.40215 8.46447 3.46447C9.40215 2.52678 10.6739 2 12 2C13.3261 2 14.5979 2.52678 15.5355 3.46447C16.4732 4.40215 17 5.67392 17 7V11M5 11H19C20.1046 11 21 11.8954 21 13V20C21 21.1046 20.1046 22 19 22H5C3.89543 22 3 21.1046 3 20V13C3 11.8954 3.89543 11 5 11Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            <path d="M7 11V7C7 5.67392 7.52678 4.40215 8.46447 3.46447C9.40215 2.52678 10.6739 2 12 2C13.3261 2 14.5979 2.52678 15.5355 3.46447C16.4732 4.40215 17 5.67392 17 7V11M5 11H19C20.1046 11 21 11.8954 21 13V20C21 21.1046 20.1046 22 19 22H5C3.89543 22 3 21.1046 3 20V13C3 11.8954 3.89543 11 5 11Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                           </svg>
                         ) : (
                           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M17 11H7C5.89543 11 5 11.8954 5 13V20C5 21.1046 5.89543 22 7 22H17C18.1046 22 19 21.1046 19 20V13C19 11.8954 18.1046 11 17 11Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                            <path d="M7 11V7C7 5.67392 7.52678 4.40215 8.46447 3.46447C9.40215 2.52678 10.6739 2 12 2C13.3261 2 14.5979 2.52678 15.5355 3.46447C16.4732 4.40215 17 5.67392 17 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            <path d="M17 11H7C5.89543 11 5 11.8954 5 13V20C5 21.1046 5.89543 22 7 22H17C18.1046 22 19 21.1046 19 20V13C19 11.8954 18.1046 11 17 11Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                            <path d="M7 11V7C7 5.67392 7.52678 4.40215 8.46447 3.46447C9.40215 2.52678 10.6739 2 12 2C13.3261 2 14.5979 2.52678 15.5355 3.46447C16.4732 4.40215 17 5.67392 17 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                           </svg>
                         )}
                       </button>
@@ -700,32 +758,32 @@ const defaultFilters: FilterState = {
             </tbody>
           </table>
         </div>
-         <div className={styles.pagination}>
-            
-            <div className={styles.pageNumbers}>
-              <button onClick={() => handlePageChange('prev')} disabled={filters.page === 0 || sessionsLoading}>
+        <div className={styles.pagination}>
+
+          <div className={styles.pageNumbers}>
+            <button onClick={() => handlePageChange('prev')} disabled={filters.page === 0 || sessionsLoading}>
               Trang trước
-              </button>
-              {[...Array(Math.min(5, totalPages))].map((_, index) => {
-                const pageNum = getPageRange(filters.page, totalPages)[index];
-                return (
-                  <button
-                    key={pageNum}
-                    onClick={() => handlePageChange(pageNum)}
-                    className={pageNum === filters.page + 1 ? styles.currentPage : ''}
-                    disabled={sessionsLoading}
-                  >
-                    {pageNum}
-                  </button>
-                  
-                );
-              })}
-               <button onClick={() => handlePageChange('next')} disabled={filters.page + 1 >= totalPages || sessionsLoading}>
+            </button>
+            {[...Array(Math.min(5, totalPages))].map((_, index) => {
+              const pageNum = getPageRange(filters.page, totalPages)[index];
+              return (
+                <button
+                  key={pageNum}
+                  onClick={() => handlePageChange(pageNum)}
+                  className={pageNum === filters.page + 1 ? styles.currentPage : ''}
+                  disabled={sessionsLoading}
+                >
+                  {pageNum}
+                </button>
+
+              );
+            })}
+            <button onClick={() => handlePageChange('next')} disabled={filters.page + 1 >= totalPages || sessionsLoading}>
               Trang sau
             </button>
-            </div>
-           
           </div>
+
+        </div>
       </section>
 
       <Modal isOpen={!!editingSession} onClose={closeEditModal} title="Edit session" size="lg">
@@ -754,6 +812,16 @@ const defaultFilters: FilterState = {
           </label>
           <div className={styles.formRow}>
             <label>
+              Chọn địa điểm có sẵn (tùy chọn)
+              <select onChange={handleEditLocationPreset} defaultValue="">
+                <option value="">-- Nhập thủ công --</option>
+                <option value="nong-lam">Đại học Nông Lâm TP.HCM</option>
+                <option value="cong-nghiep">Đại học Công Nghiệp TP.HCM</option>
+              </select>
+            </label>
+          </div>
+          <div className={styles.formRow}>
+            <label>
               Vĩ độ
               <input type="number" step="0.000001" name="latitude" value={editForm.latitude} onChange={handleEditChange} />
             </label>
@@ -777,9 +845,9 @@ const defaultFilters: FilterState = {
         </form>
       </Modal>
 
-      <Modal 
-        isOpen={activeModalType === 'single'} 
-        onClose={() => setActiveModalType(null)} 
+      <Modal
+        isOpen={activeModalType === 'single'}
+        onClose={() => setActiveModalType(null)}
         title="Sắp xếp 1 buổi học"
         size="lg"
       >
@@ -833,6 +901,17 @@ const defaultFilters: FilterState = {
 
           <div className={styles.formRow}>
             <label>
+              Chọn địa điểm có sẵn (tùy chọn)
+              <select onChange={handleSingleLocationPreset} defaultValue="">
+                <option value="">-- Nhập thủ công --</option>
+                <option value="nong-lam">Đại học Nông Lâm TP.HCM</option>
+                <option value="cong-nghiep">Đại học Công Nghiệp TP.HCM</option>
+              </select>
+            </label>
+          </div>
+
+          <div className={styles.formRow}>
+            <label>
               Vĩ độ
               <input
                 type="text"
@@ -874,9 +953,9 @@ const defaultFilters: FilterState = {
         </form>
       </Modal>
 
-      <Modal 
-        isOpen={activeModalType === 'recurring'} 
-        onClose={() => setActiveModalType(null)} 
+      <Modal
+        isOpen={activeModalType === 'recurring'}
+        onClose={() => setActiveModalType(null)}
         title="Buổi học định kỳ trong kỳ"
         size="lg"
       >
@@ -966,6 +1045,17 @@ const defaultFilters: FilterState = {
               required
             />
           </label>
+
+          <div className={styles.formRow}>
+            <label>
+              Chọn địa điểm có sẵn (tùy chọn)
+              <select onChange={handleRecurringLocationPreset} defaultValue="">
+                <option value="">-- Nhập thủ công --</option>
+                <option value="nong-lam">Đại học Nông Lâm TP.HCM</option>
+                <option value="cong-nghiep">Đại học Công Nghiệp TP.HCM</option>
+              </select>
+            </label>
+          </div>
 
           <div className={styles.formRow}>
             <label>

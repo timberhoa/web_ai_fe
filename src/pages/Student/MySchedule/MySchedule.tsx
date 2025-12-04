@@ -154,19 +154,19 @@ const MySchedule: React.FC = () => {
         </label>
         <label>
           Lọc theo môn học
-        <select value={courseFilter} onChange={(event) => setCourseFilter(event.target.value)}>
-          <option value="ALL">Tất cả môn học</option>
-          {myCourses.map((course) => (
-            <option key={course.id} value={course.id}>
-              {course.code} - {course.name}
-            </option>
-          ))}
-        </select>
+          <select value={courseFilter} onChange={(event) => setCourseFilter(event.target.value)}>
+            <option value="ALL">Tất cả môn học</option>
+            {myCourses.map((course) => (
+              <option key={course.id} value={course.id}>
+                {course.code} - {course.name}
+              </option>
+            ))}
+          </select>
         </label>
         <label>
           Tìm kiếm
-          <input 
-            value={keyword} 
+          <input
+            value={keyword}
             onChange={(event) => setKeyword(event.target.value)}
             placeholder="Tìm môn học hoặc phòng..."
           />
@@ -181,26 +181,27 @@ const MySchedule: React.FC = () => {
           <div className={styles.loading}>Đang tải danh sách môn học...</div>
         </div>
       )}
-      
+
       {coursesError && <div className={styles.error}>{coursesError}</div>}
-      
+
       {!coursesLoading && myCourses.length > 0 && (
         <div className={styles.card}>
           <h3>Môn học đã ghi danh ({myCourses.length})</h3>
           <ul className={styles.courseList}>
             {myCourses.map((course) => {
               const sessionsCount = sessions.filter(s => s.courseId === course.id).length
-              return(
-              <li key={course.id} className={styles.courseItem}>
-                <div>
-                  <strong>{course.code}</strong> - {course.name}
-                </div>
-                <div className={styles.courseMeta}>
-                  <span>Giảng viên: {course.teacher_name || 'Chưa có giảng viên'}</span>
-                  <span>Tín chỉ: {course.credits ?? 0} · Buổi học: {sessionsCount}</span>
-                </div>
-              </li>
-            )})}
+              return (
+                <li key={course.id} className={styles.courseItem}>
+                  <div>
+                    <strong>{course.code}</strong> - {course.name}
+                  </div>
+                  <div className={styles.courseMeta}>
+                    <span>Giảng viên: {course.teacher_name || 'Chưa có giảng viên'}</span>
+                    <span>Tín chỉ: {course.credits ?? 0} · Buổi học: {sessionsCount}</span>
+                  </div>
+                </li>
+              )
+            })}
           </ul>
         </div>
       )}
@@ -241,7 +242,7 @@ const MySchedule: React.FC = () => {
                     <button
                       type="button"
                       className={styles.sessionButton}
-                      onClick={() => navigate(`/session/${session.sessionId}`)}
+                      onClick={() => navigate(`/face-enrollment?sessionId=${session.sessionId}`)}
                     >
                       Điểm danh
                     </button>

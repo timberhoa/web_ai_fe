@@ -10,6 +10,7 @@ export type AdminUser = {
   role: Role
   active: boolean
   faculty?: { id: string; code?: string; name?: string } | null
+  isFaceRegistered?: boolean
 }
 
 export type CreateAdminUserRequest = {

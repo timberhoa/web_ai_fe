@@ -20,6 +20,8 @@ const formatDateTime = (value?: string) => {
   }
 }
 
+import TeacherFaceScanModal from '../../../components/TeacherFaceScanModal/TeacherFaceScanModal'
+
 const AttendanceSession: React.FC = () => {
   const { sessionId } = useParams()
   const [detail, setDetail] = useState<SessionAttendanceDetail | null>(null)
@@ -29,6 +31,7 @@ const AttendanceSession: React.FC = () => {
   const [newStudentId, setNewStudentId] = useState('')
   const [newStatus, setNewStatus] = useState<AttendanceStatus>('PRESENT')
   const [newNote, setNewNote] = useState('')
+  const [isScanModalOpen, setIsScanModalOpen] = useState(false)
 
   const loadDetail = async () => {
     if (!sessionId) return
@@ -141,6 +144,15 @@ const AttendanceSession: React.FC = () => {
               <button type="button" className={styles.primaryButton} onClick={loadDetail} disabled={loading}>
                 Làm mới
               </button>
+              <button
+                type="button"
+                className={styles.primaryButton}
+                onClick={() => setIsScanModalOpen(true)}
+                disabled={detail.locked}
+                style={{ backgroundColor: '#10b981' }}
+              >
+                Scan Face (Điểm danh hộ)
+              </button>
             </div>
           </div>
 
@@ -208,6 +220,13 @@ const AttendanceSession: React.FC = () => {
               </tbody>
             </table>
           </div>
+
+          <TeacherFaceScanModal
+            isOpen={isScanModalOpen}
+            onClose={() => setIsScanModalOpen(false)}
+            sessionId={sessionId}
+            onSuccess={loadDetail}
+          />
         </>
       )}
     </div>
