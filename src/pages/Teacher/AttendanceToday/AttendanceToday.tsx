@@ -16,6 +16,7 @@ const AttendanceToday: React.FC = () => {
   const [error, setError] = useState<string | null>(null)
   const [todaySessions, setTodaySessions] = useState<any[]>([])
   const [selectedSessionId, setSelectedSessionId] = useState<string | null>(null)
+  const [roster, setRoster] = useState<any[]>([])
 
   const webcamRef = useRef<Webcam>(null)
   const [capturedImage, setCapturedImage] = useState<string | null>(null)
@@ -26,14 +27,18 @@ const AttendanceToday: React.FC = () => {
       if (!teacherId) return
       try {
         const now = new Date()
-        const startOfDay = new Date(now.setHours(0, 0, 0, 0)).toISOString()
-        const endOfDay = new Date(now.setHours(23, 59, 59, 999)).toISOString()
+        const todayStr = now.toISOString().slice(0, 10)
+
+        const weekAhead = new Date(now)
+        weekAhead.setDate(now.getDate() + 7)
+        const weekAheadStr = weekAhead.toISOString().slice(0, 10)
 
         const data = await scheduleApi.list({
           teacherId,
-          from: startOfDay,
-          to: endOfDay,
-          size: 100
+          from: `${todayStr}T00:00:00`,
+          to: `${weekAheadStr}T23:59:59`,
+          size: 100,
+          sort: 'startTime,asc'
         })
         setTodaySessions(data.content || [])
       } catch (err) {
@@ -43,6 +48,22 @@ const AttendanceToday: React.FC = () => {
     }
     loadSessions()
   }, [teacherId])
+
+  useEffect(() => {
+    if (!selectedSessionId) {
+      setRoster([])
+      return
+    }
+    const loadRoster = async () => {
+      try {
+        const data = await attendanceApi.sessionRoster(selectedSessionId)
+        setRoster(data || [])
+      } catch (err) {
+        console.error('Failed to load roster', err)
+      }
+    }
+    loadRoster()
+  }, [selectedSessionId])
 
   const handleStartScan = () => {
     if (!selectedSessionId) {
@@ -59,16 +80,12 @@ const AttendanceToday: React.FC = () => {
     setCapturedImage(null)
   }
 
-  const capture = useCallback(() => {
-    const imageSrc = webcamRef.current?.getScreenshot()
-    if (imageSrc) {
-      setCapturedImage(imageSrc)
-      handleScanSuccess(imageSrc)
-    }
-  }, [webcamRef])
-
   const handleScanSuccess = async (imageSrc: string) => {
-    if (!selectedSessionId) return
+    console.log('handleScanSuccess triggered', { selectedSessionId })
+    if (!selectedSessionId) {
+      console.error('No session selected')
+      return
+    }
 
     try {
       setLoading(true)
@@ -81,21 +98,63 @@ const AttendanceToday: React.FC = () => {
       formData.append('image', blob, 'teacher_scan.jpg')
       formData.append('sessionId', selectedSessionId)
 
+      console.log('Calling teacherCheckInFace API...')
       const result = await attendanceApi.teacherCheckInFace(formData)
+      console.log('API Result:', result)
 
-      setScanResult({
-        ...result,
-        timestamp: new Date().toISOString(),
-        confidence: 0.95 // Mock if not returned, or use result.confidence if API returns it (User request says output has confidence)
-      })
-      setIsModalOpen(true)
-      setIsScanning(false)
+      if (result.success) {
+        setScanResult({
+          ...result,
+          timestamp: new Date().toISOString(),
+          confidence: 0.95 // Mock if not returned, or use result.confidence if API returns it
+        })
+        setIsModalOpen(true)
+        setIsScanning(false)
+
+        // Update roster locally
+        setRoster(prev => prev.map(student => {
+          const matchId = result.studentId && student.studentId === result.studentId
+          const matchCode = result.studentCode && student.studentCode === result.studentCode
+
+          if (matchId || matchCode) {
+            return { ...student, status: result.status, checkedAt: new Date().toISOString() }
+          }
+          return student
+        }))
+      } else {
+        console.warn('Check-in failed logic:', result.message)
+        setError(result.message || 'Không nhận diện được sinh viên')
+        setCapturedImage(null)
+      }
     } catch (err: any) {
-      setError(err?.response?.data?.message || err?.message || 'Không thể điểm danh. Vui lòng thử lại.')
+      console.error('Check-in error:', err)
+
+      const message = err?.response?.data?.message
+      if (message === 'No face detected') {
+        setError('Không nhận diện được sinh viên trong lớp học, vui lòng thử lại')
+      } else {
+        setError(message || err?.message || 'Không thể điểm danh. Vui lòng thử lại.')
+      }
+
       // Keep scanning active on error so they can try again
       setCapturedImage(null)
     } finally {
       setLoading(false)
+    }
+  }
+
+  const capture = () => {
+    console.log('Capture button clicked')
+    if (!webcamRef.current) {
+      console.error('Webcam ref is null')
+      return
+    }
+    const imageSrc = webcamRef.current.getScreenshot()
+    console.log('Screenshot result:', imageSrc ? 'Success (base64 data)' : 'Failed (null)')
+
+    if (imageSrc) {
+      setCapturedImage(imageSrc)
+      handleScanSuccess(imageSrc)
     }
   }
 
@@ -201,29 +260,50 @@ const AttendanceToday: React.FC = () => {
 
         <div className={styles.infoSection}>
           <div className={styles.infoCard}>
-            <h3 className={styles.infoTitle}>Hướng dẫn</h3>
-            <div className={styles.infoList}>
-              <div className={styles.infoItem}>
-                <div className={styles.infoNumber}>1</div>
-                <div className={styles.infoContent}>
-                  <h4>Chọn buổi học</h4>
-                  <p>Chọn buổi học bạn muốn điểm danh từ danh sách</p>
-                </div>
-              </div>
-              <div className={styles.infoItem}>
-                <div className={styles.infoNumber}>2</div>
-                <div className={styles.infoContent}>
-                  <h4>Bấm "Bắt đầu quét"</h4>
-                  <p>Hệ thống sẽ kích hoạt camera</p>
-                </div>
-              </div>
-              <div className={styles.infoItem}>
-                <div className={styles.infoNumber}>3</div>
-                <div className={styles.infoContent}>
-                  <h4>Chụp ảnh</h4>
-                  <p>Bấm nút tròn để chụp và nhận diện sinh viên</p>
-                </div>
-              </div>
+            <h3 className={styles.infoTitle}>Danh sách sinh viên ({roster.length})</h3>
+            <div className={styles.rosterList} style={{ maxHeight: '400px', overflowY: 'auto' }}>
+              {roster.length === 0 ? (
+                <p style={{ textAlign: 'center', color: '#6b7280', padding: '16px' }}>
+                  {selectedSessionId ? 'Chưa có dữ liệu sinh viên' : 'Vui lòng chọn buổi học'}
+                </p>
+              ) : (
+                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem' }}>
+                  <thead>
+                    <tr style={{ borderBottom: '1px solid #e5e7eb', textAlign: 'left' }}>
+                      <th style={{ padding: '8px' }}>Tên</th>
+                      <th style={{ padding: '8px' }}>Trạng thái</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {roster.map((student) => (
+                      <tr key={student.studentId} style={{ borderBottom: '1px solid #f3f4f6' }}>
+                        <td style={{ padding: '8px' }}>
+                          <div style={{ fontWeight: '500' }}>{student.studentName}</div>
+                          <div style={{ fontSize: '0.8rem', color: '#6b7280' }}>{student.studentCode}</div>
+                        </td>
+                        <td style={{ padding: '8px' }}>
+                          <span style={{
+                            padding: '2px 8px',
+                            borderRadius: '12px',
+                            fontSize: '0.75rem',
+                            fontWeight: '500',
+                            backgroundColor: student.status === 'PRESENT' ? '#d1fae5' :
+                              student.status === 'ABSENT' ? '#fee2e2' :
+                                student.status === 'LATE' ? '#fef3c7' : '#f3f4f6',
+                            color: student.status === 'PRESENT' ? '#065f46' :
+                              student.status === 'ABSENT' ? '#991b1b' :
+                                student.status === 'LATE' ? '#92400e' : '#374151'
+                          }}>
+                            {student.status === 'PRESENT' ? 'Có mặt' :
+                              student.status === 'ABSENT' ? 'Vắng' :
+                                student.status === 'LATE' ? 'Đi trễ' : 'Chưa điểm'}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
             </div>
           </div>
         </div>

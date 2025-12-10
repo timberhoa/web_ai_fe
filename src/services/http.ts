@@ -42,6 +42,10 @@ http.interceptors.response.use(
     const isFaceVerificationError = status === 401 && data?.error === 'Face Verification Failed'
     const isUnregisteredFaceError = status === 400 && data?.message === 'User has not registered face data'
 
+    const isOutOfGeofenceError = status === 400 && data?.message === 'OUT_OF_GEOFENCE'
+    const isNoFaceDetectedError = status === 503 && data?.message === 'No face detected'
+    const isSessionLockedError = status === 400 && data?.message === 'SESSION_LOCKED'
+
     if (status === 401 && !isFaceVerificationError) {
       try {
         useAuthStore.getState().logout()
@@ -50,9 +54,9 @@ http.interceptors.response.use(
       }
     }
 
-    // Skip global error notification for Face Verification Failed errors
+    // Skip global error notification for specific handled errors
     // so they can be handled locally by the component
-    if (!isFaceVerificationError && !isUnregisteredFaceError) {
+    if (!isFaceVerificationError && !isUnregisteredFaceError && !isOutOfGeofenceError && !isNoFaceDetectedError && !isSessionLockedError) {
       try {
         const method = error?.config?.method?.toUpperCase?.() || ''
         const url = error?.config?.url || ''

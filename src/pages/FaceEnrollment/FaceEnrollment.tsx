@@ -120,8 +120,12 @@ const AttendanceCheckInContent: React.FC<{ sessionId: string | null }> = ({ sess
         setError(`Khuôn mặt không khớp với dữ liệu đăng ký (Độ chính xác: ${confidence.toFixed(2)}). Vui lòng chụp rõ mặt hơn.`)
       } else if (err.response?.status === 400 && err.response?.data?.message === 'User has not registered face data') {
         setError('Bạn chưa thực hiện đăng kí khuôn mặt cho việc điểm danh, Vui lòng liên hệ với trường thông qua email suport@hcmuaf.edu.vn')
+      } else if (err.response?.status === 400 && err.response?.data?.message === 'OUT_OF_GEOFENCE') {
+        setError('Vị trí của bạn không nằm trong phạm vi lớp học. Vui lòng di chuyển đến đúng phòng học và thử lại.')
+      } else if (err.response?.status === 400 && err.response?.data?.message === 'SESSION_LOCKED') {
+        setError('Giảng viên đã khóa điểm danh, vui lòng liên hệ với giảng viên để thực hiện điểm danh')
       } else {
-        setError(err?.response?.data?.message || err?.message || 'Điểm danh thất bại')
+        setError('Điểm danh thất bại. Vui lòng thử lại.')
       }
     } finally {
       setLoading(false)
@@ -143,7 +147,13 @@ const AttendanceCheckInContent: React.FC<{ sessionId: string | null }> = ({ sess
       })
       setSuccessData({ ...(res as any), checkInType: 'LOCATION_ONLY' })
     } catch (err: any) {
-      setError(err?.message || 'Điểm danh vị trí thất bại')
+      if (err.response?.status === 400 && err.response?.data?.message === 'OUT_OF_GEOFENCE') {
+        setError('Vị trí của bạn không nằm trong phạm vi lớp học. Vui lòng di chuyển đến đúng phòng học và thử lại.')
+      } else if (err.response?.status === 400 && err.response?.data?.message === 'SESSION_LOCKED') {
+        setError('Giảng viên đã khóa điểm danh, vui lòng liên hệ với giảng viên để thực hiện điểm danh')
+      } else {
+        setError('Điểm danh vị trí thất bại. Vui lòng thử lại.')
+      }
     } finally {
       setLoading(false)
     }

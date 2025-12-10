@@ -272,19 +272,23 @@ const SessionDetail: React.FC = () => {
     }
   }
   const handleToggleLock = async () => {
-    const params = await window.location.pathname.slice(1).split('/')[2];
     if (!detail) return
+    const currentLocked = (detail?.locked ?? sessionMeta?.locked) ?? false
+    console.log('Toggling lock. Current status:', currentLocked)
     setLockLoading(true)
     setError(null)
-    
+
     try {
-      if (detail.locked) {
+      if (currentLocked) {
+        console.log('Calling unlock API...')
         await scheduleApi.unlock(sessionId)
       } else {
+        console.log('Calling lock API...')
         await scheduleApi.lock(sessionId)
       }
       await loadData()
     } catch (err: any) {
+      console.error('Toggle lock error:', err)
       setError(err?.message ?? 'Không thể cập nhật trạng thái khóa')
     } finally {
       setLockLoading(false)
@@ -304,7 +308,13 @@ const SessionDetail: React.FC = () => {
       setSelfCheckMessage('Điểm danh thành công')
       await loadData()
     } catch (err: any) {
-      setSelfCheckError(err?.message ?? 'Không thể điểm danh')
+      if (err.response?.status === 400 && err.response?.data?.message === 'OUT_OF_GEOFENCE') {
+        setSelfCheckError('Vị trí của bạn không nằm trong phạm vi lớp học. Vui lòng di chuyển đến đúng phòng học và thử lại.')
+      } else if (err.response?.status === 400 && err.response?.data?.message === 'SESSION_LOCKED') {
+        setSelfCheckError('Giảng viên đã khóa điểm danh, vui lòng liên hệ với giảng viên để thực hiện điểm danh')
+      } else {
+        setSelfCheckError('Không thể điểm danh. Vui lòng thử lại.')
+      }
     } finally {
       setSelfCheckLoading(false)
     }
@@ -431,9 +441,8 @@ const SessionDetail: React.FC = () => {
                   <p>
                     Trạng thái hiện tại:{' '}
                     <span
-                      className={`${styles.statusBadge} ${
-                        studentRow.status ? styles[`status-${studentRow.status.toLowerCase()}`] : styles.statusUnknown
-                      }`}
+                      className={`${styles.statusBadge} ${studentRow.status ? styles[`status-${studentRow.status.toLowerCase()}`] : styles.statusUnknown
+                        }`}
                     >
                       {statusLabel[studentStatusKey]}
                     </span>
@@ -502,108 +511,107 @@ const SessionDetail: React.FC = () => {
           )}
 
           {showManagementSections && (
-          <section className={styles.card}>
-            <div className={styles.sectionHeader}>
-              <h3>Danh sách điểm danh</h3>
-              <div className={styles.rosterActions}>
-                <input
-                  name="keyword"
-                  placeholder="Tìm tên hoặc mã sinh viên"
-                  value={filters.keyword}
-                  onChange={handleFilterChange}
-                />
-                <select name="status" value={filters.status} onChange={handleFilterChange}>
-                  <option value="ALL">Tất cả trạng thái</option>
-                  <option value="UNMARKED">Chưa điểm danh</option>
-                  {attendanceStatuses.map((status) => (
-                    <option key={status} value={status}>
-                      {statusLabel[status]}
-                    </option>
-                  ))}
-                </select>
-                <button type="button" className={styles.secondaryButton} onClick={loadData} disabled={loading}>
-                  Làm mới
-                </button>
-                {canManageRoster && (
-                  <button
-                    type="button"
-                    className={styles.secondaryButton}
-                    onClick={handleSeed}
-                    disabled={seedLoading || isLocked}
-                  >
-                    {seedLoading ? 'Đang seed...' : 'Seed vắng mặt'}
-                  </button>
-                )}
-              </div>
-            </div>
-
-            <div className={styles.tableWrap}>
-              <table className={styles.table}>
-                <thead>
-                  <tr>
-                    <th>Sinh viên</th>
-                    <th>Email</th>
-                    <th>Trạng thái</th>
-                    <th>Thời gian</th>
-                    <th>Ghi chú</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {loading && (
-                    <tr>
-                      <td colSpan={5}>Đang tải danh sách...</td>
-                    </tr>
-                  )}
-                  {!loading && filteredRows.length === 0 && (
-                    <tr>
-                      <td colSpan={5}>Không có sinh viên nào.</td>
-                    </tr>
-                  )}
-                  {!loading &&
-                    filteredRows.map((row) => (
-                      <tr key={row.studentId}>
-                        <td>
-                          <strong>{row.studentName}</strong>
-                          <div className={styles.subtle}>{row.studentCode || row.studentId}</div>
-                        </td>
-                        <td>{row.studentEmail || '-'}</td>
-                        <td>
-                          {canManageRoster ? (
-                            <select
-                              className={styles.statusSelect}
-                              value={row.status ?? ''}
-                              disabled={rowUpdating === row.studentId || isLocked}
-                              onChange={(event) => {
-                                const nextValue = event.target.value as AttendanceStatus | ''
-                                if (!nextValue) return
-                                handleStatusChange(row, nextValue)
-                              }}
-                            >
-                              <option value="">Chưa điểm danh</option>
-                              {attendanceStatuses.map((status) => (
-                                <option key={status} value={status}>
-                                  {statusLabel[status]}
-                                </option>
-                              ))}
-                            </select>
-                          ) : (
-                            <span
-                              className={`${styles.statusBadge} ${
-                                row.status ? styles[`status-${row.status.toLowerCase()}`] : styles.statusUnknown
-                              }`}
-                            >
-                              {statusLabel[row.status ?? 'UNMARKED']}
-                            </span>
-                          )}
-                        </td>
-                        <td>{formatDateTime(row.checkedAt)}</td>
-                        <td>{row.note || '-'}</td>
-                      </tr>
+            <section className={styles.card}>
+              <div className={styles.sectionHeader}>
+                <h3>Danh sách điểm danh</h3>
+                <div className={styles.rosterActions}>
+                  <input
+                    name="keyword"
+                    placeholder="Tìm tên hoặc mã sinh viên"
+                    value={filters.keyword}
+                    onChange={handleFilterChange}
+                  />
+                  <select name="status" value={filters.status} onChange={handleFilterChange}>
+                    <option value="ALL">Tất cả trạng thái</option>
+                    <option value="UNMARKED">Chưa điểm danh</option>
+                    {attendanceStatuses.map((status) => (
+                      <option key={status} value={status}>
+                        {statusLabel[status]}
+                      </option>
                     ))}
-                </tbody>
-              </table>
-            </div>
-          </section>
+                  </select>
+                  <button type="button" className={styles.secondaryButton} onClick={loadData} disabled={loading}>
+                    Làm mới
+                  </button>
+                  {canManageRoster && (
+                    <button
+                      type="button"
+                      className={styles.secondaryButton}
+                      onClick={handleSeed}
+                      disabled={seedLoading || isLocked}
+                    >
+                      {seedLoading ? 'Đang seed...' : 'Seed vắng mặt'}
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              <div className={styles.tableWrap}>
+                <table className={styles.table}>
+                  <thead>
+                    <tr>
+                      <th>Sinh viên</th>
+                      <th>Email</th>
+                      <th>Trạng thái</th>
+                      <th>Thời gian</th>
+                      <th>Ghi chú</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {loading && (
+                      <tr>
+                        <td colSpan={5}>Đang tải danh sách...</td>
+                      </tr>
+                    )}
+                    {!loading && filteredRows.length === 0 && (
+                      <tr>
+                        <td colSpan={5}>Không có sinh viên nào.</td>
+                      </tr>
+                    )}
+                    {!loading &&
+                      filteredRows.map((row) => (
+                        <tr key={row.studentId}>
+                          <td>
+                            <strong>{row.studentName}</strong>
+                            <div className={styles.subtle}>{row.studentCode || row.studentId}</div>
+                          </td>
+                          <td>{row.studentEmail || '-'}</td>
+                          <td>
+                            {canManageRoster ? (
+                              <select
+                                className={styles.statusSelect}
+                                value={row.status ?? ''}
+                                disabled={rowUpdating === row.studentId || isLocked}
+                                onChange={(event) => {
+                                  const nextValue = event.target.value as AttendanceStatus | ''
+                                  if (!nextValue) return
+                                  handleStatusChange(row, nextValue)
+                                }}
+                              >
+                                <option value="">Chưa điểm danh</option>
+                                {attendanceStatuses.map((status) => (
+                                  <option key={status} value={status}>
+                                    {statusLabel[status]}
+                                  </option>
+                                ))}
+                              </select>
+                            ) : (
+                              <span
+                                className={`${styles.statusBadge} ${row.status ? styles[`status-${row.status.toLowerCase()}`] : styles.statusUnknown
+                                  }`}
+                              >
+                                {statusLabel[row.status ?? 'UNMARKED']}
+                              </span>
+                            )}
+                          </td>
+                          <td>{formatDateTime(row.checkedAt)}</td>
+                          <td>{row.note || '-'}</td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </table>
+              </div>
+            </section>
           )}
         </>
       )}

@@ -19,6 +19,7 @@ const TeacherFaceScanModal: React.FC<TeacherFaceScanModalProps> = ({
     const [isSubmitting, setIsSubmitting] = useState(false)
     const webcamRef = useRef<Webcam>(null)
     const [capturedImage, setCapturedImage] = useState<string | null>(null)
+    const [error, setError] = useState<string | null>(null)
 
     const capture = useCallback(() => {
         const imageSrc = webcamRef.current?.getScreenshot()
@@ -29,12 +30,14 @@ const TeacherFaceScanModal: React.FC<TeacherFaceScanModalProps> = ({
 
     const retake = () => {
         setCapturedImage(null)
+        setError(null)
     }
 
     const handleSubmit = async () => {
         if (!capturedImage) return
 
         setIsSubmitting(true)
+        setError(null)
         try {
             const response = await fetch(capturedImage)
             const blob = await response.blob()
@@ -45,12 +48,16 @@ const TeacherFaceScanModal: React.FC<TeacherFaceScanModalProps> = ({
 
             const result = await attendanceApi.teacherCheckInFace(formData)
 
-            alert(`Điểm danh thành công!\nSinh viên: ${result.studentName} (${result.studentCode})\nTrạng thái: ${result.status}`)
-            onSuccess()
-            setCapturedImage(null)
+            if (result.success) {
+                alert(`Điểm danh thành công!\nSinh viên: ${result.studentName} (${result.studentCode})\nTrạng thái: ${result.status}`)
+                onSuccess()
+                setCapturedImage(null)
+            } else {
+                setError(result.message || 'Không tìm thấy sinh viên phù hợp')
+            }
         } catch (error: any) {
             console.error('Check-in failed:', error)
-            alert(error?.response?.data?.message || error?.message || 'Điểm danh thất bại')
+            setError(error?.response?.data?.message || error?.message || 'Lỗi kết nối đến máy chủ')
         } finally {
             setIsSubmitting(false)
         }
@@ -69,6 +76,25 @@ const TeacherFaceScanModal: React.FC<TeacherFaceScanModalProps> = ({
                         </svg>
                     </button>
                 </div>
+
+                {error && (
+                    <div style={{
+                        backgroundColor: '#fee2e2',
+                        color: '#b91c1c',
+                        padding: '12px',
+                        borderRadius: '8px',
+                        marginBottom: '16px',
+                        fontSize: '0.9rem',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px'
+                    }}>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 9V13M12 17H12.01M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                        {error}
+                    </div>
+                )}
 
                 <div className={styles.body}>
                     <div className={styles.cameraWrapper}>
