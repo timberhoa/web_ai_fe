@@ -203,7 +203,18 @@ const AttendanceSession: React.FC = () => {
                     <td>
                       <select
                         value={record.status}
-                        disabled={detail.locked || updatingId === record.attendanceId}
+                        disabled={
+                          detail.locked ||
+                          updatingId === record.attendanceId ||
+                          ((record.status === 'PRESENT' || record.status === 'LATE') &&
+                            ['FACE_AND_LOCATION', 'TEACHER_FACE_SCAN'].some(m => record.method === m || record.note === m))
+                        }
+                        style={
+                          (record.status === 'PRESENT' || record.status === 'LATE') &&
+                            ['FACE_AND_LOCATION', 'TEACHER_FACE_SCAN'].some(m => record.method === m || record.note === m)
+                            ? { opacity: 0.6, cursor: 'not-allowed' }
+                            : {}
+                        }
                         onChange={(event) => handleStatusChange(record, event.target.value as AttendanceStatus)}
                       >
                         {attendanceStatuses.map((status) => (

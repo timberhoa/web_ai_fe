@@ -15,6 +15,8 @@ type SingleFormState = {
   latitude: string
   longitude: string
   radiusMeters: string
+  selectedUniversity?: string
+  selectedBuilding?: string
 }
 
 type RecurringFormState = {
@@ -28,6 +30,8 @@ type RecurringFormState = {
   latitude: string
   longitude: string
   radiusMeters: string
+  selectedUniversity?: string
+  selectedBuilding?: string
 }
 
 type FilterState = {
@@ -67,22 +71,43 @@ const sanitizeTimeValue = (value: string) => {
 }
 
 // Location presets for quick selection
-const LOCATION_PRESETS = {
+// Location Data Structure
+type Building = {
+  id: string
+  name: string
+  latitude: string
+  longitude: string
+  radiusMeters: string
+}
+
+type University = {
+  name: string
+  buildings: Building[]
+}
+
+const UNIVERSITIES: Record<string, University> = {
   'nong-lam': {
     name: 'Đại học Nông Lâm TP.HCM',
-    latitude: '10.871283565071982',
-    longitude: '106.79176401813622',
-    radiusMeters: '300'
+    buildings: [
+      { id: 'phuong-vi', name: 'Phượng Vĩ', latitude: '10.871975071432047', longitude: '106.79284221988554', radiusMeters: '80' },
+      { id: 'thien-ly', name: 'Thiên Lý', latitude: '10.871281400610913', longitude: '106.79179357158485', radiusMeters: '50' },
+      { id: 'cam-tu', name: 'Cẩm Tú', latitude: '10.873535969586007', longitude: '106.79152837544507', radiusMeters: '60' },
+      { id: 'tuong-vy', name: 'Tường Vy', latitude: '10.873600518906729', longitude: '106.7919859035111', radiusMeters: '80' },
+      { id: 'huong-duong', name: 'Hướng Dương', latitude: '10.873901772385354', longitude: '106.79195187900868', radiusMeters: '80' },
+      { id: 'cat-tuong', name: 'Cát Tường', latitude: '10.87328785748265', longitude: '106.79199354397628', radiusMeters: '80' },
+      { id: 'rang-dong', name: 'Rạng Đông', latitude: '10.870539287643657', longitude: '106.79216933271366', radiusMeters: '90' },
+    ]
   },
   'cong-nghiep': {
     name: 'Đại học Công Nghiệp TP.HCM',
-    latitude: '10.822170852595844',
-    longitude: '106.68684822027657',
-    radiusMeters: '300'
+    buildings: [
+      { id: 'b1', name: 'B1', latitude: '10.822300', longitude: '106.687000', radiusMeters: '50' },
+      { id: 'b2', name: 'B2', latitude: '10.822000', longitude: '106.686500', radiusMeters: '50' },
+      { id: 'a1', name: 'A1', latitude: '10.822500', longitude: '106.687500', radiusMeters: '50' },
+      { id: 'a2', name: 'A2', latitude: '10.822800', longitude: '106.688000', radiusMeters: '50' },
+    ]
   }
-} as const
-
-type LocationPresetKey = keyof typeof LOCATION_PRESETS | ''
+}
 
 const parseOptionalNumber = (value: string) => {
   if (!value) return undefined
@@ -291,43 +316,44 @@ const Schedule: React.FC = () => {
     })
   }
 
-  // Location preset handlers
-  const handleSingleLocationPreset = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const presetKey = event.target.value as LocationPresetKey
-    if (presetKey && LOCATION_PRESETS[presetKey]) {
-      const preset = LOCATION_PRESETS[presetKey]
-      setSingleForm((prev) => ({
-        ...prev,
-        latitude: preset.latitude,
-        longitude: preset.longitude,
-        radiusMeters: preset.radiusMeters,
-      }))
+  // --- Hierarchical Location Handlers ---
+  const handleUniversityChange = (
+    e: React.ChangeEvent<HTMLSelectElement>,
+    formType: 'single' | 'recurring' | 'edit'
+  ) => {
+    const uniKey = e.target.value
+    if (formType === 'single') {
+      setSingleForm(prev => ({ ...prev, selectedUniversity: uniKey, selectedBuilding: '', latitude: '', longitude: '', radiusMeters: '' }))
+    } else if (formType === 'recurring') {
+      setRecurringForm(prev => ({ ...prev, selectedUniversity: uniKey, selectedBuilding: '', latitude: '', longitude: '', radiusMeters: '' }))
+    } else {
+      setEditForm(prev => ({ ...prev, selectedUniversity: uniKey, selectedBuilding: '', latitude: '', longitude: '', radiusMeters: '' }))
     }
   }
 
-  const handleRecurringLocationPreset = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const presetKey = event.target.value as LocationPresetKey
-    if (presetKey && LOCATION_PRESETS[presetKey]) {
-      const preset = LOCATION_PRESETS[presetKey]
-      setRecurringForm((prev) => ({
-        ...prev,
-        latitude: preset.latitude,
-        longitude: preset.longitude,
-        radiusMeters: preset.radiusMeters,
-      }))
-    }
-  }
+  const handleBuildingChange = (
+    e: React.ChangeEvent<HTMLSelectElement>,
+    formType: 'single' | 'recurring' | 'edit'
+  ) => {
+    const buildingId = e.target.value
+    let currentUniKey = ''
+    if (formType === 'single') currentUniKey = singleForm.selectedUniversity || ''
+    else if (formType === 'recurring') currentUniKey = recurringForm.selectedUniversity || ''
+    else currentUniKey = editForm.selectedUniversity || ''
 
-  const handleEditLocationPreset = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const presetKey = event.target.value as LocationPresetKey
-    if (presetKey && LOCATION_PRESETS[presetKey]) {
-      const preset = LOCATION_PRESETS[presetKey]
-      setEditForm((prev) => ({
-        ...prev,
-        latitude: preset.latitude,
-        longitude: preset.longitude,
-        radiusMeters: preset.radiusMeters,
-      }))
+    if (currentUniKey && UNIVERSITIES[currentUniKey]) {
+      const building = UNIVERSITIES[currentUniKey].buildings.find(b => b.id === buildingId)
+      if (building) {
+        const updates = {
+          selectedBuilding: buildingId,
+          latitude: building.latitude,
+          longitude: building.longitude,
+          radiusMeters: building.radiusMeters
+        }
+        if (formType === 'single') setSingleForm(prev => ({ ...prev, ...updates }))
+        else if (formType === 'recurring') setRecurringForm(prev => ({ ...prev, ...updates }))
+        else setEditForm(prev => ({ ...prev, ...updates }))
+      }
     }
   }
 
@@ -812,11 +838,28 @@ const Schedule: React.FC = () => {
           </label>
           <div className={styles.formRow}>
             <label>
-              Chọn địa điểm có sẵn (tùy chọn)
-              <select onChange={handleEditLocationPreset} defaultValue="">
-                <option value="">-- Nhập thủ công --</option>
-                <option value="nong-lam">Đại học Nông Lâm TP.HCM</option>
-                <option value="cong-nghiep">Đại học Công Nghiệp TP.HCM</option>
+              Trường học
+              <select
+                value={editForm.selectedUniversity || ''}
+                onChange={(e) => handleUniversityChange(e, 'edit')}
+              >
+                <option value="">-- Chọn trường --</option>
+                {Object.entries(UNIVERSITIES).map(([key, uni]) => (
+                  <option key={key} value={key}>{uni.name}</option>
+                ))}
+              </select>
+            </label>
+            <label>
+              Giảng đường
+              <select
+                value={editForm.selectedBuilding || ''}
+                onChange={(e) => handleBuildingChange(e, 'edit')}
+                disabled={!editForm.selectedUniversity}
+              >
+                <option value="">-- Chọn giảng đường --</option>
+                {editForm.selectedUniversity && UNIVERSITIES[editForm.selectedUniversity]?.buildings.map((b) => (
+                  <option key={b.id} value={b.id}>{b.name}</option>
+                ))}
               </select>
             </label>
           </div>
@@ -901,11 +944,28 @@ const Schedule: React.FC = () => {
 
           <div className={styles.formRow}>
             <label>
-              Chọn địa điểm có sẵn (tùy chọn)
-              <select onChange={handleSingleLocationPreset} defaultValue="">
-                <option value="">-- Nhập thủ công --</option>
-                <option value="nong-lam">Đại học Nông Lâm TP.HCM</option>
-                <option value="cong-nghiep">Đại học Công Nghiệp TP.HCM</option>
+              Trường học
+              <select
+                value={singleForm.selectedUniversity || ''}
+                onChange={(e) => handleUniversityChange(e, 'single')}
+              >
+                <option value="">-- Chọn trường --</option>
+                {Object.entries(UNIVERSITIES).map(([key, uni]) => (
+                  <option key={key} value={key}>{uni.name}</option>
+                ))}
+              </select>
+            </label>
+            <label>
+              Giảng đường
+              <select
+                value={singleForm.selectedBuilding || ''}
+                onChange={(e) => handleBuildingChange(e, 'single')}
+                disabled={!singleForm.selectedUniversity}
+              >
+                <option value="">-- Chọn giảng đường --</option>
+                {singleForm.selectedUniversity && UNIVERSITIES[singleForm.selectedUniversity]?.buildings.map((b) => (
+                  <option key={b.id} value={b.id}>{b.name}</option>
+                ))}
               </select>
             </label>
           </div>
@@ -1048,11 +1108,28 @@ const Schedule: React.FC = () => {
 
           <div className={styles.formRow}>
             <label>
-              Chọn địa điểm có sẵn (tùy chọn)
-              <select onChange={handleRecurringLocationPreset} defaultValue="">
-                <option value="">-- Nhập thủ công --</option>
-                <option value="nong-lam">Đại học Nông Lâm TP.HCM</option>
-                <option value="cong-nghiep">Đại học Công Nghiệp TP.HCM</option>
+              Trường học
+              <select
+                value={recurringForm.selectedUniversity || ''}
+                onChange={(e) => handleUniversityChange(e, 'recurring')}
+              >
+                <option value="">-- Chọn trường --</option>
+                {Object.entries(UNIVERSITIES).map(([key, uni]) => (
+                  <option key={key} value={key}>{uni.name}</option>
+                ))}
+              </select>
+            </label>
+            <label>
+              Giảng đường
+              <select
+                value={recurringForm.selectedBuilding || ''}
+                onChange={(e) => handleBuildingChange(e, 'recurring')}
+                disabled={!recurringForm.selectedUniversity}
+              >
+                <option value="">-- Chọn giảng đường --</option>
+                {recurringForm.selectedUniversity && UNIVERSITIES[recurringForm.selectedUniversity]?.buildings.map((b) => (
+                  <option key={b.id} value={b.id}>{b.name}</option>
+                ))}
               </select>
             </label>
           </div>

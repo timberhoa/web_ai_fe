@@ -276,7 +276,17 @@ const AttendanceToday: React.FC = () => {
                   </thead>
                   <tbody>
                     {roster.map((student) => (
-                      <tr key={student.studentId} style={{ borderBottom: '1px solid #f3f4f6' }}>
+                      <tr
+                        key={student.studentId}
+                        style={{
+                          borderBottom: '1px solid #f3f4f6',
+                          opacity:
+                            (student.status === 'PRESENT' || student.status === 'LATE') &&
+                              ['FACE_AND_LOCATION', 'TEACHER_FACE_SCAN'].some(m => student.method === m || student.note === m)
+                              ? 0.6
+                              : 1
+                        }}
+                      >
                         <td style={{ padding: '8px' }}>
                           <div style={{ fontWeight: '500' }}>{student.studentName}</div>
                           <div style={{ fontSize: '0.8rem', color: '#6b7280' }}>{student.studentCode}</div>

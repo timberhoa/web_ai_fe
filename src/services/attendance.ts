@@ -2,7 +2,7 @@ import http from './http'
 import type { Page } from './adminUsers'
 
 export type AttendanceStatus = 'PRESENT' | 'ABSENT' | 'LATE' | 'EXCUSED'
-export type AttendanceMethod = 'FACE_RECOGNITION' | 'MANUAL' | 'IMPORT' | 'SEED'
+export type AttendanceMethod = 'FACE_RECOGNITION' | 'MANUAL' | 'IMPORT' | 'SEED' | 'FACE_AND_LOCATION' | 'TEACHER_FACE_SCAN'
 
 export type AttendanceRecordDTO = {
   id: string
@@ -66,6 +66,7 @@ export type SessionRosterRow = {
   studentLat?: number | null
   studentLng?: number | null
   note?: string | null
+  method?: AttendanceMethod | null
 }
 
 export type MonitorWindowRequest = {

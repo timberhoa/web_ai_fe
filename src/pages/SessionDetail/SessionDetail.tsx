@@ -9,6 +9,7 @@ import {
 } from '../../services/attendance'
 import { scheduleApi, type ClassSession } from '../../services/schedule'
 import { useAuthStore } from '../../store/useAuthStore'
+import { exportToExcel } from '../../utils/excelExport'
 
 const attendanceStatuses: AttendanceStatus[] = ['PRESENT', 'LATE', 'ABSENT', 'EXCUSED']
 const statusLabel: Record<AttendanceStatus | 'UNMARKED', string> = {
@@ -19,7 +20,7 @@ const statusLabel: Record<AttendanceStatus | 'UNMARKED', string> = {
   UNMARKED: 'Chưa điểm danh',
 }
 
-type CombinedRosterRow = SessionRosterRow & { attendanceId?: string | null }
+type CombinedRosterRow = SessionRosterRow & { attendanceId?: string | null; method?: string | null }
 
 const formatDateTime = (value?: string | null) => {
   if (!value) return '-'
@@ -131,8 +132,8 @@ const SessionDetail: React.FC = () => {
         marked: true,
         status: record.status,
         checkedAt: record.markedAt,
-        note: record.note,
         attendanceId: record.attendanceId,
+        method: record.method,
       }))
     }
 
@@ -146,6 +147,7 @@ const SessionDetail: React.FC = () => {
         checkedAt: row.checkedAt ?? match?.markedAt ?? null,
         note: row.note ?? match?.note ?? null,
         attendanceId: match?.attendanceId ?? null,
+        method: match?.method ?? null,
       }
     })
   }, [roster, detail])
@@ -318,6 +320,37 @@ const SessionDetail: React.FC = () => {
     } finally {
       setSelfCheckLoading(false)
     }
+  }
+
+  const handleExportExcel = () => {
+    if (!detail) return
+    const dataToExport = filteredRows.length > 0 ? filteredRows : combinedRows
+    const columns = [
+      { title: 'STT', key: 'index', render: (_: any, __: any, index: number) => (index + 1).toString() },
+      { title: 'Họ và tên', dataIndex: 'studentName' },
+      { title: 'Mã SV', dataIndex: 'studentCode' },
+      { title: 'Email', dataIndex: 'studentEmail' },
+      {
+        title: 'Trạng thái',
+        key: 'status',
+        render: (_: any, r: CombinedRosterRow) => statusLabel[r.status ?? 'UNMARKED'] || r.status || ''
+      },
+      {
+        title: 'Thời gian',
+        key: 'checkedAt',
+        render: (_: any, r: CombinedRosterRow) => formatDateTime(r.checkedAt)
+      },
+      { title: 'Ghi chú', dataIndex: 'note' },
+      { title: 'Phương thức', dataIndex: 'method' }
+    ] as any // Use as any to bypass strict Column type check for mixed dataIndex/render
+
+    const courseCode = detail?.courseCode ?? sessionMeta?.courseCode ?? 'Course'
+    const safeSessionId = sessionId ?? detail?.sessionId ?? 'Session'
+
+    exportToExcel(dataToExport, columns, {
+      filename: `DiemDanh_${courseCode}_${safeSessionId.slice(0, 8)}`,
+      sheetName: 'DiemDanh'
+    })
   }
 
   const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -543,6 +576,16 @@ const SessionDetail: React.FC = () => {
                       {seedLoading ? 'Đang seed...' : 'Seed vắng mặt'}
                     </button>
                   )}
+                  {canManageRoster && (
+                    <button
+                      type="button"
+                      className={styles.secondaryButton}
+                      onClick={handleExportExcel}
+                      style={{ backgroundColor: '#059669', color: 'white', borderColor: '#059669' }}
+                    >
+                      Xuất Excel
+                    </button>
+                  )}
                 </div>
               </div>
 
@@ -581,7 +624,18 @@ const SessionDetail: React.FC = () => {
                               <select
                                 className={styles.statusSelect}
                                 value={row.status ?? ''}
-                                disabled={rowUpdating === row.studentId || isLocked}
+                                disabled={
+                                  rowUpdating === row.studentId ||
+                                  isLocked ||
+                                  ((row.status === 'PRESENT' || row.status === 'LATE') &&
+                                    ['FACE_AND_LOCATION', 'TEACHER_FACE_SCAN'].some(m => row.method === m || row.note === m))
+                                }
+                                style={
+                                  (row.status === 'PRESENT' || row.status === 'LATE') &&
+                                    ['FACE_AND_LOCATION', 'TEACHER_FACE_SCAN'].some(m => row.method === m || row.note === m)
+                                    ? { opacity: 0.6, cursor: 'not-allowed' }
+                                    : {}
+                                }
                                 onChange={(event) => {
                                   const nextValue = event.target.value as AttendanceStatus | ''
                                   if (!nextValue) return
