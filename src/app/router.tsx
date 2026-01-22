@@ -33,6 +33,8 @@ import FacultyBrowser from '../pages/FacultyBrowser';
 import CoursesByFaculty from '../pages/CoursesByFaculty';
 import CourseDetail from '../pages/CourseDetail';
 import FacultyDetail from '../pages/FacultyDetail';
+import ForgotPassword from '../pages/ForgotPassword/ForgotPassword';
+import ResetPassword from '../pages/ResetPassword/ResetPassword';
 
 export default function AppRouter() {
   return (
@@ -42,6 +44,8 @@ export default function AppRouter() {
         <Route element={<PublicOnly />}>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
         </Route>
 
         {/* Protected app routes */}
@@ -58,7 +62,7 @@ export default function AppRouter() {
             <Route element={<RequireRole allow={["TEACHER", "STUDENT"]} />}>
               <Route path="face-enrollment" element={<FaceEnrollment />} />
             </Route>
-             <Route element={<RequireRole allow={["TEACHER", "STUDENT", "ADMIN"]} />}>
+            <Route element={<RequireRole allow={["TEACHER", "STUDENT", "ADMIN"]} />}>
               <Route path="settings" element={<Settings />} />
             </Route>
 

@@ -23,6 +23,28 @@ export type User = {
 }
 export type LoginResponse = { accessToken: string; tokenType?: string; user?: User }
 
+// Forgot Password Types
+export type ForgotPasswordRequest = { email: string }
+export type ForgotPasswordResponse = {
+  message: string
+  tokenSentTo?: string
+}
+
+export type ValidateTokenResponse = {
+  valid: boolean
+  message: string
+}
+
+export type ResetPasswordRequest = {
+  token: string
+  newPassword: string
+  confirmPassword: string
+}
+
+export type ResetPasswordResponse = {
+  message: string
+}
+
 export const authApi = {
   async login(payload: LoginRequest) {
     const { data } = await http.post<LoginResponse>('/auth/login', payload)
@@ -33,6 +55,24 @@ export const authApi = {
     return data
   },
   async logout() {
-   await http.post('/auth/logout')
+    await http.post('/auth/logout')
+  },
+
+  // Forgot Password API
+  async forgotPassword(email: string) {
+    const { data } = await http.post<ForgotPasswordResponse>('/auth/forgot-password', { email })
+    return data
+  },
+
+  async validateResetToken(token: string) {
+    const { data } = await http.get<ValidateTokenResponse>('/auth/validate-reset-token', {
+      params: { token }
+    })
+    return data
+  },
+
+  async resetPassword(payload: ResetPasswordRequest) {
+    const { data } = await http.post<ResetPasswordResponse>('/auth/reset-password', payload)
+    return data
   },
 }

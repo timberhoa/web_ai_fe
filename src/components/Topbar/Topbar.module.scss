@@ -56,8 +56,10 @@
     box-shadow: 0 0 0 3px $primary-light;
   }
 
+  display: none;
+
   @include media-md {
-    display: none;
+    display: flex;
   }
 }
 

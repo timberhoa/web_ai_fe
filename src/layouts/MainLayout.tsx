@@ -13,15 +13,15 @@ const MainLayout: React.FC = () => {
   const token = useAuthStore((s) => s.token)
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(() => {
     if (typeof window !== 'undefined') {
-      // On mobile, start closed; on desktop, start open
-      return !window.matchMedia('(max-width: 768px)').matches
+      // On mobile/tablet, start closed; on desktop, start open
+      return !window.matchMedia('(max-width: 1023px)').matches
     }
     return true
   })
   const location = useLocation()
 
   useEffect(() => {
-    if (typeof window !== 'undefined' && window.matchMedia('(max-width: 768px)').matches) {
+    if (typeof window !== 'undefined' && window.matchMedia('(max-width: 1023px)').matches) {
       setSidebarOpen(false)
     }
   }, [location.pathname])

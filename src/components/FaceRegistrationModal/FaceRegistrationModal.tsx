@@ -156,7 +156,7 @@ const FaceRegistrationModal: React.FC<FaceRegistrationModalProps> = ({
                                     onClick={triggerFileUpload}
                                     className={styles.uploadButton}
                                     title="Tải ảnh lên"
-                                    disabled={images.length >= 10}
+                                    disabled={images.length >= 20}
                                 >
                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M4 16V17C4 18.6569 5.34315 20 7 20H17C18.6569 20 20 18.6569 20 17V16M12 12V4M12 4L8 8M12 4L16 8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -165,14 +165,14 @@ const FaceRegistrationModal: React.FC<FaceRegistrationModalProps> = ({
 
                                 <button
                                     onClick={capture}
-                                    disabled={images.length >= 10}
+                                    disabled={images.length >= 20}
                                     className={styles.button}
                                     style={{
                                         borderRadius: '50%',
                                         width: '64px',
                                         height: '64px',
                                         padding: 0,
-                                        backgroundColor: images.length >= 10 ? '#9ca3af' : '#ef4444',
+                                        backgroundColor: images.length >= 20 ? '#9ca3af' : '#ef4444',
                                         border: '4px solid white',
                                         boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
                                     }}
@@ -188,7 +188,7 @@ const FaceRegistrationModal: React.FC<FaceRegistrationModalProps> = ({
                         <div className={styles.capturedImages}>
                             <h4>
                                 Ảnh đã chụp
-                                <span>{images.length}/10</span>
+                                <span>{images.length}/20</span>
                             </h4>
                             <div className={styles.imageList}>
                                 {images.map((img, idx) => (

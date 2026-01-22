@@ -14,7 +14,7 @@
   border-right: 1px solid $border-light;
   z-index: $z-fixed;
   transform: translateX(0);
-  transition: transform .28s cubic-bezier(.2,.6,.2,1), box-shadow .28s;
+  transition: transform .28s cubic-bezier(.2, .6, .2, 1), box-shadow .28s;
   overflow-y: auto;
   will-change: transform;
   @include custom-scrollbar;
@@ -23,7 +23,7 @@
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,.5);
+  background: rgba(0, 0, 0, .5);
   // Keep overlay below the sidebar but above page content
   z-index: 1025; // below $z-fixed (1030), above content/topbar
   opacity: 0;
@@ -107,7 +107,9 @@
   padding: 0;
 }
 
-.navItem { margin-bottom: $spacing-1; }
+.navItem {
+  margin-bottom: $spacing-1;
+}
 
 .navLink {
   @include flex-start;
@@ -130,7 +132,9 @@
     box-shadow: 0 0 0 3px $primary-light;
   }
 
-  &:active { transform: translateY(1px); }
+  &:active {
+    transform: translateY(1px);
+  }
 }
 
 .navLinkActive {
@@ -165,14 +169,17 @@
 }
 
 /* Mobile */
-@include media-sm {
+/* Mobile & Tablet */
+@include media-md {
   .sidebar {
     width: min(320px, 92vw);
     box-shadow: $shadow-lg;
     transform: translateX(-100%);
   }
 
-  .overlay { display: block; }
+  .overlay {
+    display: block;
+  }
 
   .sidebar[data-open="true"] {
     transform: translateX(0);
@@ -183,7 +190,15 @@
     pointer-events: auto;
   }
 
-  .logo { padding: 0 $spacing-4 $spacing-6; }
-  .nav { padding: 0 $spacing-2; }
-  .navLink { padding: $spacing-3; }
+  .logo {
+    padding: 0 $spacing-4 $spacing-6;
+  }
+
+  .nav {
+    padding: 0 $spacing-2;
+  }
+
+  .navLink {
+    padding: $spacing-3;
+  }
 }
