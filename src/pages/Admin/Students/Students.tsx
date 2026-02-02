@@ -8,6 +8,8 @@ import { useFacultyStore } from '../../../store/useFacultyStore'
 import { useUIStore } from '../../../store/useUIStore'
 import { exportToExcel } from '../../../utils/excelExport'
 import FaceRegistrationModal from '../../../components/FaceRegistrationModal/FaceRegistrationModal'
+import NotificationModal from '../../../components/NotificationModal/NotificationModal'
+import ConfirmDialog from '../../../components/ConfirmDialog/ConfirmDialog'
 
 type StudentUser = AdminUser & { role: Extract<Role, 'STUDENT'> }
 
@@ -42,6 +44,8 @@ const Students: React.FC = () => {
   // Face Registration Modal State
   const [isFaceModalOpen, setIsFaceModalOpen] = useState(false)
   const [selectedStudentForFace, setSelectedStudentForFace] = useState<StudentUser | null>(null)
+  const [notification, setNotification] = useState<{ isOpen: boolean; type: 'success' | 'error' | 'warning'; message: string }>({ isOpen: false, type: 'success', message: '' })
+  const [confirm, setConfirm] = useState<{ isOpen: boolean; message: string; onConfirm: () => void }>({ isOpen: false, message: '', onConfirm: () => { } })
 
   const { fetchFacultyList, getFacultyList } = useFacultyStore()
   const faculties = getFacultyList()
@@ -131,48 +135,59 @@ const Students: React.FC = () => {
   }
 
   const handleDeleteStudent = async (id: string) => {
-    if (!window.confirm('Bạn chắc chắn muốn xóa sinh viên này?')) return
-    setLoading(true)
-    try {
-      await adminUsersApi.remove(id)
-      setUsers((arr) => arr.filter((u) => u.id !== id))
-    } catch (e: any) {
-      setError(e?.message ?? 'Xóa sinh viên thất bại')
-    } finally {
-      setLoading(false)
-    }
+    setConfirm({
+      isOpen: true,
+      message: 'Bạn chắc chắn muốn xóa sinh viên này?',
+      onConfirm: async () => {
+        setLoading(true)
+        try {
+          await adminUsersApi.remove(id)
+          setUsers((arr) => arr.filter((u) => u.id !== id))
+        } catch (e: any) {
+          setError(e?.message ?? 'Xóa sinh viên thất bại')
+        } finally {
+          setLoading(false)
+        }
+      }
+    })
   }
 
   const handleDeleteFace = async (studentId: string, studentName: string) => {
-    if (!window.confirm(`Bạn chắc chắn muốn xóa dữ liệu khuôn mặt của sinh viên ${studentName}?`)) return
-
-    setLoading(true)
-    try {
-      await import('../../../services/attendance').then(m => m.attendanceApi.deleteFace(studentId))
-
-      // Update local state
-      setUsers(prev => prev.map(u => {
-        if (u.id === studentId) {
-          return { ...u, isFaceRegistered: false }
+    setConfirm({
+      isOpen: true,
+      message: `Bạn chắc chắn muốn xóa dữ liệu khuôn mặt của sinh viên ${studentName}?`,
+      onConfirm: async () => {
+        setLoading(true)
+        try {
+          await import('../../../services/attendance').then(m => m.attendanceApi.deleteFace(studentId))
+          setUsers(prev => prev.map(u => {
+            if (u.id === studentId) {
+              return { ...u, isFaceRegistered: false }
+            }
+            return u
+          }))
+          setNotification({ isOpen: true, type: 'success', message: 'Xóa dữ liệu khuôn mặt thành công!' })
+        } catch (e: any) {
+          console.error(e)
+          setNotification({ isOpen: true, type: 'error', message: e?.message ?? 'Xóa dữ liệu khuôn mặt thất bại' })
+        } finally {
+          setLoading(false)
         }
-        return u
-      }))
-
-      alert('Xóa dữ liệu khuôn mặt thành công!')
-    } catch (e: any) {
-      console.error(e)
-      alert(e?.message ?? 'Xóa dữ liệu khuôn mặt thất bại')
-    } finally {
-      setLoading(false)
-    }
+      }
+    })
   }
 
   const handleOpenFaceRegistration = (student: StudentUser) => {
     if (student.isFaceRegistered) {
-      const confirm = window.confirm(
-        `Sinh viên ${student.fullName} đã thực hiện việc đăng ký khuôn mặt.\n\nNếu chắc chắn về việc đăng ký lại khuôn mặt thì thực hiện xóa dữ liệu khuôn mặt trước hoặc nhấn nút tiếp tục.`
-      )
-      if (!confirm) return
+      setConfirm({
+        isOpen: true,
+        message: `Sinh viên ${student.fullName} đã thực hiện việc đăng ký khuôn mặt.\n\nNếu chắc chắn về việc đăng ký lại khuôn mặt thì thực hiện xóa dữ liệu khuôn mặt trước hoặc nhấn nút tiếp tục.`,
+        onConfirm: () => {
+          setSelectedStudentForFace(student)
+          setIsFaceModalOpen(true)
+        }
+      })
+      return
     }
     setSelectedStudentForFace(student)
     setIsFaceModalOpen(true)
@@ -511,6 +526,22 @@ const Students: React.FC = () => {
           }}
         />
       )}
+
+      <NotificationModal
+        isOpen={notification.isOpen}
+        onClose={() => setNotification({ ...notification, isOpen: false })}
+        type={notification.type}
+        message={notification.message}
+      />
+
+      <ConfirmDialog
+        isOpen={confirm.isOpen}
+        onClose={() => setConfirm({ ...confirm, isOpen: false })}
+        onConfirm={confirm.onConfirm}
+        title="Xác nhận"
+        message={confirm.message}
+        isDanger={true}
+      />
     </div>
   )
 }

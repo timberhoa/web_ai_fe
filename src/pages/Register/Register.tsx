@@ -157,9 +157,9 @@ const Register: React.FC = () => {
           <div className={styles.logoTitleRow}>
             <div className={styles.logo}>
               <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
-                <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M2 12L12 17L22 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M2 17L12 22L22 17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M2 12L12 17L22 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M2 17L12 22L22 17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </div>
             <div className={styles.titleBlock}>
@@ -179,8 +179,8 @@ const Register: React.FC = () => {
             <div className={styles.inputWrapper}>
               <span className={styles.inputIcon} aria-hidden>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" >
-                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-                  <circle cx="12" cy="7" r="4" stroke="currentColor" strokeWidth="2"/>
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                  <circle cx="12" cy="7" r="4" stroke="currentColor" strokeWidth="2" />
                 </svg>
               </span>
               <input
@@ -214,7 +214,7 @@ const Register: React.FC = () => {
             <div className={styles.inputWrapper}>
               <span className={styles.inputIcon} aria-hidden>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.86 19.86 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.86 19.86 0 0 1 2.11 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.81.3 1.6.54 2.36a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.72-1.11a2 2 0 0 1 2.11-.45c.76.24 1.55.42 2.36.54A2 2 0 0 1 22 16.92z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.86 19.86 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.86 19.86 0 0 1 2.11 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.81.3 1.6.54 2.36a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.72-1.11a2 2 0 0 1 2.11-.45c.76.24 1.55.42 2.36.54A2 2 0 0 1 22 16.92z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </span>
               <input
@@ -250,9 +250,9 @@ const Register: React.FC = () => {
             <div className={styles.inputWrapper}>
               <span className={styles.inputIcon} aria-hidden>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none"  >
-                  <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
-                  <path d="M8 15s1.5-2 4-2 4 2 4 2" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-                  <path d="M9 10h.01M15 10h.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                  <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" />
+                  <path d="M8 15s1.5-2 4-2 4 2 4 2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                  <path d="M9 10h.01M15 10h.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
                 </svg>
               </span>
               <input
@@ -286,7 +286,7 @@ const Register: React.FC = () => {
             <div className={styles.inputWrapper}>
               <span className={styles.inputIcon} aria-hidden>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                  <path d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z" stroke="currentColor" strokeWidth="2"/>
+                  <path d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z" stroke="currentColor" strokeWidth="2" />
                   <path d="m22 6-10 7L2 6" stroke="currentColor" strokeWidth="2" />
                 </svg>
               </span>
@@ -320,8 +320,8 @@ const Register: React.FC = () => {
             <div className={styles.inputWrapper}>
               <span className={styles.inputIcon} aria-hidden>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                  <rect x="3" y="11" width="18" height="10" rx="2" stroke="currentColor" strokeWidth="2"/>
-                  <path d="M7 11V7a5 5 0 0 1 10 0v4" stroke="currentColor" strokeWidth="2"/>
+                  <rect x="3" y="11" width="18" height="10" rx="2" stroke="currentColor" strokeWidth="2" />
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4" stroke="currentColor" strokeWidth="2" />
                 </svg>
               </span>
               <input
@@ -349,14 +349,14 @@ const Register: React.FC = () => {
               >
                 {showPassword ? (
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" >
-                    <path d="M3 3l18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-                    <path d="M10.58 10.58A2 2 0 1 0 13.42 13.4" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-                    <path d="M9.88 5.09A9.37 9.37 0 0 1 12 5c7 0 10 7 10 7a16.5 16.5 0 0 1-3.12 4.56M6.61 6.61A16.5 16.5 0 0 0 2 12s3 7 10 7a9.46 9.46 0 0 0 3.23-.56" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                    <path d="M3 3l18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                    <path d="M10.58 10.58A2 2 0 1 0 13.42 13.4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                    <path d="M9.88 5.09A9.37 9.37 0 0 1 12 5c7 0 10 7 10 7a16.5 16.5 0 0 1-3.12 4.56M6.61 6.61A16.5 16.5 0 0 0 2 12s3 7 10 7a9.46 9.46 0 0 0 3.23-.56" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
                   </svg>
                 ) : (
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none"  >
-                    <path d="M1 12s3-7 11-7 11 7 11 7-3 7-11 7S1 12 1 12Z" stroke="currentColor" strokeWidth="2"/>
-                    <circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="2"/>
+                    <path d="M1 12s3-7 11-7 11 7 11 7-3 7-11 7S1 12 1 12Z" stroke="currentColor" strokeWidth="2" />
+                    <circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="2" />
                   </svg>
                 )}
               </button>
@@ -374,8 +374,8 @@ const Register: React.FC = () => {
             <div className={styles.inputWrapper}>
               <span className={styles.inputIcon} aria-hidden>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none"  >
-                  <rect x="3" y="11" width="18" height="10" rx="2" stroke="currentColor" strokeWidth="2"/>
-                  <path d="M7 11V7a5 5 0 0 1 10 0v4" stroke="currentColor" strokeWidth="2"/>
+                  <rect x="3" y="11" width="18" height="10" rx="2" stroke="currentColor" strokeWidth="2" />
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4" stroke="currentColor" strokeWidth="2" />
                 </svg>
               </span>
               <input
@@ -408,8 +408,8 @@ const Register: React.FC = () => {
             <div className={styles.inputWrapper}>
               <span className={styles.inputIcon} aria-hidden>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                  <path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5z" stroke="currentColor" strokeWidth="2"/>
-                  <path d="M20 21a8 8 0 0 0-16 0" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                  <path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5z" stroke="currentColor" strokeWidth="2" />
+                  <path d="M20 21a8 8 0 0 0-16 0" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
                 </svg>
               </span>
               <select
@@ -422,7 +422,7 @@ const Register: React.FC = () => {
               >
                 <option value="STUDENT">Học sinh/Sinh viên</option>
                 <option value="TEACHER">Giáo viên</option>
-                <option value="ADMIN">Quản trị</option>
+                {/* <option value="ADMIN">Quản trị</option>*/}
               </select>
             </div>
           </div>
@@ -435,8 +435,8 @@ const Register: React.FC = () => {
             <div className={styles.inputWrapper}>
               <span className={styles.inputIcon} aria-hidden>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                  <path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5z" stroke="currentColor" strokeWidth="2"/>
-                  <path d="M20 21a8 8 0 0 0-16 0" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                  <path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5z" stroke="currentColor" strokeWidth="2" />
+                  <path d="M20 21a8 8 0 0 0-16 0" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
                 </svg>
               </span>
               <select

@@ -1,14 +1,16 @@
 import React, { useState } from 'react'
 import styles from '../Admin.module.scss'
 import pageStyles from './FacesSettings.module.scss'
+import NotificationModal from '../../../components/NotificationModal/NotificationModal'
 
 const FacesSettings: React.FC = () => {
   const [threshold, setThreshold] = useState(0.65)
   const [liveness, setLiveness] = useState(true)
   const [selfEnroll, setSelfEnroll] = useState(false)
+  const [notification, setNotification] = useState<{ isOpen: boolean; type: 'success' | 'error' | 'warning'; message: string }>({ isOpen: false, type: 'success', message: '' })
 
   const save = () => {
-    alert(`Đã lưu: threshold=${threshold}, liveness=${liveness}, self-enroll=${selfEnroll}`)
+    setNotification({ isOpen: true, type: 'success', message: `Đã lưu: threshold=${threshold}, liveness=${liveness}, self-enroll=${selfEnroll}` })
   }
 
   return (
@@ -29,6 +31,13 @@ const FacesSettings: React.FC = () => {
           <button onClick={save}>Lưu</button>
         </div>
       </div>
+
+      <NotificationModal
+        isOpen={notification.isOpen}
+        onClose={() => setNotification({ ...notification, isOpen: false })}
+        type={notification.type}
+        message={notification.message}
+      />
     </div>
   )
 }

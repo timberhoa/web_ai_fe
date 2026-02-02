@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { AxiosError } from 'axios'
 import styles from './Login.module.scss'
 import { useAuthStore } from '../../store/useAuthStore'
 
@@ -14,6 +15,7 @@ const Login: React.FC = () => {
   })
   const [isLoading, setIsLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target
@@ -23,10 +25,20 @@ const Login: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
+    setErrorMessage('')
     try {
       await login(formData.username, formData.password)
       const from = (location.state as any)?.from?.pathname || '/'
       navigate(from, { replace: true })
+    } catch (error) {
+      const err = error as AxiosError
+      if (err.response?.status === 404) {
+        setErrorMessage('Tài khoản không tồn tại')
+      } else if (err.response?.status === 401) {
+        setErrorMessage('Tài khoản hoặc mật khẩu không đúng')
+      } else {
+        setErrorMessage('Đã có lỗi xảy ra. Vui lòng thử lại sau.')
+      }
     } finally {
       setIsLoading(false)
     }
@@ -80,6 +92,8 @@ const Login: React.FC = () => {
             <h2 className={styles.welcomeTitle}>Chào mừng trở lại</h2>
             <p className={styles.welcomeSubtitle}>Đăng nhập để tiếp tục sử dụng hệ thống</p>
           </div>
+
+          {errorMessage && <div className={styles.errorMessage}>{errorMessage}</div>}
 
           <form className={styles.loginForm} onSubmit={handleSubmit}>
             <div className={styles.inputGroup}>

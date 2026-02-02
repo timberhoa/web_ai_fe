@@ -1,0 +1,197 @@
+.modalContent {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 0.5rem;
+}
+
+.successIcon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 1rem 0;
+
+    svg {
+        color: #10b981;
+        animation: scaleIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        filter: drop-shadow(0 4px 12px rgba(16, 185, 129, 0.3));
+    }
+}
+
+@keyframes scaleIn {
+    0% {
+        transform: scale(0) rotate(-180deg);
+        opacity: 0;
+    }
+
+    50% {
+        transform: scale(1.15) rotate(0deg);
+    }
+
+    100% {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+    }
+}
+
+.message {
+    text-align: center;
+    margin: 0.5rem 0;
+
+    h3 {
+        margin: 0 0 0.75rem 0;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1f2937;
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    p {
+        margin: 0;
+        font-size: 1rem;
+        color: #6b7280;
+        line-height: 1.5;
+    }
+}
+
+.studentInfo {
+    margin: 0.5rem 0;
+}
+
+.infoCard {
+    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+    border: 2px solid #86efac;
+    border-radius: 12px;
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+}
+
+.infoRow {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+
+    .label {
+        min-width: 140px;
+        font-weight: 600;
+        color: #047857;
+        flex-shrink: 0;
+        font-size: 0.95rem;
+    }
+
+    .value {
+        flex: 1;
+        color: #1f2937;
+        font-weight: 400;
+        font-size: 0.95rem;
+
+        strong {
+            color: #065f46;
+            font-weight: 600;
+        }
+    }
+
+    .highlight {
+        color: #10b981;
+        font-weight: 700;
+        font-size: 1rem;
+    }
+}
+
+.actions {
+    display: flex;
+    justify-content: center;
+    padding-top: 1rem;
+    border-top: 1px solid #e5e7eb;
+}
+
+.confirmButton {
+    padding: 0.875rem 3rem;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.05rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.3);
+        transform: translate(-50%, -50%);
+        transition: width 0.6s, height 0.6s;
+    }
+
+    &:hover {
+        background: linear-gradient(135deg, #059669 0%, #047857 100%);
+        box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+        transform: translateY(-2px);
+
+        &::before {
+            width: 300px;
+            height: 300px;
+        }
+    }
+
+    &:active {
+        transform: translateY(0);
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+    }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+    .modalContent {
+        padding: 0;
+    }
+
+    .successIcon svg {
+        width: 64px;
+        height: 64px;
+    }
+
+    .message {
+        h3 {
+            font-size: 1.25rem;
+        }
+
+        p {
+            font-size: 0.9rem;
+        }
+    }
+
+    .infoRow {
+        flex-direction: column;
+        gap: 0.25rem;
+        align-items: flex-start;
+
+        .label {
+            min-width: auto;
+            font-size: 0.875rem;
+        }
+
+        .value {
+            font-size: 0.875rem;
+        }
+    }
+
+    .confirmButton {
+        padding: 0.75rem 2rem;
+        font-size: 1rem;
+    }
+}

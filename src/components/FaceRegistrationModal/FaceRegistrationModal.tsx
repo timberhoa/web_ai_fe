@@ -2,6 +2,9 @@ import React, { useState, useRef, useCallback } from 'react'
 import Webcam from 'react-webcam'
 import styles from './FaceRegistrationModal.module.scss'
 import { attendanceApi } from '../../services/attendance'
+import FaceRegistrationSuccessModal from '../FaceRegistrationSuccessModal/FaceRegistrationSuccessModal'
+import NotificationModal from '../NotificationModal/NotificationModal'
+import ConfirmDialog from '../ConfirmDialog/ConfirmDialog'
 
 interface FaceRegistrationModalProps {
     isOpen: boolean
@@ -22,6 +25,9 @@ const FaceRegistrationModal: React.FC<FaceRegistrationModalProps> = ({
 }) => {
     const [images, setImages] = useState<string[]>([])
     const [isSubmitting, setIsSubmitting] = useState(false)
+    const [showSuccessModal, setShowSuccessModal] = useState(false)
+    const [notification, setNotification] = useState<{ isOpen: boolean; type: 'success' | 'error' | 'warning'; message: string }>({ isOpen: false, type: 'success', message: '' })
+    const [confirm, setConfirm] = useState<{ isOpen: boolean; message: string; onConfirm: () => void }>({ isOpen: false, message: '', onConfirm: () => { } })
     const webcamRef = useRef<Webcam>(null)
 
     const fileInputRef = useRef<HTMLInputElement>(null)
@@ -63,7 +69,7 @@ const FaceRegistrationModal: React.FC<FaceRegistrationModalProps> = ({
 
     const handleSubmit = async () => {
         if (images.length < 3) {
-            alert('Vui lòng chụp ít nhất 3 ảnh')
+            setNotification({ isOpen: true, type: 'warning', message: 'Vui lòng chụp ít nhất 3 ảnh' })
             return
         }
 
@@ -79,16 +85,20 @@ const FaceRegistrationModal: React.FC<FaceRegistrationModalProps> = ({
             }
 
             await attendanceApi.registerFace(studentId, formData)
-            alert('Đăng ký khuôn mặt thành công!')
+            setShowSuccessModal(true)
             onSuccess?.()
-            onClose()
-            setImages([])
         } catch (error: any) {
             console.error('Registration failed:', error)
-            alert(error?.message || 'Đăng ký thất bại. Vui lòng thử lại.')
+            setNotification({ isOpen: true, type: 'error', message: error?.message || 'Đăng ký thất bại. Vui lòng thử lại.' })
         } finally {
             setIsSubmitting(false)
         }
+    }
+
+    const handleSuccessModalClose = () => {
+        setShowSuccessModal(false)
+        onClose()
+        setImages([])
     }
 
     if (!isOpen) return null
@@ -231,14 +241,19 @@ const FaceRegistrationModal: React.FC<FaceRegistrationModalProps> = ({
                     </button>
                     <button
                         className={`${styles.button} ${styles.danger}`}
-                        onClick={async () => {
-                            if (!window.confirm('Bạn chắc chắn muốn xóa dữ liệu khuôn mặt cũ?')) return
-                            try {
-                                await attendanceApi.deleteFace(studentId)
-                                alert('Đã xóa dữ liệu khuôn mặt cũ')
-                            } catch (e: any) {
-                                alert(e?.message || 'Xóa thất bại')
-                            }
+                        onClick={() => {
+                            setConfirm({
+                                isOpen: true,
+                                message: 'Bạn chắc chắn muốn xóa dữ liệu khuôn mặt cũ?',
+                                onConfirm: async () => {
+                                    try {
+                                        await attendanceApi.deleteFace(studentId)
+                                        setNotification({ isOpen: true, type: 'success', message: 'Đã xóa dữ liệu khuôn mặt cũ' })
+                                    } catch (e: any) {
+                                        setNotification({ isOpen: true, type: 'error', message: e?.message || 'Xóa thất bại' })
+                                    }
+                                }
+                            })
                         }}
                         disabled={isSubmitting}
                         style={{ marginRight: 'auto', marginLeft: '0', backgroundColor: '#fee2e2', color: '#991b1b', border: '1px solid #fecaca' }}
@@ -254,6 +269,30 @@ const FaceRegistrationModal: React.FC<FaceRegistrationModalProps> = ({
                     </button>
                 </div>
             </div>
+
+            <FaceRegistrationSuccessModal
+                isOpen={showSuccessModal}
+                onClose={handleSuccessModalClose}
+                studentName={studentName}
+                studentCode={studentCode}
+                imageCount={images.length}
+            />
+
+            <NotificationModal
+                isOpen={notification.isOpen}
+                onClose={() => setNotification({ ...notification, isOpen: false })}
+                type={notification.type}
+                message={notification.message}
+            />
+
+            <ConfirmDialog
+                isOpen={confirm.isOpen}
+                onClose={() => setConfirm({ ...confirm, isOpen: false })}
+                onConfirm={confirm.onConfirm}
+                title="Xác nhận"
+                message={confirm.message}
+                isDanger={true}
+            />
         </div>
     )
 }

@@ -2,6 +2,7 @@ import React, { useState, useRef, useCallback } from 'react'
 import Webcam from 'react-webcam'
 import styles from './TeacherFaceScanModal.module.scss'
 import { attendanceApi } from '../../services/attendance'
+import AttendanceSuccessModal from '../AttendanceSuccessModal/AttendanceSuccessModal'
 
 interface TeacherFaceScanModalProps {
     isOpen: boolean
@@ -20,6 +21,7 @@ const TeacherFaceScanModal: React.FC<TeacherFaceScanModalProps> = ({
     const webcamRef = useRef<Webcam>(null)
     const [capturedImage, setCapturedImage] = useState<string | null>(null)
     const [error, setError] = useState<string | null>(null)
+    const [successData, setSuccessData] = useState<{ studentName: string; studentCode: string; status: string } | null>(null)
 
     const capture = useCallback(() => {
         const imageSrc = webcamRef.current?.getScreenshot()
@@ -49,7 +51,7 @@ const TeacherFaceScanModal: React.FC<TeacherFaceScanModalProps> = ({
             const result = await attendanceApi.teacherCheckInFace(formData)
 
             if (result.success) {
-                alert(`Điểm danh thành công!\nSinh viên: ${result.studentName} (${result.studentCode})\nTrạng thái: ${result.status}`)
+                setSuccessData({ studentName: result.studentName, studentCode: result.studentCode, status: result.status })
                 onSuccess()
                 setCapturedImage(null)
             } else {
@@ -142,6 +144,14 @@ const TeacherFaceScanModal: React.FC<TeacherFaceScanModalProps> = ({
                         )}
                     </div>
                 </div>
+
+                <AttendanceSuccessModal
+                    isOpen={!!successData}
+                    onClose={() => setSuccessData(null)}
+                    studentName={successData?.studentName || ''}
+                    studentCode={successData?.studentCode || ''}
+                    status={successData?.status || ''}
+                />
             </div>
         </div>
     )
